@@ -7,6 +7,7 @@ import { BarraProgreso } from '../components/BarraProgreso';
 import { clasesBoton } from '../components/estilos';
 import { Insignia } from '../components/Insignia';
 import { ListaPasos } from '../components/ListaPasos';
+import { MandalaAnio } from '../components/MandalaAnio';
 import { Pantalla } from '../components/Pantalla';
 import { Tarjeta } from '../components/Tarjeta';
 import { repositorio, totalBorrador } from '../db/repositorio';
@@ -54,10 +55,14 @@ export function Hoy() {
     <Pantalla
       antetitulo={formatearDiaYMes(hoy)}
       titulo={nombreDelDia(hoy)}
-      progreso={
-        info
-          ? { valor: info.diaDelTrimestre, maximo: info.diasDelTrimestre, etiqueta: 'Avance del trimestre' }
-          : undefined
+      adorno={
+        info && (
+          <MandalaAnio
+            trimestre={info.trimestre}
+            diaDelTrimestre={info.diaDelTrimestre}
+            diasDelTrimestre={info.diasDelTrimestre}
+          />
+        )
       }
     >
       {info && <LineaTrimestre info={info} />}
