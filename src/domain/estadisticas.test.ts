@@ -4,7 +4,6 @@ import {
   inicioDeSemana,
   mejorDia,
   resumenMeditacion,
-  ritmoParejo,
   totalesPorDia,
   minutosPorSemana,
   proyeccion,
@@ -122,15 +121,6 @@ describe('resumenCarnet', () => {
 
   it('antes del inicio no hay filas', () => {
     expect(resumenCarnet([], [], '2026-10-14', '2026-10-01')).toEqual([]);
-  });
-});
-
-describe('ritmoParejo', () => {
-  it('reparte la meta en partes iguales por día', () => {
-    expect(ritmoParejo(10000, 46, 92)).toBe(5000);
-    expect(ritmoParejo(10000, 5, 92)).toBe(543);
-    expect(ritmoParejo(0, 5, 92)).toBe(0);
-    expect(ritmoParejo(100, 120, 92)).toBe(100);
   });
 });
 

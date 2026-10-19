@@ -158,12 +158,6 @@ export function resumenCarnet(
   return filas;
 }
 
-/** Cuánto llevaría hoy un ritmo parejo que llega justo a la meta el último día del período. */
-export function ritmoParejo(meta: number, diaActual: number, diasTotales: number): number {
-  if (meta <= 0 || diasTotales <= 0) return 0;
-  return Math.round((meta * Math.min(diaActual, diasTotales)) / diasTotales);
-}
-
 /** Total de una práctica en cada uno de los últimos `dias` días hasta hoy, del más viejo al más nuevo. */
 export function totalesPorDia(
   conteos: readonly MovimientoConteo[],

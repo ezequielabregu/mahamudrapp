@@ -1,6 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
-import { ComparacionRitmo } from '../components/ComparacionRitmo';
 import { BarraProgreso } from '../components/BarraProgreso';
 import { GraficoColumnas } from '../components/GraficoColumnas';
 import { MapaDeCalor } from '../components/MapaDeCalor';
@@ -19,7 +18,6 @@ import {
   regularidad,
   resumenCarnet,
   resumenMeditacion,
-  ritmoParejo,
   totalesPorDia,
   type FilaCarnet,
 } from '../domain/estadisticas';
@@ -144,7 +142,7 @@ type Calculo = ReturnType<typeof calcular>;
 
 function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
   const { hoy, info, sesiones, conteos, calculo } = props;
-  const { metas, preliminar, chenresi, diaDelAnio, diasDelAnio } = calculo;
+  const { metas, preliminar, chenresi } = calculo;
   const anio = regularidad(sesiones, info.inicioAnio, hoy);
   const semanas = minutosPorSemana(sesiones, hoy, SEMANAS_EN_GRAFICO);
   const metaDiaria = preliminar?.meta ? Math.ceil(preliminar.meta / info.diasDelTrimestre) : 0;
@@ -166,38 +164,23 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
       {hayMetas && (
         <Tarjeta antetitulo="Metas" titulo="Cómo vas">
           {preliminar && preliminar.meta > 0 && (
-            <ComparacionRitmo
+            <AvanceMeta
               titulo={programa.practicas[preliminar.practica].titulo}
               valor={preliminar.total}
               meta={preliminar.meta}
-              parejo={ritmoParejo(preliminar.meta, info.diaDelTrimestre, info.diasDelTrimestre)}
-              periodo="del trimestre"
+              periodo="en el trimestre"
             />
           )}
           {chenresi.meta !== null && (
-            <ComparacionRitmo
-              titulo="Chenresi"
-              valor={chenresi.total}
-              meta={chenresi.meta}
-              parejo={ritmoParejo(chenresi.meta, diaDelAnio, diasDelAnio)}
-              periodo="del año"
-            />
+            <AvanceMeta titulo="Chenresi" valor={chenresi.total} meta={chenresi.meta} periodo="en el año" />
           )}
           {metas.yidam && (
-            <div className="space-y-2">
-              <p className="flex flex-wrap items-baseline justify-between gap-x-3">
-                <span className="font-semibold">Yidam</span>
-                <span className="text-tenue">
-                  {formatearNumero(sumarConteos(conteos, { practica: metas.yidam.practica }))} de{' '}
-                  {formatearNumero(metas.yidam.meta)}
-                </span>
-              </p>
-              <BarraProgreso
-                valor={sumarConteos(conteos, { practica: metas.yidam.practica })}
-                maximo={metas.yidam.meta}
-                etiqueta="Mantras del yidam, acumulado"
-              />
-            </div>
+            <AvanceMeta
+              titulo="Yidam"
+              valor={sumarConteos(conteos, { practica: metas.yidam.practica })}
+              meta={metas.yidam.meta}
+              periodo="acumulado"
+            />
           )}
         </Tarjeta>
       )}
@@ -254,6 +237,27 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
         />
       </Tarjeta>
     </>
+  );
+}
+
+/** Una meta: cuánto va hecho, de cuánto y qué porcentaje, con su barra. */
+function AvanceMeta(props: { titulo: string; valor: number; meta: number; periodo: string }) {
+  const { titulo, valor, meta, periodo } = props;
+  return (
+    <div className="space-y-2">
+      <p className="flex flex-wrap items-baseline justify-between gap-x-3">
+        <span className="font-semibold">{titulo}</span>
+        <span className="text-tenue">{periodo}</span>
+      </p>
+      <BarraProgreso valor={valor} maximo={meta} etiqueta={`${titulo} ${periodo}`} />
+      <p>
+        <span className="font-semibold">{formatearNumero(valor)}</span>
+        <span className="text-tenue">
+          {' '}
+          de {formatearNumero(meta)} · {porcentaje(valor, meta)}
+        </span>
+      </p>
+    </div>
   );
 }
 
@@ -412,11 +416,6 @@ function NumerosDePractica(props: PropsNumeros) {
         <Dato etiqueta="Mejor día">
           {mejor ? `${formatearNumero(mejor.total)} (${formatearDiaCorto(mejor.fecha)})` : 'Sin registros'}
         </Dato>
-        {meta > 0 && (
-          <Dato etiqueta="Ritmo parejo a hoy">
-            {formatearNumero(ritmoParejo(meta, diaActual, diasTotales))}
-          </Dato>
-        )}
         <Dato etiqueta={`Al final del ${periodo}, a este ritmo`}>{formatearNumero(p.proyectado)}</Dato>
         {meta > 0 && (
           <Dato etiqueta="Para llegar a la meta, por día">
