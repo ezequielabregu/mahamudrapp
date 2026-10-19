@@ -235,7 +235,7 @@ Implementado en `src/content/sesiones.json` y `src/domain/sesiones.ts`. La panta
 
 Principio: **append-only**. Nunca `update` ni `delete` sobre registros de práctica. Una corrección es un registro nuevo con monto negativo o con `corrigeId`.
 
-**Única excepción: `borrarRegistros()`** (botón al final de Ajustes, pedido por el autor). Borra sesiones, conteos, borradores y el log de copias, y conserva los ajustes. Resguardos: el repositorio la rechaza si no hay una copia de seguridad **hecha ese mismo día**, y la pantalla pide una confirmación que dice cuántos registros se borran. Mientras no exista la importación de copias, el borrado no tiene vuelta atrás dentro de la app.
+**Única excepción: `borrarRegistros()`** (botón al final de Ajustes, pedido por el autor). Borra sesiones, conteos, borradores y el log de copias, y conserva los ajustes. Resguardos: el repositorio la rechaza si no hay una copia de seguridad **hecha ese mismo día**, y la pantalla pide una confirmación que dice cuántos registros se borran. Lo borrado se recupera restaurando la copia de ese día.
 
 Todo registro lleva: `id` (UUID), `creadoEn` (ISO con zona), `fechaLocal` (`YYYY-MM-DD` según la zona del dispositivo, define a qué día pertenece), `dispositivoId`, `version` (del esquema).
 
@@ -369,7 +369,7 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
 ### 9.2 Respaldo, etapa 1 (manual)
 
 - **Exportar:** JSON completo (todas las tablas, con versión de esquema) y CSV de sesiones y conteos para análisis. Usar la Web Share API para enviarlo (WhatsApp, mail, Archivos, iCloud Drive) y descarga directa como alternativa.
-- **Importar:** valida el JSON, fusiona por `id` (nunca duplica ni sobrescribe) y muestra un resumen antes de confirmar.
+- **Importar** (hecho, `src/backup/importar.ts` + `importarCopia` en el repositorio; en Ajustes → Copia de seguridad → "Restaurar una copia"): valida el JSON (rechaza archivos ajenos y copias de versiones más nuevas, descarta y cuenta registros dañados), fusiona por `id` (nunca duplica ni sobrescribe) y muestra un resumen antes de confirmar. Ajustes: solo los que el teléfono no tiene elegidos; nunca `dispositivoId` ni `shineEnCurso`. Un conteo sin terminar de la copia entra como conteo de su día, con id estable.
 - Recordatorio dentro de la app si pasaron más de 7 días sin copia. Registrar cada exportación en `respaldos`.
 
 ### 9.3 Respaldo, etapa 2 (Google Drive automático, opcional)

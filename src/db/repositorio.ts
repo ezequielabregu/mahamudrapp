@@ -1,6 +1,7 @@
 // Única puerta de lectura y escritura a la base. Los registros de práctica (sesiones y
 // conteos) solo se agregan: acá no hay ningún update ni delete sobre ellos.
 
+import { borradorComoConteo, type CopiaLeida } from '../backup/importar';
 import { infoDelDia } from '../domain/calendario';
 import { esCantidadValida } from '../domain/conteos';
 import { diaDeSemana, esFechaValida, fechaLocalDe } from '../domain/fechas';
@@ -53,6 +54,16 @@ export interface ShineEnCurso {
   duracionSeg: number;
   /** Día al que pertenece: el del comienzo. */
   fechaLocal: string;
+}
+
+export interface ResumenImportacion {
+  sesionesNuevas: number;
+  sesionesRepetidas: number;
+  conteosNuevos: number;
+  conteosRepetidos: number;
+  /** Ajustes de la copia que se toman porque en este teléfono todavía no se eligieron. */
+  ajustesNuevos: number;
+  descartados: number;
 }
 
 export interface NuevaSesion {
@@ -355,6 +366,50 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     return (await cerrarShine(true)) !== null;
   }
 
+  /** Lo que se agregaría con una copia: solo lo que no está (por id). No escribe nada. */
+  async function planificarImportacion(copia: CopiaLeida) {
+    const id = await dispositivoId();
+    const conteosDeLaCopia = [
+      ...copia.conteos,
+      ...copia.borradores.flatMap((b) => borradorComoConteo(b, id) ?? []),
+    ];
+    const [sesionesLocales, conteosLocales, ajustesLocales, respaldosLocales] = await Promise.all([
+      db.sesiones.bulkGet(copia.sesiones.map((s) => s.id)),
+      db.conteos.bulkGet(conteosDeLaCopia.map((c) => c.id)),
+      db.ajustes.bulkGet(copia.ajustes.map((a) => a.clave)),
+      db.respaldos.bulkGet(copia.respaldos.map((r) => r.id)),
+    ]);
+    const sesiones = copia.sesiones.filter((_, i) => !sesionesLocales[i]);
+    const conteos = conteosDeLaCopia.filter((_, i) => !conteosLocales[i]);
+    const ajustes = copia.ajustes.filter((_, i) => !ajustesLocales[i]);
+    const respaldos = copia.respaldos.filter((_, i) => !respaldosLocales[i]);
+    const resumen: ResumenImportacion = {
+      sesionesNuevas: sesiones.length,
+      sesionesRepetidas: copia.sesiones.length - sesiones.length,
+      conteosNuevos: conteos.length,
+      conteosRepetidos: conteosDeLaCopia.length - conteos.length,
+      ajustesNuevos: ajustes.length,
+      descartados: copia.descartados,
+    };
+    return { resumen, sesiones, conteos, ajustes, respaldos };
+  }
+
+  /**
+   * Fusiona una copia: agrega solo lo que no está (por id) y nunca sobrescribe. Los ajustes de la
+   * copia se toman solo si en este teléfono no se eligieron. Importar dos veces no duplica nada.
+   */
+  async function importarCopia(copia: CopiaLeida): Promise<ResumenImportacion> {
+    await dispositivoId();
+    return db.transaction('rw', [db.sesiones, db.conteos, db.ajustes, db.respaldos], async () => {
+      const plan = await planificarImportacion(copia);
+      await db.sesiones.bulkAdd(plan.sesiones);
+      await db.conteos.bulkAdd(plan.conteos);
+      await db.ajustes.bulkAdd(plan.ajustes);
+      await db.respaldos.bulkAdd(plan.respaldos);
+      return plan.resumen;
+    });
+  }
+
   async function registrarRespaldo(metodo: Respaldo['metodo'], registros: number): Promise<void> {
     await db.respaldos.add({
       id: nuevoId(),
@@ -377,6 +432,8 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     exportarTodo,
     registrarRespaldo,
     borrarRegistros,
+    planificarImportacion: async (copia: CopiaLeida) => (await planificarImportacion(copia)).resumen,
+    importarCopia,
     shineEnCurso,
     iniciarShine,
     cerrarShine,

@@ -1,5 +1,6 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
+import { leerCopia } from '../backup/importar';
 import { crearRepositorio } from './repositorio';
 import { BaseMahamudra } from './schema';
 
@@ -227,5 +228,67 @@ describe('repositorio', () => {
     reloj = new Date(2026, 9, 19, 0, 25);
     await repo.cerrarShineSiTermino();
     expect((await db.sesiones.toArray())[0]?.fechaLocal).toBe('2026-10-18');
+  });
+
+  it('importar una copia en una app en 0 restaura todo: registros y ajustes', async () => {
+    const origen = nuevoRepo();
+    await origen.repo.guardarPreferencia('nivel', 2);
+    await origen.repo.guardarPreferencia('apariencia', 'clara');
+    await origen.repo.registrarSesion({
+      tipo: 'shine',
+      origen: 'app',
+      fechaLocal: '2026-10-18',
+      duracionSeg: 1800,
+    });
+    await origen.repo.registrarConteo({
+      practica: 'chenresi',
+      cantidad: 300,
+      fechaLocal: '2026-10-17',
+      origen: 'manual',
+    });
+    await origen.repo.sumarAlBorrador('postraciones', 21);
+    const lectura = leerCopia(JSON.stringify(await origen.repo.exportarTodo()));
+    if (!lectura.ok) throw new Error(lectura.error);
+
+    const destino = nuevoRepo();
+    expect(await destino.repo.planificarImportacion(lectura.copia)).toMatchObject({
+      sesionesNuevas: 1,
+      conteosNuevos: 2,
+      sesionesRepetidas: 0,
+    });
+    await destino.repo.importarCopia(lectura.copia);
+    expect(await destino.db.sesiones.count()).toBe(1);
+    expect((await destino.db.conteos.toArray()).map((c) => c.cantidad).sort()).toEqual([21, 300]);
+    expect(await destino.repo.leerPreferencias()).toMatchObject({ nivel: 2, apariencia: 'clara' });
+    // El teléfono nuevo conserva su propio id de dispositivo.
+    expect(await destino.repo.dispositivoId()).not.toBe(await origen.repo.dispositivoId());
+  });
+
+  it('importar dos veces no duplica, y nunca pisa lo que ya había', async () => {
+    const origen = nuevoRepo();
+    await origen.repo.guardarPreferencia('nivel', 3);
+    await origen.repo.registrarSesion({
+      tipo: 'shine',
+      origen: 'app',
+      fechaLocal: '2026-10-18',
+      duracionSeg: 1800,
+    });
+    const lectura = leerCopia(JSON.stringify(await origen.repo.exportarTodo()));
+    if (!lectura.ok) throw new Error(lectura.error);
+
+    const destino = nuevoRepo();
+    await destino.repo.guardarPreferencia('nivel', 1);
+    await destino.repo.registrarSesion({
+      tipo: 'shine',
+      origen: 'app',
+      fechaLocal: '2026-10-16',
+      duracionSeg: 600,
+    });
+    await destino.repo.importarCopia(lectura.copia);
+    const segunda = await destino.repo.importarCopia(lectura.copia);
+
+    expect(segunda).toMatchObject({ sesionesNuevas: 0, sesionesRepetidas: 1, ajustesNuevos: 0 });
+    expect(await destino.db.sesiones.count()).toBe(2);
+    expect((await destino.repo.leerPreferencias()).nivel).toBe(1);
   });
 });

@@ -259,8 +259,8 @@ function BorrarRegistros() {
       ) : (
         <>
           <p className="text-tenue">
-            Borra todas las sesiones y conteos de este teléfono; tus ajustes se conservan. La app todavía no
-            puede restaurar una copia: lo que borres solo va a quedar en el archivo de la copia.
+            Borra todas las sesiones y conteos de este teléfono; tus ajustes se conservan. Lo borrado solo se
+            puede recuperar restaurando la copia de hoy.
           </p>
           {!copiaDeHoy ? (
             <>
