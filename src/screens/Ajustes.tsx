@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { claseCampo, claseOpcion, clasesBoton } from '../components/estilos';
+import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio, type EscalaTexto, type Preferencias } from '../db/repositorio';
 import { esFechaValida } from '../domain/fechas';
@@ -34,9 +35,7 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
   }
 
   return (
-    <div className="space-y-5">
-      <h1 className="text-2xl font-bold">Ajustes</h1>
-
+    <Pantalla titulo="Ajustes">
       <Seccion titulo="Compromiso de práctica">
         <fieldset className="space-y-2">
           <legend className="sr-only">Compromiso de práctica</legend>
@@ -137,7 +136,7 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
       </Seccion>
 
       <p className="text-center text-tenue">Versión {__VERSION_APP__}</p>
-    </div>
+    </Pantalla>
   );
 }
 

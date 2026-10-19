@@ -1,0 +1,102 @@
+{
+  "fuente": "Orden: cuadernillo del programa ('Desarrollo de una sesión de meditación'). Detalles: indicaciones de Lama Rinchen en el seminario y Preliminares abreviados del Arco Iris (pp. 71 a 75).",
+  "shine": {
+    "titulo": "Shiné",
+    "momento": "Mañana",
+    "duracion": "De media hora a tres cuartos de hora",
+    "pasos": [
+      {
+        "id": "expulsiones",
+        "titulo": "Tres expulsiones del aire residual",
+        "detalle": "Si es tu primera sesión del día."
+      },
+      {
+        "id": "refugio",
+        "titulo": "Toma de refugio",
+        "repeticiones": 3,
+        "pagina": 8
+      },
+      {
+        "id": "linaje",
+        "titulo": "Corta plegaria al linaje",
+        "pagina": 13
+      },
+      {
+        "id": "reflexion",
+        "titulo": "Reflexión preliminar",
+        "tipo": "reflexion",
+        "detalle": "Unos 5 minutos; pueden ser 10."
+      },
+      {
+        "id": "milarepa",
+        "titulo": "Invocación a Milarepa",
+        "condicion": "sin-soporte",
+        "pagina": 12,
+        "detalle": "Sin soporte, entrás en la meditación apoyándote en la devoción."
+      },
+      {
+        "id": "shine",
+        "titulo": "Shiné",
+        "tipo": "meditacion",
+        "detalle": "Antes de terminar, soltá el soporte y reposá unos momentos."
+      },
+      {
+        "id": "dedicacion",
+        "titulo": "Dedicación",
+        "pagina": 69
+      }
+    ]
+  },
+  "preliminares": {
+    "postraciones": {
+      "titulo": "Postraciones",
+      "momento": "Tarde o noche",
+      "pasos": [
+        {
+          "id": "expulsiones",
+          "titulo": "Tres expulsiones del aire residual",
+          "detalle": "Solo si es tu primera sesión del día."
+        },
+        {
+          "id": "preocupaciones",
+          "titulo": "Soltar las ocho preocupaciones mundanas",
+          "pagina": 72,
+          "detalle": "Felicidad y sufrimiento, agradable y desagradable, fama y anonimato, riqueza y pobreza. Sentate en la postura correcta, en un asiento confortable."
+        },
+        {
+          "id": "visualizacion",
+          "titulo": "Visualización del refugio",
+          "pagina": 72,
+          "paginaFin": 73,
+          "detalle": "Leer una vez, desde «Enfrente de mí, en el espacio» hasta «nos refugiamos y desarrollamos la apertura del corazón»."
+        },
+        {
+          "id": "postraciones",
+          "titulo": "Refugio con cada postración",
+          "tipo": "conteo",
+          "pagina": 73,
+          "detalle": "Recitá el refugio en las Cinco Joyas con cada postración. Si recién empezás, 10 o 20, y de a poco más."
+        },
+        {
+          "id": "voto",
+          "titulo": "Voto de bodhisattva",
+          "repeticiones": 3,
+          "pagina": 74,
+          "detalle": "Después, una vez, los versos que siguen."
+        },
+        {
+          "id": "disolucion",
+          "titulo": "Disolución en luz y reposo",
+          "pagina": 75,
+          "detalle": "Los lugares de refugio se funden en luz que se absorbe en vos. Reposá al menos 5 minutos."
+        },
+        {
+          "id": "dedicacion",
+          "titulo": "Dedicación",
+          "pagina": 69,
+          "detalle": "La primera estrofa siempre; la segunda, si querés."
+        }
+      ]
+    }
+  }
+}

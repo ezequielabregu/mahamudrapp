@@ -11,20 +11,28 @@ export function Navegacion() {
   return (
     <nav
       aria-label="Secciones"
-      className="fixed inset-x-0 bottom-0 border-t border-borde bg-superficie pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-borde bg-superficie/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
-      <ul className="mx-auto flex max-w-xl">
+      <ul className="mx-auto flex max-w-xl px-2">
         {destinos.map((d) => (
           <li key={d.a} className="flex-1">
             <NavLink
               to={d.a}
               end={d.a === '/'}
               className={({ isActive }) =>
-                'flex min-h-[3rem] items-center justify-center text-base ' +
-                (isActive ? 'font-bold text-acento underline underline-offset-4' : 'text-tenue')
+                'flex min-h-[3.25rem] flex-col items-center justify-center gap-1 ' +
+                (isActive ? 'font-bold text-acento' : 'text-tenue')
               }
             >
-              {d.texto}
+              {({ isActive }) => (
+                <>
+                  <span>{d.texto}</span>
+                  <span
+                    aria-hidden="true"
+                    className={`h-1 w-6 rounded-full ${isActive ? 'bg-oro' : 'bg-transparent'}`}
+                  />
+                </>
+              )}
             </NavLink>
           </li>
         ))}

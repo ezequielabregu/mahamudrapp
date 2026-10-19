@@ -30,7 +30,7 @@ function Layout() {
 
   return (
     <>
-      <main className="mx-auto max-w-xl px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-28">
+      <main className="pt-[env(safe-area-inset-top)]">
         <Outlet context={contexto} />
       </main>
       <Navegacion />

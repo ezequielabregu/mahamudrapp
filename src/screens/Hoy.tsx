@@ -1,22 +1,31 @@
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useState, type ReactNode } from 'react';
 import { Link, useLocation, useOutletContext } from 'react-router';
+import type { ContextoLayout } from '../App';
 import { Aviso } from '../components/Aviso';
+import { BarraProgreso } from '../components/BarraProgreso';
 import { clasesBoton } from '../components/estilos';
-import { Seccion } from '../components/Seccion';
+import { Insignia } from '../components/Insignia';
+import { ListaPasos } from '../components/ListaPasos';
+import { Pantalla } from '../components/Pantalla';
+import { Tarjeta } from '../components/Tarjeta';
 import { repositorio, totalBorrador } from '../db/repositorio';
+import type { InfoDelDia } from '../domain/calendario';
 import {
+  formatearDiaYMes,
   formatearFechaCorta,
-  formatearFechaLarga,
   formatearMinutos,
   formatearNumero,
   haceCuanto,
+  nombreDelDia,
 } from '../domain/formato';
-import { programa, type Guia } from '../domain/programa';
+import { programa } from '../domain/programa';
+import type { ResumenDelDia } from '../domain/resumen';
+import { guiaPreliminar, guiaShine, pasosDelDia } from '../domain/sesiones';
 import { useDia } from '../hooks/useDia';
 import { useHoy } from '../hooks/useHoy';
 import { useInstalacion } from '../hooks/useInstalacion';
 import { usePreferencias } from '../hooks/usePreferencias';
-import type { ContextoLayout } from '../App';
 
 export function Hoy() {
   const hoy = useHoy();
@@ -33,18 +42,16 @@ export function Hoy() {
   const sugerirInstalar = !instalacion.instalada && instalacion.sistema !== 'otro';
 
   return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-bold">{formatearFechaLarga(hoy)}</h1>
-        {info && (
-          <p className="text-tenue">
-            {info.trimestre}º trimestre · día {info.diaDelTrimestre} de {info.diasDelTrimestre}
-            {info.anioPractica > 1 && ` · año ${info.anioPractica}`}
-          </p>
-        )}
-      </header>
-
-      {mensaje && <p role="status">{mensaje}</p>}
+    <Pantalla
+      antetitulo={nombreDelDia(hoy)}
+      titulo={formatearDiaYMes(hoy)}
+      cabecera={info && <CabeceraTrimestre info={info} />}
+    >
+      {mensaje && (
+        <p role="status" className="font-semibold text-hecho">
+          {mensaje}
+        </p>
+      )}
 
       {sugerirInstalar && (
         <Aviso>
@@ -68,53 +75,14 @@ export function Hoy() {
       ))}
 
       {!info || !resumen ? (
-        <Seccion titulo="Todavía no empezó el año de práctica">
+        <Tarjeta titulo="Todavía no empezó el año de práctica">
           <p>Empieza el {formatearFechaCorta(prefs.fechaInicio)}. Podés cambiar la fecha en Ajustes.</p>
-        </Seccion>
+        </Tarjeta>
       ) : (
         <>
-          <Seccion
-            titulo="Sesión de Shiné"
-            estado={
-              resumen.shine.sesiones > 0 ? `Hecha · ${formatearMinutos(resumen.shine.segundos)}` : 'Pendiente'
-            }
-          >
-            <Paso etiqueta="Reflexión" guia={info.reflexion} />
-            <Paso etiqueta="Soporte" guia={info.soporte} />
-            <Link to="/registrar?que=sesion" className={clasesBoton('principal')}>
-              {resumen.shine.sesiones > 0 ? 'Registrar otra sesión' : 'Registrar la sesión de hoy'}
-            </Link>
-          </Seccion>
-
-          <Seccion
-            titulo={programa.practicas[resumen.preliminar.practica].titulo}
-            estado={`Hoy: ${formatearNumero(resumen.preliminar.hoy)}`}
-          >
-            <p>
-              En el trimestre: {formatearNumero(resumen.preliminar.trimestre)}
-              {resumen.preliminar.metaTrimestre > 0 &&
-                ` de ${formatearNumero(resumen.preliminar.metaTrimestre)}`}
-            </p>
-            {resumen.preliminar.metaDiaria && (
-              <p className="text-tenue">Sugerido por día: {formatearNumero(resumen.preliminar.metaDiaria)}</p>
-            )}
-            <Link to={`/contador/${resumen.preliminar.practica}`} className={clasesBoton('principal')}>
-              Contar {programa.practicas[resumen.preliminar.practica].unidad}
-            </Link>
-          </Seccion>
-
-          <Seccion
-            titulo={programa.practicas.chenresi.titulo}
-            estado={`Hoy: ${formatearNumero(resumen.chenresi.hoy)}`}
-          >
-            <p>
-              En el año: {formatearNumero(resumen.chenresi.anio)} de{' '}
-              {formatearNumero(resumen.chenresi.metaAnio)}
-            </p>
-            <Link to="/contador/chenresi" className={clasesBoton()}>
-              Contar mantras
-            </Link>
-          </Seccion>
+          <TarjetaShine info={info} resumen={resumen} />
+          <TarjetaPreliminar info={info} resumen={resumen} />
+          <TarjetaChenresi resumen={resumen} />
         </>
       )}
 
@@ -132,7 +100,9 @@ export function Hoy() {
         </Aviso>
       ) : (
         dia.ultimaCopia && (
-          <p className="text-tenue">Última copia de seguridad: {haceCuanto(dia.ultimaCopia, hoy)}.</p>
+          <p className="text-center text-tenue">
+            Última copia de seguridad: {haceCuanto(dia.ultimaCopia, hoy)}.
+          </p>
         )
       )}
 
@@ -144,19 +114,133 @@ export function Hoy() {
           </button>
         </Aviso>
       )}
+    </Pantalla>
+  );
+}
+
+function CabeceraTrimestre({ info }: { info: InfoDelDia }) {
+  return (
+    <div className="mt-4 space-y-2">
+      <p className="text-sobre-banda/85">
+        {info.trimestre}º trimestre · día {info.diaDelTrimestre} de {info.diasDelTrimestre}
+        {info.anioPractica > 1 && ` · año ${info.anioPractica}`}
+      </p>
+      <BarraProgreso
+        enBanda
+        valor={info.diaDelTrimestre}
+        maximo={info.diasDelTrimestre}
+        etiqueta="Avance del trimestre"
+      />
     </div>
   );
 }
 
-function Paso({ etiqueta, guia }: { etiqueta: string; guia: Guia }) {
+function TarjetaShine({ info, resumen }: { info: InfoDelDia; resumen: ResumenDelDia }) {
+  const hecha = resumen.shine.sesiones > 0;
   return (
-    <div>
-      <p>
-        <span className="text-tenue">{etiqueta}: </span>
-        <span className="font-semibold">{guia.titulo}</span>
-        {guia.pagina && <span className="text-tenue"> (libro, p. {guia.pagina})</span>}
+    <Tarjeta
+      antetitulo={`Sesión 1 · ${guiaShine.momento}`}
+      titulo={guiaShine.titulo}
+      subtitulo={guiaShine.duracion}
+      estado={
+        <Insignia
+          hecho={hecha}
+          texto={hecha ? `Hecha · ${formatearMinutos(resumen.shine.segundos)}` : 'Pendiente'}
+        />
+      }
+    >
+      <Pasos plegados={hecha}>
+        <ListaPasos pasos={pasosDelDia(guiaShine, info)} info={info} />
+      </Pasos>
+      <Link to="/registrar?que=sesion" className={clasesBoton(hecha ? 'secundario' : 'principal')}>
+        {hecha ? 'Registrar otra sesión' : 'Registrar la sesión'}
+      </Link>
+    </Tarjeta>
+  );
+}
+
+function TarjetaPreliminar({ info, resumen }: { info: InfoDelDia; resumen: ResumenDelDia }) {
+  const { practica, hoy, trimestre, metaTrimestre, metaDiaria } = resumen.preliminar;
+  const datos = programa.practicas[practica];
+  const guia = guiaPreliminar(practica);
+  const hecha = hoy > 0;
+
+  return (
+    <Tarjeta
+      antetitulo={`Sesión 2 · ${guia?.momento ?? 'Preliminar del trimestre'}`}
+      titulo={datos.titulo}
+      estado={<Insignia hecho={hecha} texto={`Hoy: ${formatearNumero(hoy)}`} />}
+    >
+      <Avance etiqueta="En el trimestre" valor={trimestre} meta={metaTrimestre}>
+        {metaDiaria && <p className="text-tenue">Sugerido por día: {formatearNumero(metaDiaria)}</p>}
+      </Avance>
+      {guia ? (
+        <Pasos plegados={hecha}>
+          <ListaPasos pasos={pasosDelDia(guia, info)} info={info} />
+        </Pasos>
+      ) : (
+        <p className="text-tenue">Los pasos de esta sesión se van a cargar más adelante.</p>
+      )}
+      <Link to={`/contador/${practica}`} className={clasesBoton('principal')}>
+        Contar {datos.unidad}
+      </Link>
+    </Tarjeta>
+  );
+}
+
+function TarjetaChenresi({ resumen }: { resumen: ResumenDelDia }) {
+  const datos = programa.practicas.chenresi;
+  const { hoy, anio, metaAnio } = resumen.chenresi;
+  return (
+    <Tarjeta
+      antetitulo="Durante el día"
+      titulo="Chenresi"
+      estado={<Insignia hecho={hoy > 0} texto={`Hoy: ${formatearNumero(hoy)}`} />}
+    >
+      {datos.mantra && (
+        <p lang="bo-Latn" className="font-serif text-xl tracking-wide text-oro italic">
+          {datos.mantra}
+        </p>
+      )}
+      <Avance etiqueta="En el año" valor={anio} meta={metaAnio} />
+      <Link to="/contador/chenresi" className={clasesBoton()}>
+        Contar mantras
+      </Link>
+    </Tarjeta>
+  );
+}
+
+function Avance(props: { etiqueta: string; valor: number; meta: number; children?: ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <p className="flex flex-wrap items-baseline justify-between gap-x-2">
+        <span className="text-tenue">{props.etiqueta}</span>
+        <span className="tabular-nums">
+          <span className="text-lg font-semibold">{formatearNumero(props.valor)}</span>
+          {props.meta > 0 && <span className="text-tenue"> de {formatearNumero(props.meta)}</span>}
+        </span>
       </p>
-      {guia.nota && <p className="text-tenue">{guia.nota}</p>}
+      {props.meta > 0 && <BarraProgreso valor={props.valor} maximo={props.meta} etiqueta={props.etiqueta} />}
+      {props.children}
     </div>
+  );
+}
+
+/** Muestra los pasos; una vez hecha la sesión quedan plegados detrás de un botón visible. */
+function Pasos({ plegados, children }: { plegados: boolean; children: ReactNode }) {
+  const [abiertos, setAbiertos] = useState(false);
+  if (!plegados) return children;
+  return (
+    <>
+      {abiertos && children}
+      <button
+        type="button"
+        aria-expanded={abiertos}
+        className={clasesBoton()}
+        onClick={() => setAbiertos((a) => !a)}
+      >
+        {abiertos ? 'Ocultar los pasos' : 'Ver los pasos'}
+      </button>
+    </>
   );
 }

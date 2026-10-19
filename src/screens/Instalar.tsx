@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { clasesBoton } from '../components/estilos';
+import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { useInstalacion } from '../hooks/useInstalacion';
 
@@ -9,16 +10,14 @@ export function Instalar() {
 
   if (instalada) {
     return (
-      <div className="space-y-5">
-        <h1 className="text-2xl font-bold">Instalar la app</h1>
+      <Pantalla titulo="Instalar la app">
         <p>La app ya está instalada en este teléfono. Abrila siempre desde su ícono.</p>
-      </div>
+      </Pantalla>
     );
   }
 
   return (
-    <div className="space-y-5">
-      <h1 className="text-2xl font-bold">Instalar la app</h1>
+    <Pantalla titulo="Instalar la app">
       <p>
         Instalada, la app funciona sin internet y el teléfono cuida mejor tus registros. Instalala antes de
         empezar a registrar: lo que anotes en el navegador no pasa a la app instalada.
@@ -66,6 +65,6 @@ export function Instalar() {
           </ol>
         </Seccion>
       )}
-    </div>
+    </Pantalla>
   );
 }

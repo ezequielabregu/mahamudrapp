@@ -15,6 +15,7 @@ export interface DatosPractica {
   titulo: string;
   unidad: string;
   sumasRapidas: SumaRapida[];
+  mantra?: string;
   nota?: string;
 }
 

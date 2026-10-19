@@ -53,6 +53,7 @@
       "titulo": "Mantras de Chenresi",
       "unidad": "mantras",
       "sumasRapidas": [{ "cantidad": 100, "etiqueta": "+1 mala (100)" }],
+      "mantra": "OM MANI PADME HUNG",
       "nota": "Una mala de 108 cuentas suma 100: las 8 restantes son de regalo."
     }
   },
@@ -162,8 +163,7 @@
       "titulo": "Tigle (o Lama) en el corazón"
     },
     "sin-soporte": {
-      "titulo": "Shiné sin soporte (o lhaktong)",
-      "nota": "Antes de meditar, Invocación a Milarepa (libro, p. 12)."
+      "titulo": "Shiné sin soporte (o lhaktong)"
     }
   }
 }

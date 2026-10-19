@@ -1,44 +1,83 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/atkinson-hyperlegible-next';
 
-/* Paleta: papel cálido y granate en la vista general; tema oscuro en la práctica.
-   Contraste de texto principal y secundario por encima de WCAG AA (y AAA en tinta). */
+/* Las cifras se toman de Fraunces: Atkinson dibuja el cero con barra ("1Ø"), que en
+   números como 10.000 o 30 minutos se ve técnico. Solo afecta a los dígitos 0 a 9. */
+@font-face {
+  font-family: 'Cifras';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0030-0039;
+}
+
+/* Paleta inspirada en la tradición tibetana: granate de los hábitos, oro azafrán y papel
+   cálido; los cinco colores de las banderas de oración (lungta) solo como acento fino.
+   Contrastes: tinta y tenue sobre superficie por encima de WCAG AA; textos de práctica AAA. */
 @theme {
-  --color-fondo: #f6f0e4;
-  --color-superficie: #fffaf1;
-  --color-tinta: #231910;
-  --color-tenue: #57463a;
-  --color-borde: #cdbb9f;
-  --color-acento: #6e1c27;
-  --color-sobre-acento: #ffffff;
-  --color-aviso: #fbe9c8;
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --color-fondo: #f7f1e6;
+  --color-superficie: #fffcf6;
+  --color-tinta: #2a1a14;
+  --color-tenue: #6b5444;
+  --color-borde: #e7dac5;
+  --color-pista: #efe3d0;
+  --color-acento: #7b1e22;
+  --color-sobre-acento: #fff8ec;
+  --color-oro: #8f5b00;
+  --color-oro-claro: #f2b33d;
+  --color-banda: #5e1418;
+  --color-sobre-banda: #fbf2e3;
+  --color-resalte: #fbefd6;
+  --color-hecho: #00703a;
+  --color-aviso: #fdf0d6;
+
+  --color-lungta-azul: #1d3fbf;
+  --color-lungta-blanco: #fefefe;
+  --color-lungta-rojo: #cd0100;
+  --color-lungta-verde: #008542;
+  --color-lungta-amarillo: #f5c400;
+
+  --font-sans:
+    'Cifras', 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-fondo: #15110d;
-    --color-superficie: #211a14;
-    --color-tinta: #f3eadb;
-    --color-tenue: #cbbca4;
-    --color-borde: #4a3d31;
-    --color-acento: #e6a955;
-    --color-sobre-acento: #1b130b;
-    --color-aviso: #3a2c17;
+    --color-fondo: #140e0c;
+    --color-superficie: #1f1714;
+    --color-tinta: #f4eadb;
+    --color-tenue: #cbb8a3;
+    --color-borde: #3a2c25;
+    --color-pista: #3a2c25;
+    --color-acento: #eaa944;
+    --color-sobre-acento: #1a100b;
+    --color-oro: #eaa944;
+    --color-banda: #2b1214;
+    --color-sobre-banda: #f4eadb;
+    --color-resalte: #2c201a;
+    --color-hecho: #5cc98f;
+    --color-aviso: #2e2116;
   }
 }
 
 .tema-practica {
-  --color-fondo: #100d0a;
-  --color-superficie: #1c1611;
-  --color-tinta: #f3eadb;
-  --color-tenue: #cbbca4;
-  --color-borde: #4a3d31;
-  --color-acento: #e6a955;
-  --color-sobre-acento: #1b130b;
-  --color-aviso: #3a2c17;
+  --color-fondo: #100b09;
+  --color-superficie: #1b1411;
+  --color-tinta: #f4eadb;
+  --color-tenue: #cbb8a3;
+  --color-borde: #3a2c25;
+  --color-pista: #3a2c25;
+  --color-acento: #eaa944;
+  --color-sobre-acento: #1a100b;
+  --color-oro: #eaa944;
+  --color-resalte: #2c201a;
+  --color-aviso: #2e2116;
 }
 
-/* 1rem = 20 px con el tamaño por defecto del teléfono; respeta el tamaño que elija cada persona.
+/* 1rem = 20 px con el tamaño por defecto del teléfono; respeta el que elija cada persona.
    La escala de Ajustes se aplica cambiando este valor desde la app. */
 html {
   font-size: 125%;
@@ -49,7 +88,16 @@ body {
   background: var(--color-fondo);
   color: var(--color-tinta);
   font-family: var(--font-sans);
-  line-height: 1.45;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
 }
 
 button,
@@ -57,10 +105,11 @@ a,
 input,
 label {
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-acento);
+  outline: 3px solid var(--color-oro);
   outline-offset: 3px;
 }
 

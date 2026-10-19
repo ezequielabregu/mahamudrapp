@@ -3,6 +3,18 @@ import { aDateLocal, diasEntre } from './fechas';
 const numeros = new Intl.NumberFormat('es-AR');
 const fechaLarga = new Intl.DateTimeFormat('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
 const fechaCorta = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+const soloDia = new Intl.DateTimeFormat('es-AR', { weekday: 'long' });
+const diaMes = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long' });
+
+/** "Domingo" */
+export function nombreDelDia(fecha: string): string {
+  return mayuscula(soloDia.format(aDateLocal(fecha)));
+}
+
+/** "18 de octubre" */
+export function formatearDiaYMes(fecha: string): string {
+  return diaMes.format(aDateLocal(fecha));
+}
 
 export function formatearNumero(n: number): string {
   return numeros.format(n);

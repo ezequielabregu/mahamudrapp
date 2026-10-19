@@ -34,6 +34,7 @@ La máxima: **la app es una herramienta, nunca una distracción.** Ante cualquie
 | UI | React 18+ |
 | Build y dev server | Vite |
 | Estilos | Tailwind CSS v4 |
+| Tipografías | `@fontsource-variable/atkinson-hyperlegible-next` y `@fontsource-variable/fraunces` (ver 8.5) |
 | Base de datos local | Dexie.js (sobre IndexedDB) |
 | PWA, offline, actualizaciones | `vite-plugin-pwa` (Workbox) |
 | Ruteo | React Router (modo hash, compatible con GitHub Pages) |
@@ -212,7 +213,9 @@ Se definen en `sesiones.json` como lista ordenada de pasos. Cada paso: `id`, `ti
 
 Las expulsiones del aire no se repiten en la segunda sesión del día. El usuario puede elegir hacer las dos sesiones seguidas, en cualquier orden.
 
-**Fuera de sesión:** mantras de Chenresi (OM MANI PEME HUNG) en cualquier momento, con el contador.
+**Fuera de sesión:** mantras de Chenresi (OM MANI PADME HUNG, como lo escribe el libro) en cualquier momento, con el contador.
+
+Implementado en `src/content/sesiones.json` y `src/domain/sesiones.ts`. La pantalla Hoy muestra cada sesión como lista ordenada de pasos, con la reflexión y el soporte del día resaltados; los pasos con `condicion` (Milarepa) solo aparecen los días que corresponde. Las sesiones de Vajrasattva, mandala y guru yoga todavía no están cargadas: la app lo dice en lugar de inventarlas. TODO(contenido): confirmar si la sesión de postraciones empieza leyendo la apertura de la p. 71 ("Lama Karmapa...") o directamente en la p. 72.
 
 ### 6.5 Reglas de conteo
 
@@ -324,7 +327,12 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 
 ### 8.5 Estilo visual
 
-Sereno y cálido, inspirado en la estética tibetana sin caer en el kitsch: fondo claro tipo papel en la vista general, tema oscuro en la práctica, un color de acento (granate o azafrán), tipografía legible sin serifa para la interfaz y una con buena cobertura de diacríticos para la fonética (ö, ü, ñ).
+Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. Los tokens están en `src/index.css`; nunca usar colores sueltos en los componentes.
+
+- **Paleta:** granate de los hábitos (`acento` #7b1e22, `banda` #5e1418), oro azafrán (`oro` #8f5b00 para texto, `oro-claro` #f2b33d sobre granate) y papel cálido (`fondo` #f7f1e6). Los cinco colores de las banderas de oración (lungta: azul, blanco, rojo, verde, amarillo, en ese orden) van solo como franja fina arriba de cada pantalla (`components/Lungta.tsx`), tomados de la paleta "Colors of Buddhism" (schemecolor.com), con el azul y el amarillo algo más profundos. Todos los pares de texto verificados en WCAG AA o más.
+- **Tema oscuro:** respeta `prefers-color-scheme`; el contador usa siempre `.tema-practica`.
+- **Tipografías** (servidas desde la app, funcionan sin conexión): **Atkinson Hyperlegible Next** para el texto (diseñada por el Braille Institute para baja visión) y **Fraunces** para títulos y números grandes. Las cifras 0 a 9 se toman de Fraunces en todo el texto (`@font-face 'Cifras'` con `unicode-range`), porque Atkinson dibuja el cero con barra.
+- **Estructura:** cada pantalla usa `Pantalla` (banda granate con el título) y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
 
 ## 9. PWA, instalación y respaldo
 

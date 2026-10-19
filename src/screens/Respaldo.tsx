@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { hacerCopia, puedeCompartirArchivos, type MetodoCopia } from '../backup/exportar';
 import { clasesBoton } from '../components/estilos';
+import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio } from '../db/repositorio';
 import { formatearFechaCorta, formatearNumero, haceCuanto } from '../domain/formato';
@@ -30,8 +31,7 @@ export function Respaldo() {
   }
 
   return (
-    <div className="space-y-5">
-      <h1 className="text-2xl font-bold">Copia de seguridad</h1>
+    <Pantalla titulo="Copia de seguridad">
       <p>
         Tus registros viven solo en este teléfono. Hacé una copia seguido y guardala en otro lugar: mandátela
         por WhatsApp o por mail, o guardala en Drive o en iCloud.
@@ -70,6 +70,6 @@ export function Respaldo() {
         Descargar el archivo
       </button>
       {estado && <p role="status">{estado}</p>}
-    </div>
+    </Pantalla>
   );
 }
