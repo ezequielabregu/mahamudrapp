@@ -31,9 +31,9 @@ export function Pantalla({ titulo, antetitulo, volver, adorno, children }: Props
           aria-hidden="true"
           width={317}
           height={480}
-          className="pointer-events-none absolute right-3 bottom-0 h-[5.25rem] w-auto select-none drop-shadow-[0_6px_14px_rgb(0_0_0/0.35)]"
+          className="pointer-events-none absolute right-3 bottom-0 h-[min(5.25rem,23vw)] w-auto select-none drop-shadow-[0_6px_14px_rgb(0_0_0/0.35)]"
         />
-        <div className="relative mx-auto flex h-[5.75rem] max-w-xl items-end gap-3 pr-[5.5rem] pb-3 pl-5">
+        <div className="relative mx-auto flex h-[5.75rem] max-w-xl items-end gap-3 pr-[min(5.5rem,24vw)] pb-3 pl-5">
           <div className="flex min-w-0 flex-1 flex-col">
             {volver ? (
               <Link

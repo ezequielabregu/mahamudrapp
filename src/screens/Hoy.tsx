@@ -65,8 +65,6 @@ export function Hoy() {
         )
       }
     >
-      {info && <LineaTrimestre info={info} />}
-
       {actualizacionLista && (
         <Aviso>
           <p>Hay una versión nueva de la app.</p>
@@ -145,16 +143,6 @@ export function Hoy() {
         )
       )}
     </Pantalla>
-  );
-}
-
-/** Primera línea del contenido: en qué parte del año de práctica estamos. */
-function LineaTrimestre({ info }: { info: InfoDelDia }) {
-  return (
-    <p className="text-tenue">
-      {info.trimestre}º trimestre · día {info.diaDelTrimestre} de {info.diasDelTrimestre}
-      {info.anioPractica > 1 && ` · año ${info.anioPractica}`}
-    </p>
   );
 }
 
