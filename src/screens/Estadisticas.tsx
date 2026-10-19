@@ -1,7 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
+import { BarraConMarca } from '../components/BarraConMarca';
 import { BarraProgreso } from '../components/BarraProgreso';
-import { GraficoSemanas } from '../components/GraficoSemanas';
+import { GraficoColumnas } from '../components/GraficoColumnas';
 import { MapaDeCalor } from '../components/MapaDeCalor';
 import { Pantalla } from '../components/Pantalla';
 import { Tarjeta } from '../components/Tarjeta';
@@ -10,23 +11,35 @@ import type { Conteo, Sesion } from '../db/schema';
 import { infoDelDia, type InfoDelDia } from '../domain/calendario';
 import { sumarConteos } from '../domain/conteos';
 import {
+  mejorDia,
   minutosPorDia,
   minutosPorSemana,
   proyeccion,
   rachas,
   regularidad,
   resumenCarnet,
+  resumenMeditacion,
+  ritmoParejo,
+  totalesPorDia,
   type FilaCarnet,
 } from '../domain/estadisticas';
 import { diasEntre, sumarDias } from '../domain/fechas';
-import { contar, formatearFechaCorta, formatearNumero } from '../domain/formato';
-import { metasDelNivel, type Metas } from '../domain/niveles';
+import {
+  contar,
+  formatearDiaCorto,
+  formatearDiaYMes,
+  formatearFechaCorta,
+  formatearFechaLarga,
+  formatearNumero,
+} from '../domain/formato';
+import { metasDelNivel } from '../domain/niveles';
 import { programa, type NumeroTrimestre } from '../domain/programa';
 import { rangoDelTrimestre } from '../domain/semana';
 import { useHoy } from '../hooks/useHoy';
 import { usePreferencias } from '../hooks/usePreferencias';
 
 const SEMANAS_EN_GRAFICO = 12;
+const DIAS_EN_GRAFICO = 14;
 
 export function Estadisticas() {
   const hoy = useHoy();
@@ -61,136 +74,192 @@ interface PropsPanel {
   conteos: Conteo[];
 }
 
-function Panel({ hoy, info, prefs, sesiones, conteos }: PropsPanel) {
+/** Lo que comparten las dos partes del panel, calculado una sola vez. */
+function calcular({ hoy, info, prefs, conteos }: PropsPanel) {
   const metas = metasDelNivel(prefs.nivel, prefs.compromiso, programa);
-  const anio = regularidad(sesiones, info.inicioAnio, hoy);
-  const racha = rachas(sesiones, hoy);
-  const semanas = minutosPorSemana(sesiones, hoy, SEMANAS_EN_GRAFICO);
-  const carnet = resumenCarnet(sesiones, conteos, prefs.fechaInicio, hoy);
-  const etiquetaAnio = carnet.at(-1)?.etiqueta ?? '';
+  const diaDelAnio = diasEntre(info.inicioAnio, hoy) + 1;
+  const diasDelAnio = diasEntre(info.inicioAnio, info.finAnio);
+  const preliminar =
+    metas.preliminarTrimestre === null
+      ? null
+      : {
+          practica: info.preliminar,
+          total: sumarConteos(conteos, {
+            practica: info.preliminar,
+            desde: info.inicioTrimestre,
+            hasta: info.finTrimestre,
+          }),
+          meta: metas.preliminarTrimestre,
+        };
+  const chenresi = {
+    total: sumarConteos(conteos, { practica: 'chenresi', desde: info.inicioAnio, hasta: info.finAnio }),
+    meta: metas.chenresiAnual,
+  };
+  return { metas, diaDelAnio, diasDelAnio, preliminar, chenresi };
+}
+
+function Panel(props: PropsPanel) {
+  const { hoy, info, prefs, sesiones } = props;
+  const carnet = resumenCarnet(sesiones, props.conteos, prefs.fechaInicio, hoy);
+  const calculo = calcular(props);
 
   return (
-    <Pantalla antetitulo={`Año ${info.anioPractica} · ${etiquetaAnio}`} titulo="Avance">
-      <Tarjeta antetitulo="Meditación" titulo="Regularidad del año">
-        <div>
-          <p className="text-[3.5rem] leading-none font-semibold">{anio.porcentaje}%</p>
-          <p className="mt-2 text-tenue">
-            {contar(anio.practicados, 'día', 'días')} con Shiné de{' '}
-            {contar(anio.dias, 'día transcurrido', 'días transcurridos')}.
-          </p>
-        </div>
-        <dl className="space-y-2">
-          <Dato etiqueta="Racha actual">{contar(racha.actual, 'día', 'días')}</Dato>
-          <Dato etiqueta="Racha más larga">{contar(racha.maxima, 'día', 'días')}</Dato>
-          <Dato etiqueta="Esta semana">{`${formatearNumero(semanas.at(-1)?.minutos ?? 0)} minutos`}</Dato>
-        </dl>
-      </Tarjeta>
-
-      <TarjetaPreliminar info={info} metas={metas} conteos={conteos} />
-      <TarjetaChenresi hoy={hoy} info={info} metas={metas} conteos={conteos} />
-      {metas.yidam && <TarjetaYidam yidam={metas.yidam} conteos={conteos} />}
-
-      <Tarjeta
-        antetitulo="Meditación"
-        titulo="Minutos por semana"
-        subtitulo={`Shiné, últimas ${SEMANAS_EN_GRAFICO} semanas`}
+    <Pantalla antetitulo={`Año ${info.anioPractica} · ${carnet.at(-1)?.etiqueta ?? ''}`} titulo="Avance">
+      <button
+        type="button"
+        onClick={() =>
+          document.getElementById('en-numeros')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+        className="min-h-[3rem] font-semibold text-acento underline underline-offset-4"
       >
-        <GraficoSemanas semanas={semanas} referencia={programa.minutosMeditacionDiaria * 7} />
-      </Tarjeta>
+        Ir a los números
+      </button>
 
-      <CalendarioPorTrimestre hoy={hoy} info={info} sesiones={sesiones} />
+      <Encabezado titulo="De un vistazo" />
+      <DeUnVistazo {...props} calculo={calculo} />
 
-      <TarjetaCarnet filas={carnet} />
+      <Encabezado titulo="En números" id="en-numeros" />
+      <EnNumeros {...props} calculo={calculo} carnet={carnet} />
     </Pantalla>
   );
 }
 
-function Dato({ etiqueta, children }: { etiqueta: string; children: ReactNode }) {
+function Encabezado(props: { titulo: string; id?: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 border-t border-borde pt-2">
-      <dt className="text-tenue">{etiqueta}</dt>
-      <dd className="text-right font-semibold">{children}</dd>
+    <div className="flex items-center gap-3 pt-2">
+      <h2
+        id={props.id}
+        className="scroll-mt-4 font-sans font-semibold tracking-[0.08em] whitespace-nowrap text-oro uppercase"
+      >
+        {props.titulo}
+      </h2>
+      <span aria-hidden="true" className="h-px flex-1 bg-borde" />
     </div>
   );
 }
 
-function Total(props: { valor: number; meta: number | null; etiqueta: string }) {
-  return (
-    <div className="space-y-2">
-      <p>
-        <span className="text-[2.25rem] leading-none font-semibold">{formatearNumero(props.valor)}</span>
-        {props.meta ? <span className="text-tenue"> de {formatearNumero(props.meta)}</span> : null}
-      </p>
-      {props.meta ? (
-        <BarraProgreso valor={props.valor} maximo={props.meta} etiqueta={props.etiqueta} />
-      ) : null}
-    </div>
-  );
-}
+type Calculo = ReturnType<typeof calcular>;
 
-function TarjetaPreliminar(props: { info: InfoDelDia; metas: Metas; conteos: Conteo[] }) {
-  const { info, metas, conteos } = props;
-  if (metas.preliminarTrimestre === null) return null;
-  const practica = info.preliminar;
-  const datos = programa.practicas[practica];
-  const total = sumarConteos(conteos, { practica, desde: info.inicioTrimestre, hasta: info.finTrimestre });
-  const meta = metas.preliminarTrimestre;
-  const p = proyeccion(total, meta, info.diaDelTrimestre, info.diasDelTrimestre);
+/* ---------- Primera parte: de un vistazo ---------- */
+
+function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
+  const { hoy, info, sesiones, conteos, calculo } = props;
+  const { metas, preliminar, chenresi, diaDelAnio, diasDelAnio } = calculo;
+  const anio = regularidad(sesiones, info.inicioAnio, hoy);
+  const semanas = minutosPorSemana(sesiones, hoy, SEMANAS_EN_GRAFICO);
+  const metaDiaria = preliminar?.meta ? Math.ceil(preliminar.meta / info.diasDelTrimestre) : 0;
+  const hayMetas = Boolean(preliminar?.meta) || chenresi.meta !== null || metas.yidam;
 
   return (
-    <Tarjeta antetitulo={`${info.trimestre}º trimestre · preliminar`} titulo={datos.titulo}>
-      <Total valor={total} meta={meta || null} etiqueta={`${datos.titulo} en el trimestre`} />
-      <dl className="space-y-2">
-        <Dato etiqueta="Promedio por día">{formatearNumero(Math.round(p.ritmoDiario))}</Dato>
-        <Dato etiqueta="Al final del trimestre, a este ritmo">{formatearNumero(p.proyectado)}</Dato>
-        {meta > 0 && (
-          <Dato etiqueta="Para llegar a la meta, por día">
-            {p.faltanPorDia === null ? 'Meta cumplida' : formatearNumero(p.faltanPorDia)}
-          </Dato>
-        )}
-        <Dato etiqueta="Días que quedan">
-          {formatearNumero(info.diasDelTrimestre - info.diaDelTrimestre + 1)}
-        </Dato>
-      </dl>
-    </Tarjeta>
-  );
-}
+    <>
+      <Tarjeta antetitulo="Meditación" titulo="Regularidad del año">
+        <div className="space-y-3">
+          <p className="text-[4rem] leading-none font-semibold">{anio.porcentaje}%</p>
+          <BarraProgreso valor={anio.porcentaje} maximo={100} etiqueta="Regularidad del año" />
+          <p className="text-tenue">
+            {contar(anio.practicados, 'día', 'días')} con Shiné de{' '}
+            {contar(anio.dias, 'día transcurrido', 'días transcurridos')}.
+          </p>
+        </div>
+      </Tarjeta>
 
-function TarjetaChenresi(props: { hoy: string; info: InfoDelDia; metas: Metas; conteos: Conteo[] }) {
-  const { hoy, info, metas, conteos } = props;
-  const total = sumarConteos(conteos, { practica: 'chenresi', desde: info.inicioAnio, hasta: info.finAnio });
-  const meta = metas.chenresiAnual;
-  const p = proyeccion(
-    total,
-    meta ?? 0,
-    diasEntre(info.inicioAnio, hoy) + 1,
-    diasEntre(info.inicioAnio, info.finAnio),
-  );
+      {hayMetas && (
+        <Tarjeta antetitulo="Metas" titulo="Cómo vas">
+          {preliminar && preliminar.meta > 0 && (
+            <BarraConMarca
+              titulo={programa.practicas[preliminar.practica].titulo}
+              valor={preliminar.total}
+              meta={preliminar.meta}
+              parejo={ritmoParejo(preliminar.meta, info.diaDelTrimestre, info.diasDelTrimestre)}
+              periodo="del trimestre"
+            />
+          )}
+          {chenresi.meta !== null && (
+            <BarraConMarca
+              titulo="Chenresi"
+              valor={chenresi.total}
+              meta={chenresi.meta}
+              parejo={ritmoParejo(chenresi.meta, diaDelAnio, diasDelAnio)}
+              periodo="del año"
+            />
+          )}
+          {metas.yidam && (
+            <div className="space-y-2">
+              <p className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <span className="font-semibold">Yidam</span>
+                <span className="text-tenue">
+                  {formatearNumero(sumarConteos(conteos, { practica: metas.yidam.practica }))} de{' '}
+                  {formatearNumero(metas.yidam.meta)}
+                </span>
+              </p>
+              <BarraProgreso
+                valor={sumarConteos(conteos, { practica: metas.yidam.practica })}
+                maximo={metas.yidam.meta}
+                etiqueta="Mantras del yidam, acumulado"
+              />
+            </div>
+          )}
+          {(Boolean(preliminar?.meta) || chenresi.meta !== null) && (
+            <p className="flex items-center gap-2 text-tenue">
+              <span aria-hidden="true" className="inline-block h-4 w-[3px] shrink-0 rounded-full bg-tinta" />
+              Dónde estarías hoy con un ritmo parejo hasta la meta.
+            </p>
+          )}
+        </Tarjeta>
+      )}
 
-  return (
-    <Tarjeta antetitulo={meta === null ? 'Durante el año · optativo' : 'Durante el año'} titulo="Chenresi">
-      <Total valor={total} meta={meta} etiqueta="Mantras de Chenresi en el año" />
-      <dl className="space-y-2">
-        <Dato etiqueta="Promedio por día">{formatearNumero(Math.round(p.ritmoDiario))}</Dato>
-        <Dato etiqueta="Al final del año, a este ritmo">{formatearNumero(p.proyectado)}</Dato>
-        {meta !== null && (
-          <Dato etiqueta="Para llegar a la meta, por día">
-            {p.faltanPorDia === null ? 'Meta cumplida' : formatearNumero(p.faltanPorDia)}
-          </Dato>
-        )}
-      </dl>
-    </Tarjeta>
-  );
-}
+      <CalendarioPorTrimestre hoy={hoy} info={info} sesiones={sesiones} />
 
-function TarjetaYidam(props: { yidam: NonNullable<Metas['yidam']>; conteos: Conteo[] }) {
-  const { yidam, conteos } = props;
-  const datos = programa.practicas[yidam.practica];
-  const total = sumarConteos(conteos, { practica: yidam.practica });
-  return (
-    <Tarjeta antetitulo="Acumulado de todos los años" titulo="Yidam" subtitulo={datos.titulo}>
-      <Total valor={total} meta={yidam.meta} etiqueta={datos.titulo} />
-    </Tarjeta>
+      {preliminar && (
+        <Tarjeta
+          antetitulo="Ritmo"
+          titulo={programa.practicas[preliminar.practica].titulo}
+          subtitulo={`Últimos ${DIAS_EN_GRAFICO} días`}
+        >
+          <GraficoColumnas
+            columnas={totalesPorDia(conteos, preliminar.practica, hoy, DIAS_EN_GRAFICO).map((d) => ({
+              clave: d.fecha,
+              eje: formatearDiaCorto(d.fecha),
+              nombre: formatearFechaLarga(d.fecha),
+              valor: d.total,
+            }))}
+            unidad={programa.practicas[preliminar.practica].unidad}
+            descripcion={`${programa.practicas[preliminar.practica].titulo} por día, últimos ${DIAS_EN_GRAFICO} días`}
+            referencia={
+              metaDiaria > 0
+                ? {
+                    valor: metaDiaria,
+                    texto: `${formatearNumero(metaDiaria)} por día: lo sugerido para la meta`,
+                  }
+                : undefined
+            }
+            encabezado="Día"
+          />
+        </Tarjeta>
+      )}
+
+      <Tarjeta
+        antetitulo="Ritmo"
+        titulo="Minutos de Shiné"
+        subtitulo={`Por semana, últimas ${SEMANAS_EN_GRAFICO}`}
+      >
+        <GraficoColumnas
+          columnas={semanas.map((s) => ({
+            clave: s.inicio,
+            eje: formatearDiaCorto(s.inicio),
+            nombre: `Semana del ${formatearDiaYMes(s.inicio)}`,
+            valor: s.minutos,
+          }))}
+          unidad="minutos"
+          descripcion={`Minutos de Shiné por semana, últimas ${SEMANAS_EN_GRAFICO} semanas`}
+          referencia={{
+            valor: programa.minutosMeditacionDiaria * 7,
+            texto: `${programa.minutosMeditacionDiaria * 7} minutos: media hora todos los días`,
+          }}
+          encabezado="Semana del"
+        />
+      </Tarjeta>
+    </>
   );
 }
 
@@ -201,11 +270,9 @@ function CalendarioPorTrimestre(props: { hoy: string; info: InfoDelDia; sesiones
   const [elegido, setElegido] = useState<NumeroTrimestre>(info.trimestre);
   const rango = rangoDelTrimestre(info.inicioAnio, elegido, programa);
   const hasta = sumarDias(rango.hasta, 1);
-  const minutos = minutosPorDia(sesiones, rango.desde, hasta);
-  const reg = regularidad(sesiones, rango.desde, hoy < rango.hasta ? hoy : rango.hasta);
 
   return (
-    <Tarjeta antetitulo="Meditación" titulo="Calendario del trimestre">
+    <Tarjeta antetitulo="Constancia" titulo="Calendario del trimestre">
       <div role="group" aria-label="Trimestre" className="grid grid-cols-4 gap-2">
         {TRIMESTRES.map((n) => (
           <button
@@ -225,14 +292,146 @@ function CalendarioPorTrimestre(props: { hoy: string; info: InfoDelDia; sesiones
       {rango.desde > hoy ? (
         <p className="text-tenue">Este trimestre todavía no empezó.</p>
       ) : (
-        <>
-          <p className="text-tenue">
-            Regularidad del trimestre: <span className="font-semibold text-tinta">{reg.porcentaje}%</span> (
-            {contar(reg.practicados, 'día', 'días')} de {reg.dias})
-          </p>
-          <MapaDeCalor desde={rango.desde} hasta={hasta} hoy={hoy} minutos={minutos} />
-        </>
+        <MapaDeCalor
+          desde={rango.desde}
+          hasta={hasta}
+          hoy={hoy}
+          minutos={minutosPorDia(sesiones, rango.desde, hasta)}
+        />
       )}
+    </Tarjeta>
+  );
+}
+
+/* ---------- Segunda parte: en números ---------- */
+
+function Dato({ etiqueta, children }: { etiqueta: string; children: ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 border-t border-borde pt-2 first:border-t-0 first:pt-0">
+      <dt className="text-tenue">{etiqueta}</dt>
+      <dd className="text-right font-semibold tabular-nums">{children}</dd>
+    </div>
+  );
+}
+
+function porcentaje(valor: number, meta: number): string {
+  return `${Math.round((valor / meta) * 100)}%`;
+}
+
+function EnNumeros(props: PropsPanel & { calculo: Calculo; carnet: FilaCarnet[] }) {
+  const { hoy, info, sesiones, conteos, calculo, carnet } = props;
+  const { metas, preliminar, chenresi, diaDelAnio, diasDelAnio } = calculo;
+  const anio = regularidad(sesiones, info.inicioAnio, hoy);
+  const trimestre = regularidad(sesiones, info.inicioTrimestre, hoy);
+  const meditacion = resumenMeditacion(sesiones, info.inicioAnio, hoy);
+  const racha = rachas(sesiones, hoy);
+  const estaSemana = minutosPorSemana(sesiones, hoy, 1)[0]?.minutos ?? 0;
+
+  return (
+    <>
+      <Tarjeta antetitulo="Año en curso" titulo="Meditación">
+        <dl className="space-y-2">
+          <Dato etiqueta="Regularidad del año">{anio.porcentaje}%</Dato>
+          <Dato etiqueta="Días con Shiné">
+            {anio.practicados} de {anio.dias}
+          </Dato>
+          <Dato etiqueta="Regularidad del trimestre">{trimestre.porcentaje}%</Dato>
+          <Dato etiqueta="Sesiones de Shiné">{formatearNumero(meditacion.sesiones)}</Dato>
+          <Dato etiqueta="Minutos meditados">{formatearNumero(meditacion.minutos)}</Dato>
+          <Dato etiqueta="Promedio por sesión">{meditacion.promedioPorSesion} min</Dato>
+          <Dato etiqueta="Promedio por día">{meditacion.promedioPorDia} min</Dato>
+          <Dato etiqueta="Esta semana">{formatearNumero(estaSemana)} min</Dato>
+          <Dato etiqueta="Racha actual">{contar(racha.actual, 'día', 'días')}</Dato>
+          <Dato etiqueta="Racha más larga">{contar(racha.maxima, 'día', 'días')}</Dato>
+        </dl>
+      </Tarjeta>
+
+      {preliminar && (
+        <NumerosDePractica
+          antetitulo={`${info.trimestre}º trimestre`}
+          titulo={programa.practicas[preliminar.practica].titulo}
+          total={preliminar.total}
+          meta={preliminar.meta}
+          diaActual={info.diaDelTrimestre}
+          diasTotales={info.diasDelTrimestre}
+          mejor={mejorDia(conteos, preliminar.practica, info.inicioTrimestre, info.finTrimestre)}
+          periodo="trimestre"
+          extra={
+            <Dato etiqueta="Acumulado de todos los años">
+              {formatearNumero(sumarConteos(conteos, { practica: preliminar.practica }))}
+            </Dato>
+          }
+        />
+      )}
+
+      <NumerosDePractica
+        antetitulo={chenresi.meta === null ? 'Año en curso · optativo' : 'Año en curso'}
+        titulo="Chenresi"
+        total={chenresi.total}
+        meta={chenresi.meta ?? 0}
+        diaActual={diaDelAnio}
+        diasTotales={diasDelAnio}
+        mejor={mejorDia(conteos, 'chenresi', info.inicioAnio, info.finAnio)}
+        periodo="año"
+      />
+
+      {metas.yidam && (
+        <Tarjeta antetitulo="Acumulado de todos los años" titulo="Yidam">
+          <dl className="space-y-2">
+            <Dato etiqueta="Mantras">
+              {formatearNumero(sumarConteos(conteos, { practica: metas.yidam.practica }))}
+            </Dato>
+            <Dato etiqueta="Del millón">
+              {porcentaje(sumarConteos(conteos, { practica: metas.yidam.practica }), metas.yidam.meta)}
+            </Dato>
+          </dl>
+        </Tarjeta>
+      )}
+
+      <TarjetaCarnet filas={carnet} />
+    </>
+  );
+}
+
+interface PropsNumeros {
+  antetitulo: string;
+  titulo: string;
+  total: number;
+  /** 0 = sin meta. */
+  meta: number;
+  diaActual: number;
+  diasTotales: number;
+  mejor: { fecha: string; total: number } | null;
+  periodo: 'trimestre' | 'año';
+  extra?: ReactNode;
+}
+
+function NumerosDePractica(props: PropsNumeros) {
+  const { total, meta, diaActual, diasTotales, mejor, periodo } = props;
+  const p = proyeccion(total, meta, diaActual, diasTotales);
+  return (
+    <Tarjeta antetitulo={props.antetitulo} titulo={props.titulo}>
+      <dl className="space-y-2">
+        <Dato etiqueta={`En el ${periodo}`}>{formatearNumero(total)}</Dato>
+        {meta > 0 && <Dato etiqueta="De la meta">{porcentaje(total, meta)}</Dato>}
+        <Dato etiqueta="Promedio por día">{formatearNumero(Math.round(p.ritmoDiario))}</Dato>
+        <Dato etiqueta="Mejor día">
+          {mejor ? `${formatearNumero(mejor.total)} (${formatearDiaCorto(mejor.fecha)})` : 'Sin registros'}
+        </Dato>
+        {meta > 0 && (
+          <Dato etiqueta="Ritmo parejo a hoy">
+            {formatearNumero(ritmoParejo(meta, diaActual, diasTotales))}
+          </Dato>
+        )}
+        <Dato etiqueta={`Al final del ${periodo}, a este ritmo`}>{formatearNumero(p.proyectado)}</Dato>
+        {meta > 0 && (
+          <Dato etiqueta="Para llegar a la meta, por día">
+            {p.faltanPorDia === null ? 'Meta cumplida' : formatearNumero(p.faltanPorDia)}
+          </Dato>
+        )}
+        <Dato etiqueta="Días que quedan">{formatearNumero(Math.max(0, diasTotales - diaActual + 1))}</Dato>
+        {props.extra}
+      </dl>
     </Tarjeta>
   );
 }

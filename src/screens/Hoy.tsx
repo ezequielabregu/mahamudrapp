@@ -47,6 +47,15 @@ export function Hoy() {
       titulo={nombreDelDia(hoy)}
       cabecera={info && <CabeceraTrimestre info={info} />}
     >
+      {actualizacionLista && (
+        <Aviso>
+          <p>Hay una versión nueva de la app.</p>
+          <button type="button" className={clasesBoton('principal')} onClick={actualizar}>
+            Actualizar ahora
+          </button>
+        </Aviso>
+      )}
+
       {mensaje && (
         <p role="status" className="font-semibold text-hecho">
           {mensaje}
@@ -105,15 +114,6 @@ export function Hoy() {
             Última copia de seguridad: {haceCuanto(dia.ultimaCopia, hoy)}.
           </p>
         )
-      )}
-
-      {actualizacionLista && (
-        <Aviso>
-          <p>Hay una versión nueva de la app.</p>
-          <button type="button" className={clasesBoton()} onClick={actualizar}>
-            Actualizar ahora
-          </button>
-        </Aviso>
       )}
     </Pantalla>
   );

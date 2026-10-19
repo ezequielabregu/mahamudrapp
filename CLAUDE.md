@@ -302,7 +302,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - **Hoy:** fecha, trimestre, reflexión y soporte del día, estado de las dos sesiones (pendiente / hecha), progreso del preliminar del trimestre, y un botón principal enorme: "Comenzar la práctica de hoy". Indicador de respaldo ("Última copia: hoy" / "Hace 10 días sin copia").
 - **Práctica (modo guiado):** un paso por pantalla, botones "Anterior" y "Siguiente" grandes, texto del paso con fonética y español, página del libro visible ("Libro, p. 13"). Temporizador cuando corresponde.
 - **Contador:** botón que ocupa al menos la mitad de la pantalla, número gigante, sonido suave en cada toque, botón "deshacer último", sumas rápidas.
-- **Avance (estadísticas):** regularidad del año (cifra principal), racha actual y más larga, minutos de esta semana; preliminar del trimestre con promedio, proyección y lo que falta por día; Chenresi del año igual; yidam acumulado (niveles 4 a 6); minutos de Shiné por semana (12 semanas, barras en oro, con tabla); calendario de calor por trimestre (escala de oro validada); y el "recuento" del carnet por año. Lógica en `src/domain/estadisticas.ts`. La pestaña se llama "Avance" porque "Estadísticas" no entra en la barra de cuatro pestañas con letra grande.
+- **Avance (estadísticas):** dos partes. **De un vistazo** (solo gráficos, cada uno elegido según su función): regularidad del año (cifra grande + barra), metas como *barra con marca* (lo hecho contra el "ritmo parejo a hoy" para llegar a la meta), calendario de calor del trimestre, columnas de los últimos 14 días del preliminar contra lo sugerido por día, y columnas de minutos de Shiné por semana. **En números**: meditación (regularidad, días, sesiones, minutos, promedios, rachas), cada práctica (% de la meta, promedio, mejor día, ritmo parejo, proyección, lo que falta por día, días restantes) y el recuento del carnet. Lógica en `src/domain/estadisticas.ts`. La pestaña se llama "Avance" porque "Estadísticas" no entra en la barra con letra grande.
 - **Programa:** la semana tipo de cada trimestre como en el cuadernillo (botones 1º a 4º, abre en el trimestre en curso, con el día de hoy resaltado), las fechas del trimestre, la meta del preliminar según el nivel, el recuadro "Desarrollo de una sesión" y "Durante el año" literales del cuadernillo.
 - **Respaldo:** exportar, importar, estado de Google Drive (etapa 2). Se entra desde Ajustes.
 - **Registrar:** práctica hecha fuera de la app y correcciones. Se entra desde Ajustes o desde el botón de la sesión en Hoy.
@@ -357,7 +357,7 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
   - **iPhone/iPad (Safari):** pantalla ilustrada paso a paso: "Tocá el botón Compartir → Agregar a inicio". Solo Safari permite instalar.
   - **Android (Chrome):** botón "Instalar app" con el evento `beforeinstallprompt`.
 - Si la app ya está instalada (`display-mode: standalone`), no mostrar la guía.
-- Cuando hay una actualización, avisar con un mensaje simple **solo en la pantalla Hoy** ("Actualizar ahora"), nunca en medio de una sesión o del contador.
+- Cuando hay una actualización, avisar con un mensaje simple **solo en la pantalla Hoy**, primero que todo ("Actualizar ahora"), nunca en medio de una sesión o del contador.
 
 ### 9.2 Respaldo, etapa 1 (manual)
 

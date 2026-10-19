@@ -157,3 +157,68 @@ export function resumenCarnet(
   }
   return filas;
 }
+
+/** Cuánto llevaría hoy un ritmo parejo que llega justo a la meta el último día del período. */
+export function ritmoParejo(meta: number, diaActual: number, diasTotales: number): number {
+  if (meta <= 0 || diasTotales <= 0) return 0;
+  return Math.round((meta * Math.min(diaActual, diasTotales)) / diasTotales);
+}
+
+/** Total de una práctica en cada uno de los últimos `dias` días hasta hoy, del más viejo al más nuevo. */
+export function totalesPorDia(
+  conteos: readonly MovimientoConteo[],
+  practica: MovimientoConteo['practica'],
+  hoy: string,
+  dias: number,
+): { fecha: string; total: number }[] {
+  return Array.from({ length: dias }, (_, i) => {
+    const fecha = sumarDias(hoy, i - dias + 1);
+    return { fecha, total: sumarConteos(conteos, { practica, desde: fecha, hasta: sumarDias(fecha, 1) }) };
+  });
+}
+
+/** El día con más cantidad de una práctica en un período (fin exclusivo). null si no hay nada. */
+export function mejorDia(
+  conteos: readonly MovimientoConteo[],
+  practica: MovimientoConteo['practica'],
+  desde: string,
+  hasta: string,
+): { fecha: string; total: number } | null {
+  const porDia = new Map<string, number>();
+  for (const c of conteos) {
+    if (c.practica !== practica || c.fechaLocal < desde || c.fechaLocal >= hasta) continue;
+    porDia.set(c.fechaLocal, (porDia.get(c.fechaLocal) ?? 0) + c.cantidad);
+  }
+  let mejor: { fecha: string; total: number } | null = null;
+  for (const [fecha, total] of porDia)
+    if (total > 0 && (!mejor || total > mejor.total)) mejor = { fecha, total };
+  return mejor;
+}
+
+export interface ResumenMeditacion {
+  sesiones: number;
+  minutos: number;
+  /** Minutos promedio por sesión de Shiné. */
+  promedioPorSesion: number;
+  /** Minutos promedio por día transcurrido, contando los días sin sesión. */
+  promedioPorDia: number;
+}
+
+/** Sesiones y minutos de Shiné en un período (ambos extremos inclusive). */
+export function resumenMeditacion(
+  sesiones: readonly SesionResumible[],
+  desde: string,
+  hasta: string,
+): ResumenMeditacion {
+  const delPeriodo = sesiones.filter(
+    (s) => s.tipo === 'shine' && s.fechaLocal >= desde && s.fechaLocal <= hasta,
+  );
+  const minutos = delPeriodo.reduce((total, s) => total + s.duracionSeg / 60, 0);
+  const dias = Math.max(1, diasEntre(desde, hasta) + 1);
+  return {
+    sesiones: delPeriodo.length,
+    minutos: Math.round(minutos),
+    promedioPorSesion: delPeriodo.length ? Math.round(minutos / delPeriodo.length) : 0,
+    promedioPorDia: Math.round(minutos / dias),
+  };
+}

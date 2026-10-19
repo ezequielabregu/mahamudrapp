@@ -5,6 +5,12 @@ const fechaLarga = new Intl.DateTimeFormat('es-AR', { weekday: 'long', day: 'num
 const fechaCorta = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
 const soloDia = new Intl.DateTimeFormat('es-AR', { weekday: 'long' });
 const diaMes = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long' });
+const diaMesCorto = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'numeric' });
+
+/** "18/10", para ejes de gráficos. */
+export function formatearDiaCorto(fecha: string): string {
+  return diaMesCorto.format(aDateLocal(fecha));
+}
 
 /** "Domingo" */
 export function nombreDelDia(fecha: string): string {

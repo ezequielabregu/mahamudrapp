@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import type { MovimientoConteo } from './conteos';
 import {
   inicioDeSemana,
+  mejorDia,
+  resumenMeditacion,
+  ritmoParejo,
+  totalesPorDia,
   minutosPorSemana,
   proyeccion,
   rachas,
@@ -118,5 +122,52 @@ describe('resumenCarnet', () => {
 
   it('antes del inicio no hay filas', () => {
     expect(resumenCarnet([], [], '2026-10-14', '2026-10-01')).toEqual([]);
+  });
+});
+
+describe('ritmoParejo', () => {
+  it('reparte la meta en partes iguales por día', () => {
+    expect(ritmoParejo(10000, 46, 92)).toBe(5000);
+    expect(ritmoParejo(10000, 5, 92)).toBe(543);
+    expect(ritmoParejo(0, 5, 92)).toBe(0);
+    expect(ritmoParejo(100, 120, 92)).toBe(100);
+  });
+});
+
+describe('totalesPorDia y mejorDia', () => {
+  const conteos: MovimientoConteo[] = [
+    { practica: 'postraciones', cantidad: 40, fechaLocal: '2026-10-16' },
+    { practica: 'postraciones', cantidad: 30, fechaLocal: '2026-10-18' },
+    { practica: 'postraciones', cantidad: 25, fechaLocal: '2026-10-18' },
+    { practica: 'postraciones', cantidad: -5, fechaLocal: '2026-10-18' },
+    { practica: 'chenresi', cantidad: 500, fechaLocal: '2026-10-17' },
+  ];
+
+  it('da el total de cada día, con las correcciones restadas', () => {
+    expect(totalesPorDia(conteos, 'postraciones', '2026-10-18', 3)).toEqual([
+      { fecha: '2026-10-16', total: 40 },
+      { fecha: '2026-10-17', total: 0 },
+      { fecha: '2026-10-18', total: 50 },
+    ]);
+  });
+
+  it('encuentra el día con más cantidad', () => {
+    expect(mejorDia(conteos, 'postraciones', '2026-10-14', '2026-10-19')).toEqual({
+      fecha: '2026-10-18',
+      total: 50,
+    });
+    expect(mejorDia(conteos, 'mandala', '2026-10-14', '2026-10-19')).toBeNull();
+  });
+});
+
+describe('resumenMeditacion', () => {
+  it('suma sesiones y minutos y saca promedios por sesión y por día', () => {
+    const sesiones = [shine('2026-10-14', 30), shine('2026-10-14', 10), shine('2026-10-16', 50)];
+    expect(resumenMeditacion(sesiones, '2026-10-14', '2026-10-18')).toEqual({
+      sesiones: 3,
+      minutos: 90,
+      promedioPorSesion: 30,
+      promedioPorDia: 18,
+    });
   });
 });
