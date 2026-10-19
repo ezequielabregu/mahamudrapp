@@ -6,6 +6,7 @@ import type { EscalaTexto } from './db/repositorio';
 import { usePreferencias } from './hooks/usePreferencias';
 import { Ajustes } from './screens/Ajustes';
 import { Contador } from './screens/Contador';
+import { Estadisticas } from './screens/Estadisticas';
 import { Hoy } from './screens/Hoy';
 import { Instalar } from './screens/Instalar';
 import { Programa } from './screens/Programa';
@@ -45,6 +46,7 @@ const router = createHashRouter([
     children: [
       { index: true, element: <Hoy /> },
       { path: 'programa', element: <Programa /> },
+      { path: 'avance', element: <Estadisticas /> },
       { path: 'registrar', element: <Registrar /> },
       { path: 'respaldo', element: <Respaldo /> },
       { path: 'ajustes', element: <Ajustes /> },

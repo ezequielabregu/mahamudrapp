@@ -38,7 +38,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,json,mp3,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,json,mp3,woff2}'],
       },
     }),
   ],

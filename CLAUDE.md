@@ -302,12 +302,12 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - **Hoy:** fecha, trimestre, reflexión y soporte del día, estado de las dos sesiones (pendiente / hecha), progreso del preliminar del trimestre, y un botón principal enorme: "Comenzar la práctica de hoy". Indicador de respaldo ("Última copia: hoy" / "Hace 10 días sin copia").
 - **Práctica (modo guiado):** un paso por pantalla, botones "Anterior" y "Siguiente" grandes, texto del paso con fonética y español, página del libro visible ("Libro, p. 13"). Temporizador cuando corresponde.
 - **Contador:** botón que ocupa al menos la mitad de la pantalla, número gigante, sonido suave en cada toque, botón "deshacer último", sumas rápidas.
-- **Estadísticas:** regularidad, racha actual y máxima, acumulados por práctica, proyección hacia la meta del trimestre, minutos meditados por semana, calendario tipo heatmap del año, y el resumen en formato del carnet.
+- **Avance (estadísticas):** regularidad del año (cifra principal), racha actual y más larga, minutos de esta semana; preliminar del trimestre con promedio, proyección y lo que falta por día; Chenresi del año igual; yidam acumulado (niveles 4 a 6); minutos de Shiné por semana (12 semanas, barras en oro, con tabla); calendario de calor por trimestre (escala de oro validada); y el "recuento" del carnet por año. Lógica en `src/domain/estadisticas.ts`. La pestaña se llama "Avance" porque "Estadísticas" no entra en la barra de cuatro pestañas con letra grande.
 - **Programa:** la semana tipo de cada trimestre como en el cuadernillo (botones 1º a 4º, abre en el trimestre en curso, con el día de hoy resaltado), las fechas del trimestre, la meta del preliminar según el nivel, el recuadro "Desarrollo de una sesión" y "Durante el año" literales del cuadernillo.
 - **Respaldo:** exportar, importar, estado de Google Drive (etapa 2). Se entra desde Ajustes.
 - **Registrar:** práctica hecha fuera de la app y correcciones. Se entra desde Ajustes o desde el botón de la sesión en Hoy.
 - **Ajustes:** arriba, accesos a Registrar y Copia; después nivel, compromiso (solo nivel 1), tamaño de texto, sonido, fecha de inicio, estado del teléfono; al final, borrar todos los registros.
-- **Navegación:** tres pestañas abajo, Hoy · Programa · Ajustes. Las subpantallas (Registrar, Copia, Instalar) tienen un botón visible "← Ajustes" en la banda.
+- **Navegación:** cuatro pestañas abajo, Hoy · Programa · Avance · Ajustes. Las subpantallas (Registrar, Copia, Instalar) tienen un botón visible "← Ajustes" en la banda.
 - **Instalar:** guía ilustrada según el sistema detectado (ver 9.1).
 
 ### 8.2 Accesibilidad (obligatorio)
@@ -342,7 +342,9 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
 - **Paleta:** granate de los hábitos (`acento` #7b1e22, `banda` #5e1418), oro azafrán (`oro` #8f5b00 para texto, `oro-claro` #f2b33d sobre granate) y papel cálido (`fondo` #f7f1e6). Los cinco colores de las banderas de oración (lungta: azul, blanco, rojo, verde, amarillo, en ese orden) van solo como franja fina arriba de cada pantalla (`components/Lungta.tsx`), tomados de la paleta "Colors of Buddhism" (schemecolor.com), con el azul y el amarillo algo más profundos. Todos los pares de texto verificados en WCAG AA o más.
 - **Tema oscuro:** respeta `prefers-color-scheme`; el contador usa siempre `.tema-practica`.
 - **Tipografías** (servidas desde la app, funcionan sin conexión): **Atkinson Hyperlegible Next** para el texto (diseñada por el Braille Institute para baja visión) y **Fraunces** para títulos y números grandes. Las cifras 0 a 9 se toman de Fraunces en todo el texto (`@font-face 'Cifras'` con `unicode-range`), porque Atkinson dibuja el cero con barra.
-- **Estructura:** cada pantalla usa `Pantalla` (banda granate con el título) y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
+- **Estructura:** cada pantalla usa `Pantalla` (banda granate con el título y Vajradhara a la derecha) y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
+- **Imagen:** Vajradhara, escultura tibetana del siglo XV del Metropolitan Museum (dominio público, CC0), con el fondo recortado. Autoría y cambios en `public/imagenes/LICENCIAS.md`. No va en el contador: la práctica es sin elementos ajenos.
+- **Gráficos:** SVG propio siguiendo la guía de dataviz: una sola serie en oro, marcas finas, sin doble eje, y siempre una tabla o texto con los mismos valores.
 
 ## 9. PWA, instalación y respaldo
 

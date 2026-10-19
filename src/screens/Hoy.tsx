@@ -43,8 +43,8 @@ export function Hoy() {
 
   return (
     <Pantalla
-      antetitulo={nombreDelDia(hoy)}
-      titulo={formatearDiaYMes(hoy)}
+      antetitulo={formatearDiaYMes(hoy)}
+      titulo={nombreDelDia(hoy)}
       cabecera={info && <CabeceraTrimestre info={info} />}
     >
       {mensaje && (
@@ -174,9 +174,8 @@ function TarjetaPreliminar({ info, preliminar }: { info: InfoDelDia; preliminar:
       titulo={datos.titulo}
       estado={<Insignia hecho={hecha} texto={`Hoy: ${formatearNumero(hoy)}`} />}
     >
-      <Avance etiqueta="En el trimestre" valor={trimestre} meta={metaTrimestre}>
-        {metaDiaria && <p className="text-tenue">Sugerido por día: {formatearNumero(metaDiaria)}</p>}
-      </Avance>
+      {metaDiaria && <Avance etiqueta="Hoy, de lo sugerido" valor={hoy} meta={metaDiaria} />}
+      <Avance etiqueta="En el trimestre" valor={trimestre} meta={metaTrimestre} />
       {guia ? (
         <Pasos plegados={hecha}>
           <ListaPasos pasos={pasosDelDia(guia, info)} info={info} />

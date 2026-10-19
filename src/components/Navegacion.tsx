@@ -1,9 +1,10 @@
 import { NavLink, useLocation } from 'react-router';
 
-/** Tres pestañas. Registrar, Copia e Instalar viven dentro de Ajustes. */
+/** Cuatro pestañas. Registrar, Copia e Instalar viven dentro de Ajustes. */
 const destinos = [
   { a: '/', texto: 'Hoy', tambien: [] },
   { a: '/programa', texto: 'Programa', tambien: [] },
+  { a: '/avance', texto: 'Avance', tambien: [] },
   { a: '/ajustes', texto: 'Ajustes', tambien: ['/registrar', '/respaldo', '/instalar'] },
 ];
 

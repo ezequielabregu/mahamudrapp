@@ -279,6 +279,8 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
 
     sesionesEntre: (desde: string, hasta: string) =>
       db.sesiones.where('fechaLocal').between(desde, hasta, true, false).toArray(),
+    todasLasSesiones: () => db.sesiones.toArray(),
+    todosLosConteos: () => db.conteos.toArray(),
     conteosDePractica: (practica: Practica) => db.conteos.where('practica').equals(practica).toArray(),
     conteosEntre: (desde: string, hasta: string) =>
       db.conteos.where('fechaLocal').between(desde, hasta, true, false).toArray(),

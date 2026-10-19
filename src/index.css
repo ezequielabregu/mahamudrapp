@@ -22,7 +22,7 @@
   --color-tinta: #2a1a14;
   --color-tenue: #6b5444;
   --color-borde: #e7dac5;
-  --color-pista: #efe3d0;
+  --color-pista: #eadbc0;
   --color-acento: #7b1e22;
   --color-sobre-acento: #fff8ec;
   --color-oro: #8f5b00;
@@ -33,6 +33,10 @@
   --color-hecho: #00703a;
   --color-aviso: #fdf0d6;
   --color-peligro: #a8001a;
+  /* Escala de calor (minutos de Shiné por día): un solo tono, validada con el script de dataviz. */
+  --color-calor-1: #d9a94a;
+  --color-calor-2: #b07817;
+  --color-calor-3: #744800;
 
   --color-lungta-azul: #1d3fbf;
   --color-lungta-blanco: #fefefe;
@@ -62,6 +66,9 @@
     --color-hecho: #5cc98f;
     --color-aviso: #2e2116;
     --color-peligro: #ff8a7a;
+    --color-calor-1: #6b4a1c;
+    --color-calor-2: #b47c2c;
+    --color-calor-3: #eaa944;
   }
 }
 

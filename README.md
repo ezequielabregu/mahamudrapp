@@ -80,6 +80,8 @@ src/
 
 El programa sale del cuadernillo del programa de Mahamudra de Bokar Rinpoche, y la estructura de las sesiones, de las indicaciones de Lama Rinchen en el seminario. Las páginas citadas corresponden al libro **"El Arco Iris de la Sabiduría"** (© Ediciones Claire Lumière, traducción revisada por Lama Rinchen Kandro).
 
+La imagen de Vajradhara es una escultura tibetana del siglo XV del Metropolitan Museum of Art, en dominio público (Open Access, CC0); detalles en `public/imagenes/LICENCIAS.md`.
+
 El PDF del libro y la transcripción del seminario no se publican en este repositorio. La app no inventa prácticas ni instrucciones: ante una duda de contenido, se consulta antes de cargarla.
 
 ## Próximos pasos
