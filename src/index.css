@@ -49,27 +49,32 @@
   --font-serif: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-fondo: #140e0c;
-    --color-superficie: #1f1714;
-    --color-tinta: #f4eadb;
-    --color-tenue: #cbb8a3;
-    --color-borde: #3a2c25;
-    --color-pista: #3a2c25;
-    --color-acento: #eaa944;
-    --color-sobre-acento: #1a100b;
-    --color-oro: #eaa944;
-    --color-banda: #2b1214;
-    --color-sobre-banda: #f4eadb;
-    --color-resalte: #2c201a;
-    --color-hecho: #5cc98f;
-    --color-aviso: #2e2116;
-    --color-peligro: #ff8a7a;
-    --color-calor-1: #6b4a1c;
-    --color-calor-2: #b47c2c;
-    --color-calor-3: #eaa944;
-  }
+/* Tema oscuro. data-tema lo pone src/tema.ts según la Apariencia elegida en Ajustes
+   (por defecto, oscura; "automática" sigue al teléfono). */
+:root {
+  color-scheme: light;
+}
+
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --color-fondo: #140e0c;
+  --color-superficie: #1f1714;
+  --color-tinta: #f4eadb;
+  --color-tenue: #cbb8a3;
+  --color-borde: #3a2c25;
+  --color-pista: #3a2c25;
+  --color-acento: #eaa944;
+  --color-sobre-acento: #1a100b;
+  --color-oro: #eaa944;
+  --color-banda: #2b1214;
+  --color-sobre-banda: #f4eadb;
+  --color-resalte: #2c201a;
+  --color-hecho: #5cc98f;
+  --color-aviso: #2e2116;
+  --color-peligro: #ff8a7a;
+  --color-calor-1: #6b4a1c;
+  --color-calor-2: #b47c2c;
+  --color-calor-3: #eaa944;
 }
 
 .tema-practica {

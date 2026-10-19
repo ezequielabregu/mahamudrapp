@@ -275,7 +275,7 @@ interface Conteo {
 }
 
 interface Ajuste { clave: string; valor: unknown; actualizadoEn: string; }
-// claves actuales: dispositivoId, fechaInicio, nivel, compromiso, escalaTexto, sonidoContador
+// claves actuales: dispositivoId, fechaInicio, nivel, compromiso, escalaTexto, sonidoContador, apariencia
 // previstas: sonidoInicio, sonidoFin, campanaIntermedia, mostrarFonetica
 
 interface Borrador {        // conteo en curso, NO es registro de práctica
@@ -319,7 +319,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - Solo toques simples. Nada de deslizar, mantener presionado, doble toque ni menús ocultos.
 - Etiquetas claras en español, sin iconos sin texto. Única excepción, pedida por el autor: el botón "i" de cada paso, con `aria-label` ("Ver la explicación de...") y área táctil de 60 px.
 - Acciones destructivas o irreversibles con confirmación explícita.
-- Respetar `prefers-reduced-motion` y `prefers-color-scheme`.
+- Respetar `prefers-reduced-motion`; `prefers-color-scheme` se respeta con la Apariencia "Automática".
 - Navegable con lector de pantalla (roles y `aria-label` correctos).
 
 ### 8.3 Modo práctica sobrio
@@ -341,7 +341,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. Los tokens están en `src/index.css`; nunca usar colores sueltos en los componentes.
 
 - **Paleta:** granate de los hábitos (`acento` #7b1e22, `banda` #5e1418), oro azafrán (`oro` #8f5b00 para texto, `oro-claro` #f2b33d sobre granate) y papel cálido (`fondo` #f7f1e6). Los cinco colores de las banderas de oración (lungta: azul, blanco, rojo, verde, amarillo, en ese orden) van solo como franja fina arriba de cada pantalla (`components/Lungta.tsx`), tomados de la paleta "Colors of Buddhism" (schemecolor.com), con el azul y el amarillo algo más profundos. Todos los pares de texto verificados en WCAG AA o más.
-- **Tema oscuro:** respeta `prefers-color-scheme`; el contador usa siempre `.tema-practica`.
+- **Apariencia** (Ajustes): Automática (sigue al teléfono, `prefers-color-scheme`), Clara u Oscura. **Por defecto, Oscura**: para meditar no se busca una pantalla luminosa. `src/tema.ts` pone `data-tema` en `<html>` y el color de la barra del sistema; un script en `index.html` pinta el tema antes de cargar la app (copia en localStorage, la preferencia real está en la base). `color-scheme` declarado para que Chrome no oscurezca la app por su cuenta. El contador usa siempre `.tema-practica`.
 - **Tipografías** (servidas desde la app, funcionan sin conexión): **Atkinson Hyperlegible Next** para el texto (diseñada por el Braille Institute para baja visión) y **Fraunces** para títulos y números grandes. Las cifras 0 a 9 se toman de Fraunces en todo el texto (`@font-face 'Cifras'` con `unicode-range`), porque Atkinson dibuja el cero con barra.
 - **Estructura:** cada pantalla usa `Pantalla` (banda granate con el título y Vajradhara a la derecha) y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
 - **Imagen:** Vajradhara, escultura tibetana del siglo XV del Metropolitan Museum (dominio público, CC0), con el fondo recortado. Autoría y cambios en `public/imagenes/LICENCIAS.md`. No va en el contador: la práctica es sin elementos ajenos.

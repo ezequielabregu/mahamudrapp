@@ -4,13 +4,19 @@ import { Link } from 'react-router';
 import { claseCampo, claseOpcion, clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
-import { repositorio, type EscalaTexto, type Preferencias } from '../db/repositorio';
+import { repositorio, type Apariencia, type EscalaTexto, type Preferencias } from '../db/repositorio';
 import { esFechaValida } from '../domain/fechas';
 import { contar, formatearFechaCorta, haceCuanto } from '../domain/formato';
 import { programa } from '../domain/programa';
 import { useHoy } from '../hooks/useHoy';
 import { useInstalacion } from '../hooks/useInstalacion';
 import { usePreferencias } from '../hooks/usePreferencias';
+
+const APARIENCIAS: { id: Apariencia; titulo: string; descripcion: string }[] = [
+  { id: 'automatica', titulo: 'Automática', descripcion: 'Sigue el modo claro u oscuro del teléfono.' },
+  { id: 'clara', titulo: 'Clara', descripcion: 'Fondo claro, como papel.' },
+  { id: 'oscura', titulo: 'Oscura', descripcion: 'Poca luz en la pantalla, para meditar.' },
+];
 
 const ESCALAS: { id: EscalaTexto; titulo: string }[] = [
   { id: 'pequeno', titulo: 'Pequeño' },
@@ -88,6 +94,27 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
           </fieldset>
         </Seccion>
       )}
+
+      <Seccion titulo="Apariencia">
+        <fieldset className="space-y-2">
+          <legend className="sr-only">Apariencia</legend>
+          {APARIENCIAS.map((a) => (
+            <label key={a.id} className={claseOpcion}>
+              <input
+                type="radio"
+                name="apariencia"
+                checked={prefs.apariencia === a.id}
+                onChange={() => repositorio.guardarPreferencia('apariencia', a.id)}
+                className="size-6 shrink-0 accent-acento"
+              />
+              <span>
+                <span className="block">{a.titulo}</span>
+                <span className="block font-normal text-tenue">{a.descripcion}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      </Seccion>
 
       <Seccion titulo="Tamaño del texto">
         <fieldset className="space-y-2">

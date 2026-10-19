@@ -12,6 +12,7 @@ import { Instalar } from './screens/Instalar';
 import { Programa } from './screens/Programa';
 import { Registrar } from './screens/Registrar';
 import { Respaldo } from './screens/Respaldo';
+import { aplicarApariencia } from './tema';
 
 export interface ContextoLayout {
   actualizacionLista: boolean;
@@ -64,11 +65,15 @@ const router = createHashRouter([
 ]);
 
 export function App() {
-  const escala = usePreferencias()?.escalaTexto ?? 'pequeno';
+  const prefs = usePreferencias();
+  const escala = prefs?.escalaTexto ?? 'pequeno';
+  const apariencia = prefs?.apariencia;
 
   useEffect(() => {
     document.documentElement.style.fontSize = `${125 * FACTOR_ESCALA[escala]}%`;
   }, [escala]);
+
+  useEffect(() => (apariencia ? aplicarApariencia(apariencia) : undefined), [apariencia]);
 
   return <RouterProvider router={router} />;
 }

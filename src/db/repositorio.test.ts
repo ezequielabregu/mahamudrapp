@@ -171,4 +171,13 @@ describe('repositorio', () => {
     await db.ajustes.put({ clave: 'escalaTexto', valor: 'gigante', actualizadoEn: '' });
     expect((await repo.leerPreferencias()).escalaTexto).toBe('pequeno');
   });
+
+  it('la apariencia por defecto es oscura y un valor desconocido vuelve a oscura', async () => {
+    const { db, repo } = nuevoRepo();
+    expect((await repo.leerPreferencias()).apariencia).toBe('oscura');
+    await repo.guardarPreferencia('apariencia', 'automatica');
+    expect((await repo.leerPreferencias()).apariencia).toBe('automatica');
+    await db.ajustes.put({ clave: 'apariencia', valor: 'violeta', actualizadoEn: '' });
+    expect((await repo.leerPreferencias()).apariencia).toBe('oscura');
+  });
 });

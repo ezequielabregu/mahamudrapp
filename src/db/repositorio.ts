@@ -18,6 +18,9 @@ import {
   type TipoSesion,
 } from './schema';
 
+export type Apariencia = 'automatica' | 'clara' | 'oscura';
+const APARIENCIAS_VALIDAS: Apariencia[] = ['automatica', 'clara', 'oscura'];
+
 export type EscalaTexto = 'pequeno' | 'normal' | 'grande' | 'muy-grande';
 const ESCALAS_VALIDAS: EscalaTexto[] = ['pequeno', 'normal', 'grande', 'muy-grande'];
 
@@ -27,6 +30,7 @@ export interface Preferencias {
   compromiso: CompromisoId;
   escalaTexto: EscalaTexto;
   sonidoContador: boolean;
+  apariencia: Apariencia;
 }
 
 export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
@@ -35,6 +39,8 @@ export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   compromiso: 'completo',
   escalaTexto: 'pequeno',
   sonidoContador: true,
+  // Oscura por defecto: para meditar no se busca una pantalla luminosa.
+  apariencia: 'oscura',
 };
 
 export interface NuevaSesion {
@@ -94,6 +100,8 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     if ((prefs.escalaTexto as string) === 'chica') prefs.escalaTexto = 'pequeno';
     if (!ESCALAS_VALIDAS.includes(prefs.escalaTexto))
       prefs.escalaTexto = PREFERENCIAS_POR_DEFECTO.escalaTexto;
+    if (!APARIENCIAS_VALIDAS.includes(prefs.apariencia))
+      prefs.apariencia = PREFERENCIAS_POR_DEFECTO.apariencia;
     return prefs;
   }
 
