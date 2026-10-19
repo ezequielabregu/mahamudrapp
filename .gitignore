@@ -1,0 +1,11 @@
+node_modules
+dist
+dev-dist
+.DS_Store
+.~lock*
+
+# El PDF del libro no se publica: la app solo usa los textos.
+*.pdf
+
+# Transcripción del seminario: tiene nombres y comentarios personales de participantes.
+referencias/indicaciones_Lama_Rinchen.md

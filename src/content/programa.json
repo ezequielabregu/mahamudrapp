@@ -1,0 +1,169 @@
+{
+  "fuente": "Cuadernillo del programa de Mahamudra de Bokar Rinpoche (transcripción en referencias/Programa_Mahamudra_Bokar_Rinpoche.xlsx) e indicaciones de Lama Rinchen.",
+  "fechaInicioPorDefecto": "2026-10-14",
+  "mesesPorTrimestre": 3,
+  "minutosMeditacionDiaria": 30,
+  "metaChenresiAnual": 100000,
+  "compromisos": [
+    {
+      "id": "minimo",
+      "titulo": "Mínimo",
+      "descripcion": "Media hora de meditación por día y 100.000 mantras de Chenresi al año.",
+      "metaPreliminarTrimestre": 0
+    },
+    {
+      "id": "medio",
+      "titulo": "Medio",
+      "descripcion": "Lo mismo, más 5.000 de cada preliminar.",
+      "metaPreliminarTrimestre": 5000
+    },
+    {
+      "id": "completo",
+      "titulo": "Completo",
+      "descripcion": "Lo mismo, más 10.000 de cada preliminar.",
+      "metaPreliminarTrimestre": 10000
+    }
+  ],
+  "practicas": {
+    "postraciones": {
+      "titulo": "Postraciones",
+      "unidad": "postraciones",
+      "sumasRapidas": [
+        { "cantidad": 10, "etiqueta": "+10" },
+        { "cantidad": 21, "etiqueta": "+21" },
+        { "cantidad": 108, "etiqueta": "+108" }
+      ]
+    },
+    "vajrasattva": {
+      "titulo": "Mantras de Vajrasattva",
+      "unidad": "mantras",
+      "sumasRapidas": []
+    },
+    "mandala": {
+      "titulo": "Ofrendas de mandala",
+      "unidad": "ofrendas",
+      "sumasRapidas": []
+    },
+    "guruyoga": {
+      "titulo": "Plegarias de guru yoga",
+      "unidad": "plegarias",
+      "sumasRapidas": []
+    },
+    "chenresi": {
+      "titulo": "Mantras de Chenresi",
+      "unidad": "mantras",
+      "sumasRapidas": [{ "cantidad": 100, "etiqueta": "+1 mala (100)" }],
+      "nota": "Una mala de 108 cuentas suma 100: las 8 restantes son de regalo."
+    }
+  },
+  "trimestres": [
+    {
+      "numero": 1,
+      "preliminar": "postraciones",
+      "soportes": {
+        "lunes": "respiraciones",
+        "martes": "cinco-elementos",
+        "miercoles": "objeto-pequeno",
+        "jueves": "tigle-entrecejo",
+        "viernes": "buda-enfrente",
+        "sabado": "tigle-corazon",
+        "domingo": "sin-soporte"
+      }
+    },
+    {
+      "numero": 2,
+      "preliminar": "vajrasattva",
+      "soportes": {
+        "lunes": "respiraciones",
+        "martes": "cinco-elementos",
+        "miercoles": "tigle-entrecejo",
+        "jueves": "buda-enfrente",
+        "viernes": "sin-soporte",
+        "sabado": "tigle-corazon",
+        "domingo": "sin-soporte"
+      }
+    },
+    {
+      "numero": 3,
+      "preliminar": "mandala",
+      "soportes": {
+        "lunes": "respiraciones",
+        "martes": "tigle-entrecejo",
+        "miercoles": "sin-soporte",
+        "jueves": "buda-enfrente",
+        "viernes": "sin-soporte",
+        "sabado": "tigle-corazon",
+        "domingo": "sin-soporte"
+      }
+    },
+    {
+      "numero": 4,
+      "preliminar": "guruyoga",
+      "soportes": {
+        "lunes": "sin-soporte",
+        "martes": "respiraciones",
+        "miercoles": "sin-soporte",
+        "jueves": "tigle-entrecejo",
+        "viernes": "sin-soporte",
+        "sabado": "tigle-corazon",
+        "domingo": "sin-soporte"
+      }
+    }
+  ],
+  "reflexionesPorDia": {
+    "lunes": "existencia-humana",
+    "martes": "bodhicitta",
+    "miercoles": "muerte",
+    "jueves": "bodhicitta",
+    "viernes": "karma",
+    "sabado": "bodhicitta",
+    "domingo": "samsara"
+  },
+  "reflexiones": {
+    "existencia-humana": {
+      "titulo": "La preciosa existencia humana",
+      "pagina": 23
+    },
+    "bodhicitta": {
+      "titulo": "La bodhicitta y breve visualización de tong-len",
+      "nota": "Elegí con quién hacer tong-len (con vos, seres queridos, desconocidos o seres no queridos) y si hoy enfatizás dar o tomar."
+    },
+    "muerte": {
+      "titulo": "La muerte y la impermanencia",
+      "pagina": 23
+    },
+    "karma": {
+      "titulo": "La ley del karma",
+      "pagina": 23
+    },
+    "samsara": {
+      "titulo": "La naturaleza decepcionante del samsara",
+      "pagina": 23
+    }
+  },
+  "soportes": {
+    "respiraciones": {
+      "titulo": "7 veces 21 respiraciones",
+      "nota": "Las 7 veces son orientativas: manda el tiempo de la sesión. Entre cada ciclo de 21, reposar."
+    },
+    "cinco-elementos": {
+      "titulo": "Los cinco elementos"
+    },
+    "objeto-pequeno": {
+      "titulo": "Soporte exterior impuro de pequeño tamaño"
+    },
+    "tigle-entrecejo": {
+      "titulo": "Tigle en el entrecejo"
+    },
+    "buda-enfrente": {
+      "titulo": "Buda visualizado enfrente"
+    },
+    "tigle-corazon": {
+      "titulo": "Tigle (o Lama) en el corazón"
+    },
+    "sin-soporte": {
+      "titulo": "Shiné sin soporte (o lhaktong)",
+      "nota": "Antes de meditar, Invocación a Milarepa (libro, p. 12)."
+    }
+  }
+}

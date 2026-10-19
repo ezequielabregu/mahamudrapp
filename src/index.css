@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+/* Paleta: papel cálido y granate en la vista general; tema oscuro en la práctica.
+   Contraste de texto principal y secundario por encima de WCAG AA (y AAA en tinta). */
+@theme {
+  --color-fondo: #f6f0e4;
+  --color-superficie: #fffaf1;
+  --color-tinta: #231910;
+  --color-tenue: #57463a;
+  --color-borde: #cdbb9f;
+  --color-acento: #6e1c27;
+  --color-sobre-acento: #ffffff;
+  --color-aviso: #fbe9c8;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fondo: #15110d;
+    --color-superficie: #211a14;
+    --color-tinta: #f3eadb;
+    --color-tenue: #cbbca4;
+    --color-borde: #4a3d31;
+    --color-acento: #e6a955;
+    --color-sobre-acento: #1b130b;
+    --color-aviso: #3a2c17;
+  }
+}
+
+.tema-practica {
+  --color-fondo: #100d0a;
+  --color-superficie: #1c1611;
+  --color-tinta: #f3eadb;
+  --color-tenue: #cbbca4;
+  --color-borde: #4a3d31;
+  --color-acento: #e6a955;
+  --color-sobre-acento: #1b130b;
+  --color-aviso: #3a2c17;
+}
+
+/* 1rem = 20 px con el tamaño por defecto del teléfono; respeta el tamaño que elija cada persona.
+   La escala de Ajustes se aplica cambiando este valor desde la app. */
+html {
+  font-size: 125%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+}
+
+button,
+a,
+input,
+label {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
