@@ -162,4 +162,13 @@ describe('repositorio', () => {
     reloj = new Date(2026, 9, 19, 9, 0);
     await expect(repo.borrarRegistros()).rejects.toThrow(/copia/);
   });
+
+  it('el tamaño de texto por defecto es Pequeño y el valor viejo "chica" se convierte', async () => {
+    const { db, repo } = nuevoRepo();
+    expect((await repo.leerPreferencias()).escalaTexto).toBe('pequeno');
+    await db.ajustes.put({ clave: 'escalaTexto', valor: 'chica', actualizadoEn: '' });
+    expect((await repo.leerPreferencias()).escalaTexto).toBe('pequeno');
+    await db.ajustes.put({ clave: 'escalaTexto', valor: 'gigante', actualizadoEn: '' });
+    expect((await repo.leerPreferencias()).escalaTexto).toBe('pequeno');
+  });
 });

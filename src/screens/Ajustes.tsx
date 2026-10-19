@@ -13,7 +13,7 @@ import { useInstalacion } from '../hooks/useInstalacion';
 import { usePreferencias } from '../hooks/usePreferencias';
 
 const ESCALAS: { id: EscalaTexto; titulo: string }[] = [
-  { id: 'chica', titulo: 'Chica' },
+  { id: 'pequeno', titulo: 'Pequeño' },
   { id: 'normal', titulo: 'Normal' },
   { id: 'grande', titulo: 'Grande' },
   { id: 'muy-grande', titulo: 'Muy grande' },

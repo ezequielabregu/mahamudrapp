@@ -18,7 +18,8 @@ import {
   type TipoSesion,
 } from './schema';
 
-export type EscalaTexto = 'chica' | 'normal' | 'grande' | 'muy-grande';
+export type EscalaTexto = 'pequeno' | 'normal' | 'grande' | 'muy-grande';
+const ESCALAS_VALIDAS: EscalaTexto[] = ['pequeno', 'normal', 'grande', 'muy-grande'];
 
 export interface Preferencias {
   fechaInicio: string;
@@ -32,7 +33,7 @@ export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   fechaInicio: programa.fechaInicioPorDefecto,
   nivel: 1,
   compromiso: 'completo',
-  escalaTexto: 'normal',
+  escalaTexto: 'pequeno',
   sonidoContador: true,
 };
 
@@ -88,7 +89,12 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
   async function leerPreferencias(): Promise<Preferencias> {
     const filas = await db.ajustes.toArray();
     const valores = Object.fromEntries(filas.map((f) => [f.clave, f.valor]));
-    return { ...PREFERENCIAS_POR_DEFECTO, ...pick(valores, Object.keys(PREFERENCIAS_POR_DEFECTO)) };
+    const prefs = { ...PREFERENCIAS_POR_DEFECTO, ...pick(valores, Object.keys(PREFERENCIAS_POR_DEFECTO)) };
+    // 'chica' fue el nombre anterior de 'pequeno'; cualquier otro valor desconocido vuelve al de por defecto.
+    if ((prefs.escalaTexto as string) === 'chica') prefs.escalaTexto = 'pequeno';
+    if (!ESCALAS_VALIDAS.includes(prefs.escalaTexto))
+      prefs.escalaTexto = PREFERENCIAS_POR_DEFECTO.escalaTexto;
+    return prefs;
   }
 
   async function guardarPreferencia<K extends keyof Preferencias>(clave: K, valor: Preferencias[K]) {

@@ -312,7 +312,8 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 
 ### 8.2 Accesibilidad (obligatorio)
 
-- Tamaño base de texto ≥ 20 px, textos de práctica ≥ 24 px, todo en `rem` para respetar el tamaño configurado en el teléfono. Escala adicional en Ajustes: Chica (18 px, pedida por el autor, nunca por defecto), Normal (20 px, por defecto), Grande y Muy grande.
+- Tamaño base de texto: **18 px por defecto** (escala "Pequeño", decisión del autor), textos de práctica ≥ 24 px, todo en `rem` para respetar el tamaño configurado en el teléfono. Escalas en Ajustes: Pequeño (18 px, por defecto), Normal (20 px), Grande y Muy grande. Para la versión grupal, reconsiderar el tamaño por defecto con usuarios reales (ver 12.6).
+- Pestañas de abajo: sin contorno de foco (en Android aparecía al tocar, como un cuadrado amarillo). La activa se marca con texto dorado y rayita.
 - Contraste mínimo WCAG AA; apuntar a AAA en textos de práctica.
 - Áreas táctiles de al menos 56 × 56 px; botones principales de 72 px de alto o más.
 - Solo toques simples. Nada de deslizar, mantener presionado, doble toque ni menús ocultos.

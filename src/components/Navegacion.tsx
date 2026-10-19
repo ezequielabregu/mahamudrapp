@@ -25,15 +25,18 @@ export function Navegacion() {
                 const activa = isActive || d.tambien.includes(pathname);
                 return (
                   // Con letra muy grande en un teléfono angosto, las cuatro etiquetas no entran: se achican hasta caber.
+                  // Sin contorno de foco: Chrome en Android a veces lo muestra al tocar, como un cuadrado
+                  // amarillo. La pestaña activa se marca con el texto dorado y la rayita, también al enfocarla.
                   'group flex min-h-[3.25rem] flex-col items-center justify-center gap-1 text-[min(1rem,5vw)] ' +
-                  (activa ? 'activa font-bold text-acento' : 'text-tenue')
+                  'outline-none focus-visible:outline-none ' +
+                  (activa ? 'activa font-bold text-oro' : 'text-tenue')
                 );
               }}
             >
               <span>{d.texto}</span>
               <span
                 aria-hidden="true"
-                className="h-1 w-6 rounded-full bg-transparent group-[.activa]:bg-oro"
+                className="h-1 w-6 rounded-full bg-transparent group-focus-visible:bg-borde group-[.activa]:bg-oro"
               />
             </NavLink>
           </li>

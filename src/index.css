@@ -86,10 +86,10 @@
   --color-aviso: #2e2116;
 }
 
-/* 1rem = 20 px con el tamaño por defecto del teléfono; respeta el que elija cada persona.
-   La escala de Ajustes se aplica cambiando este valor desde la app. */
+/* 1rem = 18 px con el tamaño por defecto del teléfono (escala "Pequeño", la de por defecto);
+   respeta el que elija cada persona. La escala de Ajustes se aplica cambiando este valor desde la app. */
 html {
-  font-size: 125%;
+  font-size: 112.5%;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -117,9 +117,12 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
-:focus-visible {
-  outline: 3px solid var(--color-oro);
-  outline-offset: 3px;
+/* En la capa base, para que un componente pueda quitarlo con una clase (las pestañas lo hacen). */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-oro);
+    outline-offset: 3px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

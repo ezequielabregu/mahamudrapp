@@ -18,8 +18,13 @@ export interface ContextoLayout {
   actualizar: () => void;
 }
 
-/** Normal = 20 px de base. Chica (18 px) queda por debajo del mínimo recomendado: es una elección de cada persona. */
-const FACTOR_ESCALA: Record<EscalaTexto, number> = { chica: 0.9, normal: 1, grande: 1.15, 'muy-grande': 1.3 };
+/** Pequeño (18 px de base) es el tamaño por defecto, elegido por el autor; Normal = 20 px. */
+const FACTOR_ESCALA: Record<EscalaTexto, number> = {
+  pequeno: 0.9,
+  normal: 1,
+  grande: 1.15,
+  'muy-grande': 1.3,
+};
 
 function Layout() {
   const {
@@ -59,7 +64,7 @@ const router = createHashRouter([
 ]);
 
 export function App() {
-  const escala = usePreferencias()?.escalaTexto ?? 'normal';
+  const escala = usePreferencias()?.escalaTexto ?? 'pequeno';
 
   useEffect(() => {
     document.documentElement.style.fontSize = `${125 * FACTOR_ESCALA[escala]}%`;
