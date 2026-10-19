@@ -53,12 +53,12 @@ function PasoDeLaLista(props: { paso: Paso; numero: number; ultimo: boolean; inf
               aria-controls={idExplicacion}
               aria-label={`${abierta ? 'Ocultar' : 'Ver'} la explicación de ${paso.titulo}`}
               onClick={() => setAbierta((a) => !a)}
-              className="-mt-2.5 -mr-2 flex size-[3rem] shrink-0 items-center justify-center"
+              className="-mt-3 -mr-3 flex size-[3rem] shrink-0 items-center justify-center"
             >
               <span
                 aria-hidden="true"
                 className={
-                  'flex size-[1.8rem] items-center justify-center rounded-full border-2 font-serif font-semibold italic ' +
+                  'flex size-[1.3rem] items-center justify-center rounded-full border-[1.5px] font-serif text-[0.8rem] leading-none font-semibold italic ' +
                   (abierta ? 'border-oro bg-oro text-superficie' : 'border-oro/50 text-oro')
                 }
               >
