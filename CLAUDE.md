@@ -129,7 +129,7 @@ Ante una duda de contenido, no inventar: dejar un `TODO(contenido)` y preguntar 
   - Niveles 4 y 5: continuar con los preliminares (sin meta), 1 millón de mantras del yidam (exterior, interior), Chenresi optativo.
   - Nivel 6: 1 millón de mantras del yidam secreto; los preliminares ya no forman parte del compromiso.
   - TODO(contenido): el cuadernillo no dice si la semana tipo, las sesiones o el texto "Shiné sin soporte (o lhaktong)" cambian en los niveles 2 a 6. Por ahora todos los niveles ven el mismo programa semanal.
-- Compromiso del Nivel 1, elegido en Ajustes:
+- Compromiso del Nivel 1, elegido en Ajustes (por defecto, **Medio**):
   - **Mínimo:** media hora de meditación por día + 100.000 mantras de Chenresi al año.
   - **Medio:** lo mismo + 5.000 de cada preliminar.
   - **Completo:** lo mismo + 10.000 de cada preliminar.
@@ -350,7 +350,7 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
 - **Paleta:** granate de los hábitos (`acento` #7b1e22, `banda` #5e1418), oro azafrán (`oro` #8f5b00 para texto, `oro-claro` #f2b33d sobre granate) y papel cálido (`fondo` #f7f1e6). Los cinco colores de las banderas de oración (lungta: azul, blanco, rojo, verde, amarillo, en ese orden) van solo como franja fina arriba de cada pantalla (`components/Lungta.tsx`), tomados de la paleta "Colors of Buddhism" (schemecolor.com), con el azul y el amarillo algo más profundos. Todos los pares de texto verificados en WCAG AA o más.
 - **Apariencia** (Ajustes): Automática (sigue al teléfono, `prefers-color-scheme`), Clara u Oscura. **Por defecto, Oscura**: para meditar no se busca una pantalla luminosa. `src/tema.ts` pone `data-tema` en `<html>` y el color de la barra del sistema; un script en `index.html` pinta el tema antes de cargar la app (copia en localStorage, la preferencia real está en la base). `color-scheme` declarado para que Chrome no oscurezca la app por su cuenta. El contador usa siempre `.tema-practica`.
 - **Tipografías** (servidas desde la app, funcionan sin conexión): **Atkinson Hyperlegible Next** para el texto (diseñada por el Braille Institute para baja visión) y **Fraunces** para títulos y números grandes. Las cifras 0 a 9 se toman de Fraunces en todo el texto (`@font-face 'Cifras'` con `unicode-range`), porque Atkinson dibuja el cero con barra.
-- **Estructura:** cada pantalla usa `Pantalla` (banda granate con el título y Vajradhara a la derecha) y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
+- **Estructura:** cada pantalla usa `Pantalla`: banda granate de **alto fijo e igual en todas las pantallas**, con una línea chica (fecha, año, o "← Ajustes" en subpantallas), el título en un solo renglón (nombres cortos: Programa, Copia, Instalar, Sesión, Conteo) y Vajradhara a la derecha. Nada más va en la banda: en Hoy, la línea del trimestre va en el contenido y su avance es una línea dorada fina en el borde inferior de la banda y `Tarjeta` o `Seccion` para los bloques. Botones en forma de píldora.
 - **Imagen:** Vajradhara, escultura tibetana del siglo XV del Metropolitan Museum (dominio público, CC0), con el fondo recortado. Autoría y cambios en `public/imagenes/LICENCIAS.md`. No va en el contador: la práctica es sin elementos ajenos.
 - **Gráficos:** SVG propio siguiendo la guía de dataviz: una sola serie en oro, marcas finas, sin doble eje, y siempre una tabla o texto con los mismos valores.
 

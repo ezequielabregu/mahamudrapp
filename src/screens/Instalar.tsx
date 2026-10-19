@@ -10,14 +10,14 @@ export function Instalar() {
 
   if (instalada) {
     return (
-      <Pantalla titulo="Instalar la app" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
+      <Pantalla titulo="Instalar" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
         <p>La app ya está instalada en este teléfono. Abrila siempre desde su ícono.</p>
       </Pantalla>
     );
   }
 
   return (
-    <Pantalla titulo="Instalar la app" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
+    <Pantalla titulo="Instalar" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
       <p>
         Instalada, la app funciona sin internet y el teléfono cuida mejor tus registros. Instalala antes de
         empezar a registrar: lo que anotes en el navegador no pasa a la app instalada.

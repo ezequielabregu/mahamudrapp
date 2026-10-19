@@ -33,7 +33,7 @@ export function Respaldo() {
   }
 
   return (
-    <Pantalla titulo="Copia de seguridad" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
+    <Pantalla titulo="Copia" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
       <p>
         Tus registros viven solo en este teléfono. Hacé una copia seguido y guardala en otro lugar: mandátela
         por WhatsApp o por mail, o guardala en Drive o en iCloud.

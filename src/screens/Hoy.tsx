@@ -54,8 +54,14 @@ export function Hoy() {
     <Pantalla
       antetitulo={formatearDiaYMes(hoy)}
       titulo={nombreDelDia(hoy)}
-      cabecera={info && <CabeceraTrimestre info={info} />}
+      progreso={
+        info
+          ? { valor: info.diaDelTrimestre, maximo: info.diasDelTrimestre, etiqueta: 'Avance del trimestre' }
+          : undefined
+      }
     >
+      {info && <LineaTrimestre info={info} />}
+
       {actualizacionLista && (
         <Aviso>
           <p>Hay una versión nueva de la app.</p>
@@ -137,20 +143,13 @@ export function Hoy() {
   );
 }
 
-function CabeceraTrimestre({ info }: { info: InfoDelDia }) {
+/** Primera línea del contenido: en qué parte del año de práctica estamos. */
+function LineaTrimestre({ info }: { info: InfoDelDia }) {
   return (
-    <div className="mt-4 space-y-2">
-      <p className="text-sobre-banda/85">
-        {info.trimestre}º trimestre · día {info.diaDelTrimestre} de {info.diasDelTrimestre}
-        {info.anioPractica > 1 && ` · año ${info.anioPractica}`}
-      </p>
-      <BarraProgreso
-        enBanda
-        valor={info.diaDelTrimestre}
-        maximo={info.diasDelTrimestre}
-        etiqueta="Avance del trimestre"
-      />
-    </div>
+    <p className="text-tenue">
+      {info.trimestre}º trimestre · día {info.diaDelTrimestre} de {info.diasDelTrimestre}
+      {info.anioPractica > 1 && ` · año ${info.anioPractica}`}
+    </p>
   );
 }
 

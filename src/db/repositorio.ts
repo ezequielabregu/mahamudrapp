@@ -40,7 +40,7 @@ export interface Preferencias {
 export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   fechaInicio: programa.fechaInicioPorDefecto,
   nivel: 1,
-  compromiso: 'completo',
+  compromiso: 'medio',
   escalaTexto: 'pequeno',
   sonidoContador: true,
   // Oscura por defecto: para meditar no se busca una pantalla luminosa.

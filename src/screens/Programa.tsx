@@ -41,7 +41,7 @@ function SemanaPorTrimestre({ trimestreActual, diaActual, inicioAnio, metaPrelim
   const { desarrolloSesion, duranteElAnio } = programa.cuadernillo;
 
   return (
-    <Pantalla antetitulo="Según el cuadernillo" titulo="Programa anual">
+    <Pantalla antetitulo="Según el cuadernillo" titulo="Programa">
       <div role="group" aria-label="Trimestre" className="grid grid-cols-4 gap-2">
         {TRIMESTRES.map((n) => (
           <button

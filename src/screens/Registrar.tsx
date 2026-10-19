@@ -83,7 +83,7 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
   }
 
   return (
-    <Pantalla titulo="Sesión de meditación" volver={{ a: '/registrar', texto: 'Registrar' }}>
+    <Pantalla titulo="Sesión" volver={{ a: '/registrar', texto: 'Registrar' }}>
       <form onSubmit={guardar} className="space-y-5">
         <Seccion titulo="¿Qué sesión?">
           <fieldset className="space-y-2">
@@ -173,7 +173,7 @@ function FormularioConteo({ alGuardar }: PropsFormulario) {
   }
 
   return (
-    <Pantalla titulo="Postraciones o mantras" volver={{ a: '/registrar', texto: 'Registrar' }}>
+    <Pantalla titulo="Conteo" volver={{ a: '/registrar', texto: 'Registrar' }}>
       <form onSubmit={guardar} className="space-y-5">
         <Seccion titulo="¿Qué práctica?">
           <fieldset className="space-y-2">
