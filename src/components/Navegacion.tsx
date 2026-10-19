@@ -15,16 +15,17 @@ export function Navegacion() {
       aria-label="Secciones"
       className="fixed inset-x-0 bottom-0 z-20 border-t border-borde bg-superficie/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
-      <ul className="mx-auto flex max-w-xl px-2">
+      <ul className="mx-auto flex max-w-xl gap-1 px-1">
         {destinos.map((d) => (
-          <li key={d.a} className="flex-1">
+          <li key={d.a} className="min-w-0 flex-1">
             <NavLink
               to={d.a}
               end={d.a === '/'}
               className={({ isActive }) => {
                 const activa = isActive || d.tambien.includes(pathname);
                 return (
-                  'group flex min-h-[3.25rem] flex-col items-center justify-center gap-1 ' +
+                  // Con letra muy grande en un teléfono angosto, las cuatro etiquetas no entran: se achican hasta caber.
+                  'group flex min-h-[3.25rem] flex-col items-center justify-center gap-1 text-[min(1rem,5vw)] ' +
                   (activa ? 'activa font-bold text-acento' : 'text-tenue')
                 );
               }}

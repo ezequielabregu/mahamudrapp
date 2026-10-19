@@ -103,29 +103,30 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
           <label htmlFor="minutos" className="sr-only">
             Minutos
           </label>
-          <div className="flex items-center gap-3">
+          {/* El número va solo en su fila: entre los botones se cortaba en teléfonos angostos. */}
+          <input
+            id="minutos"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={600}
+            required
+            value={minutos}
+            onChange={(e) => setMinutos(Number(e.target.value))}
+            className={`${claseCampo} min-h-[4rem] text-center font-serif text-[2rem] font-semibold tabular-nums`}
+          />
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              className={`${clasesBoton('secundario', 'w-20')} shrink-0`}
+              className={clasesBoton()}
               aria-label="Restar 5 minutos"
               onClick={() => setMinutos((m) => Math.max(1, m - 5))}
             >
               −5
             </button>
-            <input
-              id="minutos"
-              type="number"
-              inputMode="numeric"
-              min={1}
-              max={600}
-              required
-              value={minutos}
-              onChange={(e) => setMinutos(Number(e.target.value))}
-              className={`${claseCampo} text-center font-serif text-2xl tabular-nums`}
-            />
             <button
               type="button"
-              className={`${clasesBoton('secundario', 'w-20')} shrink-0`}
+              className={clasesBoton()}
               aria-label="Sumar 5 minutos"
               onClick={() => setMinutos((m) => Math.min(600, m + 5))}
             >

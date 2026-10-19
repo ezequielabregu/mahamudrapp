@@ -18,7 +18,8 @@ export interface ContextoLayout {
   actualizar: () => void;
 }
 
-const FACTOR_ESCALA: Record<EscalaTexto, number> = { normal: 1, grande: 1.15, 'muy-grande': 1.3 };
+/** Normal = 20 px de base. Chica (18 px) queda por debajo del mínimo recomendado: es una elección de cada persona. */
+const FACTOR_ESCALA: Record<EscalaTexto, number> = { chica: 0.9, normal: 1, grande: 1.15, 'muy-grande': 1.3 };
 
 function Layout() {
   const {

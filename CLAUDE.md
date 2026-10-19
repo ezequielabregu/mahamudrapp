@@ -312,7 +312,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 
 ### 8.2 Accesibilidad (obligatorio)
 
-- Tamaño base de texto ≥ 20 px, textos de práctica ≥ 24 px, todo en `rem` para respetar el tamaño configurado en el teléfono. Escala adicional en Ajustes.
+- Tamaño base de texto ≥ 20 px, textos de práctica ≥ 24 px, todo en `rem` para respetar el tamaño configurado en el teléfono. Escala adicional en Ajustes: Chica (18 px, pedida por el autor, nunca por defecto), Normal (20 px, por defecto), Grande y Muy grande.
 - Contraste mínimo WCAG AA; apuntar a AAA en textos de práctica.
 - Áreas táctiles de al menos 56 × 56 px; botones principales de 72 px de alto o más.
 - Solo toques simples. Nada de deslizar, mantener presionado, doble toque ni menús ocultos.

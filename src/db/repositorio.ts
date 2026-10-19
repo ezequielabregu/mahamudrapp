@@ -18,7 +18,7 @@ import {
   type TipoSesion,
 } from './schema';
 
-export type EscalaTexto = 'normal' | 'grande' | 'muy-grande';
+export type EscalaTexto = 'chica' | 'normal' | 'grande' | 'muy-grande';
 
 export interface Preferencias {
   fechaInicio: string;
