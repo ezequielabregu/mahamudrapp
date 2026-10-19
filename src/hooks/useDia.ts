@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { repositorio, type Preferencias } from '../db/repositorio';
 import { infoDelDia, type InfoDelDia } from '../domain/calendario';
+import { metasDelNivel } from '../domain/niveles';
 import { programa } from '../domain/programa';
 import { debeRecordarRespaldo, resumirDia, type ResumenDelDia } from '../domain/resumen';
 
@@ -25,15 +26,13 @@ export function useDia(hoy: string, prefs: Preferencias | undefined): EstadoDelD
     const recordarCopia = debeRecordarRespaldo(ultimaCopia, hoy, hayRegistros);
     if (!info) return { info, resumen: null, ultimaCopia, recordarCopia };
 
-    const [sesiones, conteos] = await Promise.all([
+    const metas = metasDelNivel(prefs.nivel, prefs.compromiso, programa);
+    const [sesiones, conteos, conteosYidam] = await Promise.all([
       repositorio.sesionesEntre(info.inicioAnio, info.finAnio),
       repositorio.conteosEntre(info.inicioAnio, info.finAnio),
+      metas.yidam ? repositorio.conteosDePractica(metas.yidam.practica) : [],
     ]);
-    const compromiso = programa.compromisos.find((c) => c.id === prefs.compromiso);
-    const resumen = resumirDia(info, sesiones, conteos, {
-      preliminarTrimestre: compromiso?.metaPreliminarTrimestre ?? 0,
-      chenresiAnual: programa.metaChenresiAnual,
-    });
+    const resumen = resumirDia(info, sesiones, conteos, metas, conteosYidam);
     return { info, resumen, ultimaCopia, recordarCopia };
   }, [hoy, prefs]);
 }

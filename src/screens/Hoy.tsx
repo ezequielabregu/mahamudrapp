@@ -81,7 +81,8 @@ export function Hoy() {
       ) : (
         <>
           <TarjetaShine info={info} resumen={resumen} />
-          <TarjetaPreliminar info={info} resumen={resumen} />
+          {resumen.preliminar && <TarjetaPreliminar info={info} preliminar={resumen.preliminar} />}
+          {resumen.yidam && <TarjetaYidam yidam={resumen.yidam} />}
           <TarjetaChenresi resumen={resumen} />
         </>
       )}
@@ -159,8 +160,10 @@ function TarjetaShine({ info, resumen }: { info: InfoDelDia; resumen: ResumenDel
   );
 }
 
-function TarjetaPreliminar({ info, resumen }: { info: InfoDelDia; resumen: ResumenDelDia }) {
-  const { practica, hoy, trimestre, metaTrimestre, metaDiaria } = resumen.preliminar;
+type ResumenPreliminar = NonNullable<ResumenDelDia['preliminar']>;
+
+function TarjetaPreliminar({ info, preliminar }: { info: InfoDelDia; preliminar: ResumenPreliminar }) {
+  const { practica, hoy, trimestre, metaTrimestre, metaDiaria } = preliminar;
   const datos = programa.practicas[practica];
   const guia = guiaPreliminar(practica);
   const hecha = hoy > 0;
@@ -202,8 +205,26 @@ function TarjetaChenresi({ resumen }: { resumen: ResumenDelDia }) {
           {datos.mantra}
         </p>
       )}
-      <Avance etiqueta="En el año" valor={anio} meta={metaAnio} />
+      <Avance etiqueta="En el año" valor={anio} meta={metaAnio ?? 0} />
+      {metaAnio === null && <p className="text-tenue">Optativo en tu nivel.</p>}
       <Link to="/contador/chenresi" className={clasesBoton()}>
+        Contar mantras
+      </Link>
+    </Tarjeta>
+  );
+}
+
+function TarjetaYidam({ yidam }: { yidam: NonNullable<ResumenDelDia['yidam']> }) {
+  const datos = programa.practicas[yidam.practica];
+  return (
+    <Tarjeta
+      antetitulo="Durante el día"
+      titulo="Yidam"
+      subtitulo={datos.titulo}
+      estado={<Insignia hecho={yidam.hoy > 0} texto={`Hoy: ${formatearNumero(yidam.hoy)}`} />}
+    >
+      <Avance etiqueta="Acumulado" valor={yidam.total} meta={yidam.meta} />
+      <Link to={`/contador/${yidam.practica}`} className={clasesBoton('principal')}>
         Contar mantras
       </Link>
     </Tarjeta>

@@ -1,5 +1,5 @@
 {
-  "fuente": "Orden: cuadernillo del programa ('Desarrollo de una sesión de meditación'). Detalles: indicaciones de Lama Rinchen en el seminario y Preliminares abreviados del Arco Iris (pp. 71 a 75).",
+  "fuente": "Orden y minutos: cuadernillo del programa ('Desarrollo de una sesión de meditación (de 1/2 hora a 3/4 de hora)'). Explicaciones: indicaciones de Lama Rinchen en el seminario y Preliminares abreviados del Arco Iris (pp. 71 a 75).",
   "shine": {
     "titulo": "Shiné",
     "momento": "Mañana",
@@ -8,13 +8,14 @@
       {
         "id": "expulsiones",
         "titulo": "Tres expulsiones del aire residual",
-        "detalle": "Si es tu primera sesión del día."
+        "detalle": "Se hacen al comenzar la primera sesión del día. Si venís de un día agitado, podés hacerlas también en otra sesión."
       },
       {
         "id": "refugio",
         "titulo": "Toma de refugio",
         "repeticiones": 3,
-        "pagina": 8
+        "pagina": 8,
+        "detalle": "Siempre con la visualización. Puede ser en tibetano o en castellano, con melodía o sin ella."
       },
       {
         "id": "linaje",
@@ -25,25 +26,28 @@
         "id": "reflexion",
         "titulo": "Reflexión preliminar",
         "tipo": "reflexion",
-        "detalle": "Unos 5 minutos; pueden ser 10."
+        "duracion": "5 minutos según el cuadernillo; pueden ser 10.",
+        "detalle": "Primero reflexioná con ideas, recuerdos y ejemplos; después quedate sintiéndolo. La p. 23 tiene el resumen de las cuatro reflexiones."
       },
       {
         "id": "milarepa",
         "titulo": "Invocación a Milarepa",
         "condicion": "sin-soporte",
         "pagina": 12,
-        "detalle": "Sin soporte, entrás en la meditación apoyándote en la devoción."
+        "detalle": "Solo los días de shiné sin soporte: como no hay soporte, entrás en la meditación apoyándote en la devoción."
       },
       {
         "id": "shine",
         "titulo": "Shiné",
         "tipo": "meditacion",
+        "duracion": "Es la parte más larga: toda la sesión dura de media hora a tres cuartos de hora.",
         "detalle": "Antes de terminar, soltá el soporte y reposá unos momentos."
       },
       {
         "id": "dedicacion",
         "titulo": "Dedicación",
-        "pagina": 69
+        "pagina": 69,
+        "detalle": "Toda práctica empieza con el refugio y termina con la dedicación del mérito."
       }
     ]
   },
@@ -55,7 +59,7 @@
         {
           "id": "expulsiones",
           "titulo": "Tres expulsiones del aire residual",
-          "detalle": "Solo si es tu primera sesión del día."
+          "detalle": "Solo si esta es tu primera sesión del día."
         },
         {
           "id": "preocupaciones",
@@ -68,14 +72,14 @@
           "titulo": "Visualización del refugio",
           "pagina": 72,
           "paginaFin": 73,
-          "detalle": "Leer una vez, desde «Enfrente de mí, en el espacio» hasta «nos refugiamos y desarrollamos la apertura del corazón»."
+          "detalle": "Se lee una vez, desde «Enfrente de mí, en el espacio» hasta «nos refugiamos y desarrollamos la apertura del corazón»."
         },
         {
           "id": "postraciones",
           "titulo": "Refugio con cada postración",
           "tipo": "conteo",
           "pagina": 73,
-          "detalle": "Recitá el refugio en las Cinco Joyas con cada postración. Si recién empezás, 10 o 20, y de a poco más."
+          "detalle": "Se recita el refugio en las Cinco Joyas con cada postración. Si recién empezás, 10 o 20 por día, y de a poco más."
         },
         {
           "id": "voto",
@@ -88,7 +92,8 @@
           "id": "disolucion",
           "titulo": "Disolución en luz y reposo",
           "pagina": 75,
-          "detalle": "Los lugares de refugio se funden en luz que se absorbe en vos. Reposá al menos 5 minutos."
+          "duracion": "Reposo de al menos 5 minutos.",
+          "detalle": "Los lugares de refugio se funden en luz que se absorbe en vos."
         },
         {
           "id": "dedicacion",

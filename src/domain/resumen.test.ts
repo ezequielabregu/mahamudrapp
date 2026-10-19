@@ -22,7 +22,7 @@ describe('resumirDia', () => {
         { practica: 'chenresi', cantidad: 300, fechaLocal: '2026-10-15' },
         { practica: 'chenresi', cantidad: 100, fechaLocal: '2026-10-18' },
       ],
-      { preliminarTrimestre: 10000, chenresiAnual: 100000 },
+      { preliminarTrimestre: 10000, chenresiAnual: 100000, yidam: null },
     );
 
     expect(resumen.shine).toEqual({ sesiones: 2, segundos: 2400 });
@@ -34,6 +34,22 @@ describe('resumirDia', () => {
       metaDiaria: 109,
     });
     expect(resumen.chenresi).toEqual({ hoy: 100, anio: 400, metaAnio: 100000 });
+  });
+
+  it('sin preliminares en el compromiso, no los resume; el yidam suma todos los años', () => {
+    const resumen = resumirDia(
+      info,
+      [],
+      [],
+      { preliminarTrimestre: null, chenresiAnual: null, yidam: { practica: 'yidam-secreto', meta: 1000000 } },
+      [
+        { practica: 'yidam-secreto', cantidad: 5000, fechaLocal: '2024-03-01' },
+        { practica: 'yidam-secreto', cantidad: 200, fechaLocal: '2026-10-18' },
+      ],
+    );
+    expect(resumen.preliminar).toBeNull();
+    expect(resumen.chenresi.metaAnio).toBeNull();
+    expect(resumen.yidam).toEqual({ practica: 'yidam-secreto', hoy: 200, total: 5200, meta: 1000000 });
   });
 });
 

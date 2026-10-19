@@ -6,8 +6,10 @@ import { Seccion } from '../components/Seccion';
 import { repositorio } from '../db/repositorio';
 import type { TipoSesion } from '../db/schema';
 import { formatearFechaLarga, formatearNumero } from '../domain/formato';
-import { PRACTICAS, programa, type Practica } from '../domain/programa';
+import { practicasDelNivel } from '../domain/niveles';
+import { programa, type Practica } from '../domain/programa';
 import { useHoy } from '../hooks/useHoy';
+import { usePreferencias } from '../hooks/usePreferencias';
 
 export function Registrar() {
   const [params, setParams] = useSearchParams();
@@ -146,6 +148,7 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
 
 function FormularioConteo({ alGuardar }: PropsFormulario) {
   const hoy = useHoy();
+  const practicas = practicasDelNivel(usePreferencias()?.nivel ?? 1, programa);
   const [fecha, setFecha] = useState(hoy);
   const [practica, setPractica] = useState<Practica>('postraciones');
   const [cantidad, setCantidad] = useState('');
@@ -176,7 +179,7 @@ function FormularioConteo({ alGuardar }: PropsFormulario) {
         <Seccion titulo="¿Qué práctica?">
           <fieldset className="space-y-2">
             <legend className="sr-only">¿Qué práctica?</legend>
-            {PRACTICAS.map((p) => (
+            {practicas.map((p) => (
               <Opcion key={p} nombre="practica" marcada={practica === p} alElegir={() => setPractica(p)}>
                 {programa.practicas[p].titulo}
               </Opcion>

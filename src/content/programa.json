@@ -3,7 +3,64 @@
   "fechaInicioPorDefecto": "2026-10-14",
   "mesesPorTrimestre": 3,
   "minutosMeditacionDiaria": 30,
-  "metaChenresiAnual": 100000,
+  "niveles": [
+    {
+      "numero": 1,
+      "nombre": "Pacificación mental (Shiné)",
+      "compromiso": "Media hora de meditación por día y 100.000 mantras de Chenresi; según el compromiso elegido, además 5.000 o 10.000 de cada preliminar.",
+      "usaCompromiso": true,
+      "metaPreliminarTrimestre": null,
+      "metaChenresiAnual": 100000
+    },
+    {
+      "numero": 2,
+      "nombre": "Visión superior (Lhaktong)",
+      "compromiso": "Media hora de meditación por día, 10.000 de cada preliminar y 100.000 mantras de Chenresi.",
+      "metaPreliminarTrimestre": 10000,
+      "metaChenresiAnual": 100000
+    },
+    {
+      "numero": 3,
+      "nombre": "Unión de shiné y lhaktong",
+      "compromiso": "Media hora de meditación por día, 10.000 de cada preliminar y 100.000 mantras de Chenresi.",
+      "metaPreliminarTrimestre": 10000,
+      "metaChenresiAnual": 100000
+    },
+    {
+      "numero": 4,
+      "nombre": "Yidam, práctica exterior",
+      "compromiso": "Media hora de meditación por día, continuar con los preliminares y recitar 1 millón de mantras del yidam. Chenresi es optativo.",
+      "metaPreliminarTrimestre": 0,
+      "metaChenresiAnual": null,
+      "yidam": {
+        "practica": "yidam-exterior",
+        "meta": 1000000
+      }
+    },
+    {
+      "numero": 5,
+      "nombre": "Yidam, práctica interior",
+      "compromiso": "Media hora de meditación por día, continuar con los preliminares y recitar 1 millón de mantras del yidam. Chenresi es optativo.",
+      "metaPreliminarTrimestre": 0,
+      "metaChenresiAnual": null,
+      "yidam": {
+        "practica": "yidam-interior",
+        "meta": 1000000
+      }
+    },
+    {
+      "numero": 6,
+      "nombre": "Yidam, práctica secreta",
+      "compromiso": "Media hora de meditación por día y recitar 1 millón de mantras del yidam. Chenresi es optativo.",
+      "sinPreliminares": true,
+      "metaPreliminarTrimestre": 0,
+      "metaChenresiAnual": null,
+      "yidam": {
+        "practica": "yidam-secreto",
+        "meta": 1000000
+      }
+    }
+  ],
   "compromisos": [
     {
       "id": "minimo",
@@ -29,9 +86,18 @@
       "titulo": "Postraciones",
       "unidad": "postraciones",
       "sumasRapidas": [
-        { "cantidad": 10, "etiqueta": "+10" },
-        { "cantidad": 21, "etiqueta": "+21" },
-        { "cantidad": 108, "etiqueta": "+108" }
+        {
+          "cantidad": 10,
+          "etiqueta": "+10"
+        },
+        {
+          "cantidad": 21,
+          "etiqueta": "+21"
+        },
+        {
+          "cantidad": 108,
+          "etiqueta": "+108"
+        }
       ]
     },
     "vajrasattva": {
@@ -52,9 +118,29 @@
     "chenresi": {
       "titulo": "Mantras de Chenresi",
       "unidad": "mantras",
-      "sumasRapidas": [{ "cantidad": 100, "etiqueta": "+1 mala (100)" }],
+      "sumasRapidas": [
+        {
+          "cantidad": 100,
+          "etiqueta": "+1 mala (100)"
+        }
+      ],
       "mantra": "OM MANI PADME HUNG",
       "nota": "Una mala de 108 cuentas suma 100: las 8 restantes son de regalo."
+    },
+    "yidam-exterior": {
+      "titulo": "Mantras del yidam (práctica exterior)",
+      "unidad": "mantras",
+      "sumasRapidas": []
+    },
+    "yidam-interior": {
+      "titulo": "Mantras del yidam (práctica interior)",
+      "unidad": "mantras",
+      "sumasRapidas": []
+    },
+    "yidam-secreto": {
+      "titulo": "Mantras del yidam (práctica secreta)",
+      "unidad": "mantras",
+      "sumasRapidas": []
     }
   },
   "trimestres": [

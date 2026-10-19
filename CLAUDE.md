@@ -124,6 +124,11 @@ Ante una duda de contenido, no inventar: dejar un `TODO(contenido)` y preguntar 
 ### 6.2 Programa anual
 
 - El año de práctica arranca en **octubre de 2026** (fecha de inicio configurable en Ajustes; por defecto `2026-10-14`). Cada trimestre dura 3 meses.
+- **Nivel** del programa (1 a 6), elegido en Ajustes. Metas por nivel según "La progresión de las prácticas" del cuadernillo, en `programa.json` → `niveles` y `src/domain/niveles.ts`:
+  - Niveles 2 y 3: 10.000 de cada preliminar y 100.000 de Chenresi.
+  - Niveles 4 y 5: continuar con los preliminares (sin meta), 1 millón de mantras del yidam (exterior, interior), Chenresi optativo.
+  - Nivel 6: 1 millón de mantras del yidam secreto; los preliminares ya no forman parte del compromiso.
+  - TODO(contenido): el cuadernillo no dice si la semana tipo, las sesiones o el texto "Shiné sin soporte (o lhaktong)" cambian en los niveles 2 a 6. Por ahora todos los niveles ven el mismo programa semanal.
 - Compromiso del Nivel 1, elegido en Ajustes:
   - **Mínimo:** media hora de meditación por día + 100.000 mantras de Chenresi al año.
   - **Medio:** lo mismo + 5.000 de cada preliminar.
@@ -215,7 +220,7 @@ Las expulsiones del aire no se repiten en la segunda sesión del día. El usuari
 
 **Fuera de sesión:** mantras de Chenresi (OM MANI PADME HUNG, como lo escribe el libro) en cualquier momento, con el contador.
 
-Implementado en `src/content/sesiones.json` y `src/domain/sesiones.ts`. La pantalla Hoy muestra cada sesión como lista ordenada de pasos, con la reflexión y el soporte del día resaltados; los pasos con `condicion` (Milarepa) solo aparecen los días que corresponde. Las sesiones de Vajrasattva, mandala y guru yoga todavía no están cargadas: la app lo dice en lugar de inventarlas. TODO(contenido): confirmar si la sesión de postraciones empieza leyendo la apertura de la p. 71 ("Lama Karmapa...") o directamente en la p. 72.
+Implementado en `src/content/sesiones.json` y `src/domain/sesiones.ts`. La pantalla Hoy muestra cada sesión como lista ordenada de pasos, **solo con título, veces y página del libro**, y la reflexión y el soporte del día resaltados. Los minutos sugeridos (`duracion`) y la explicación (`detalle`) quedan detrás del botón "i" de cada paso, para que la pantalla no se llene de texto; los pasos con `condicion` (Milarepa) solo aparecen los días que corresponde. Las sesiones de Vajrasattva, mandala y guru yoga todavía no están cargadas: la app lo dice en lugar de inventarlas. TODO(contenido): confirmar si la sesión de postraciones empieza leyendo la apertura de la p. 71 ("Lama Karmapa...") o directamente en la p. 72.
 
 ### 6.5 Reglas de conteo
 
@@ -268,7 +273,7 @@ interface Conteo {
 }
 
 interface Ajuste { clave: string; valor: unknown; actualizadoEn: string; }
-// claves actuales: dispositivoId, fechaInicio, compromiso, escalaTexto, sonidoContador
+// claves actuales: dispositivoId, fechaInicio, nivel, compromiso, escalaTexto, sonidoContador
 // previstas: sonidoInicio, sonidoFin, campanaIntermedia, mostrarFonetica
 
 interface Borrador {        // conteo en curso, NO es registro de práctica
@@ -306,7 +311,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - Contraste mínimo WCAG AA; apuntar a AAA en textos de práctica.
 - Áreas táctiles de al menos 56 × 56 px; botones principales de 72 px de alto o más.
 - Solo toques simples. Nada de deslizar, mantener presionado, doble toque ni menús ocultos.
-- Etiquetas claras en español, sin iconos sin texto.
+- Etiquetas claras en español, sin iconos sin texto. Única excepción, pedida por el autor: el botón "i" de cada paso, con `aria-label` ("Ver la explicación de...") y área táctil de 60 px.
 - Acciones destructivas o irreversibles con confirmación explícita.
 - Respetar `prefers-reduced-motion` y `prefers-color-scheme`.
 - Navegable con lector de pantalla (roles y `aria-label` correctos).

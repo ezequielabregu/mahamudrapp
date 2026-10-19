@@ -14,6 +14,9 @@ export interface Paso {
   repeticiones?: number;
   pagina?: number;
   paginaFin?: number;
+  /** Minutos que sugiere el cuadernillo o la Lama. Se ve al tocar "i". */
+  duracion?: string;
+  /** Explicación del paso. Se ve al tocar "i". */
   detalle?: string;
 }
 
@@ -47,6 +50,20 @@ function cumpleCondicion(condicion: CondicionPaso | undefined, info: InfoDelDia)
   if (!condicion) return true;
   if (condicion === 'sin-soporte') return info.soporteId === 'sin-soporte';
   return false;
+}
+
+/**
+ * Lo que se muestra al tocar "i" en un paso: minutos sugeridos, explicación y, en la
+ * reflexión y el shiné, la nota de la reflexión o del soporte de ese día.
+ */
+export function explicacionDelPaso(paso: Paso, info: InfoDelDia): string[] {
+  const notaDelDia =
+    paso.tipo === 'reflexion'
+      ? info.reflexion.nota
+      : paso.tipo === 'meditacion'
+        ? info.soporte.nota
+        : undefined;
+  return [paso.duracion, paso.detalle, notaDelDia].filter((t): t is string => Boolean(t));
 }
 
 /** "libro, p. 8" o "libro, pp. 72 y 73" */

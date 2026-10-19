@@ -36,26 +36,53 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
 
   return (
     <Pantalla titulo="Ajustes">
-      <Seccion titulo="Compromiso de práctica">
+      <Seccion titulo="Nivel">
         <fieldset className="space-y-2">
-          <legend className="sr-only">Compromiso de práctica</legend>
-          {programa.compromisos.map((c) => (
-            <label key={c.id} className={claseOpcion}>
+          <legend className="sr-only">Nivel del programa</legend>
+          {programa.niveles.map((n) => (
+            <label key={n.numero} className={claseOpcion}>
               <input
                 type="radio"
-                name="compromiso"
-                checked={prefs.compromiso === c.id}
-                onChange={() => repositorio.guardarPreferencia('compromiso', c.id)}
+                name="nivel"
+                checked={prefs.nivel === n.numero}
+                onChange={() => repositorio.guardarPreferencia('nivel', n.numero)}
                 className="size-6 shrink-0 accent-acento"
               />
               <span>
-                <span className="block">{c.titulo}</span>
-                <span className="block font-normal text-tenue">{c.descripcion}</span>
+                <span className="block">
+                  Nivel {n.numero} · {n.nombre}
+                </span>
+                {prefs.nivel === n.numero && (
+                  <span className="block font-normal text-tenue">{n.compromiso}</span>
+                )}
               </span>
             </label>
           ))}
         </fieldset>
       </Seccion>
+
+      {prefs.nivel === 1 && (
+        <Seccion titulo="Compromiso de práctica">
+          <fieldset className="space-y-2">
+            <legend className="sr-only">Compromiso de práctica</legend>
+            {programa.compromisos.map((c) => (
+              <label key={c.id} className={claseOpcion}>
+                <input
+                  type="radio"
+                  name="compromiso"
+                  checked={prefs.compromiso === c.id}
+                  onChange={() => repositorio.guardarPreferencia('compromiso', c.id)}
+                  className="size-6 shrink-0 accent-acento"
+                />
+                <span>
+                  <span className="block">{c.titulo}</span>
+                  <span className="block font-normal text-tenue">{c.descripcion}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+        </Seccion>
+      )}
 
       <Seccion titulo="Tamaño del texto">
         <fieldset className="space-y-2">

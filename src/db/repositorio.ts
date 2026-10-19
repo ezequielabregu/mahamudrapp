@@ -4,7 +4,7 @@
 import { infoDelDia } from '../domain/calendario';
 import { esCantidadValida } from '../domain/conteos';
 import { diaDeSemana, esFechaValida, fechaLocalDe } from '../domain/fechas';
-import { programa, type CompromisoId, type Practica } from '../domain/programa';
+import { programa, type CompromisoId, type NumeroNivel, type Practica } from '../domain/programa';
 import { nuevoId } from './ids';
 import {
   BaseMahamudra,
@@ -22,6 +22,7 @@ export type EscalaTexto = 'normal' | 'grande' | 'muy-grande';
 
 export interface Preferencias {
   fechaInicio: string;
+  nivel: NumeroNivel;
   compromiso: CompromisoId;
   escalaTexto: EscalaTexto;
   sonidoContador: boolean;
@@ -29,6 +30,7 @@ export interface Preferencias {
 
 export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   fechaInicio: programa.fechaInicioPorDefecto,
+  nivel: 1,
   compromiso: 'completo',
   escalaTexto: 'normal',
   sonidoContador: true,
@@ -256,6 +258,7 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
 
     sesionesEntre: (desde: string, hasta: string) =>
       db.sesiones.where('fechaLocal').between(desde, hasta, true, false).toArray(),
+    conteosDePractica: (practica: Practica) => db.conteos.where('practica').equals(practica).toArray(),
     conteosEntre: (desde: string, hasta: string) =>
       db.conteos.where('fechaLocal').between(desde, hasta, true, false).toArray(),
     borrador: (practica: Practica) => db.borradores.get(practica),
