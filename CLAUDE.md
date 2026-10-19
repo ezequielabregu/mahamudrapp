@@ -18,7 +18,7 @@ Documento de producto con las decisiones y su justificación: `docs/arquitectura
 
 La máxima: **la app es una herramienta, nunca una distracción.** Ante cualquier duda de diseño, elegir lo que menos llama la atención y lo que menos tiempo de pantalla pide. Abrirla, ver qué toca, registrar y cerrarla.
 
-1. **Nunca perder datos de práctica.** Son años de registros. Toda escritura es inmediata, los registros solo se agregan (nunca se editan ni se borran) y siempre hay una vía de respaldo.
+1. **Nunca perder datos de práctica.** Son años de registros. Toda escritura es inmediata, los registros solo se agregan (nunca se editan ni se borran) y siempre hay una vía de respaldo. Única excepción: el borrado total desde Ajustes, a pedido del autor, con resguardos (ver 7).
 2. **Local primero.** Los datos viven en el dispositivo. No hay servidor propio, ni cuentas, ni login obligatorio.
 3. **Funciona sin conexión.** Después de la primera carga, todo (textos, audio, estadísticas) funciona offline.
 4. **Accesible para adultos mayores.** Letra grande, alto contraste, botones enormes, cero gestos ocultos.
@@ -103,7 +103,7 @@ Antes de dar una tarea por terminada: `npm run typecheck && npm run lint && npm 
 │  │  └─ googleDrive.ts        # etapa 2 (ver 9.3)
 │  ├─ audio/                   # reproducción de cuencos (ver 8.3)
 │  ├─ components/              # componentes de UI reutilizables
-│  ├─ screens/                 # Hoy, Practica, Contador, Estadisticas, Respaldo, Ajustes, Instalar
+│  ├─ screens/                 # Hoy, Programa, Contador, Registrar, Respaldo, Ajustes, Instalar (y luego Practica, Estadisticas)
 │  ├─ hooks/
 │  └─ main.tsx
 └─ tests/e2e/
@@ -235,6 +235,8 @@ Implementado en `src/content/sesiones.json` y `src/domain/sesiones.ts`. La panta
 
 Principio: **append-only**. Nunca `update` ni `delete` sobre registros de práctica. Una corrección es un registro nuevo con monto negativo o con `corrigeId`.
 
+**Única excepción: `borrarRegistros()`** (botón al final de Ajustes, pedido por el autor). Borra sesiones, conteos, borradores y el log de copias, y conserva los ajustes. Resguardos: el repositorio la rechaza si no hay una copia de seguridad **hecha ese mismo día**, y la pantalla pide una confirmación que dice cuántos registros se borran. Mientras no exista la importación de copias, el borrado no tiene vuelta atrás dentro de la app.
+
 Todo registro lleva: `id` (UUID), `creadoEn` (ISO con zona), `fechaLocal` (`YYYY-MM-DD` según la zona del dispositivo, define a qué día pertenece), `dispositivoId`, `version` (del esquema).
 
 La definición vigente está en `src/db/schema.ts`; resumen:
@@ -301,8 +303,11 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - **Práctica (modo guiado):** un paso por pantalla, botones "Anterior" y "Siguiente" grandes, texto del paso con fonética y español, página del libro visible ("Libro, p. 13"). Temporizador cuando corresponde.
 - **Contador:** botón que ocupa al menos la mitad de la pantalla, número gigante, sonido suave en cada toque, botón "deshacer último", sumas rápidas.
 - **Estadísticas:** regularidad, racha actual y máxima, acumulados por práctica, proyección hacia la meta del trimestre, minutos meditados por semana, calendario tipo heatmap del año, y el resumen en formato del carnet.
-- **Respaldo:** exportar, importar, estado de Google Drive (etapa 2).
-- **Ajustes:** fecha de inicio, nivel de compromiso, tamaño de texto, sonidos, mostrar u ocultar fonética.
+- **Programa:** la semana tipo de cada trimestre como en el cuadernillo (botones 1º a 4º, abre en el trimestre en curso, con el día de hoy resaltado), las fechas del trimestre, la meta del preliminar según el nivel, el recuadro "Desarrollo de una sesión" y "Durante el año" literales del cuadernillo.
+- **Respaldo:** exportar, importar, estado de Google Drive (etapa 2). Se entra desde Ajustes.
+- **Registrar:** práctica hecha fuera de la app y correcciones. Se entra desde Ajustes o desde el botón de la sesión en Hoy.
+- **Ajustes:** arriba, accesos a Registrar y Copia; después nivel, compromiso (solo nivel 1), tamaño de texto, sonido, fecha de inicio, estado del teléfono; al final, borrar todos los registros.
+- **Navegación:** tres pestañas abajo, Hoy · Programa · Ajustes. Las subpantallas (Registrar, Copia, Instalar) tienen un botón visible "← Ajustes" en la banda.
 - **Instalar:** guía ilustrada según el sistema detectado (ver 9.1).
 
 ### 8.2 Accesibilidad (obligatorio)

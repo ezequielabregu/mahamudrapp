@@ -8,6 +8,7 @@ import { Ajustes } from './screens/Ajustes';
 import { Contador } from './screens/Contador';
 import { Hoy } from './screens/Hoy';
 import { Instalar } from './screens/Instalar';
+import { Programa } from './screens/Programa';
 import { Registrar } from './screens/Registrar';
 import { Respaldo } from './screens/Respaldo';
 
@@ -43,6 +44,7 @@ const router = createHashRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Hoy /> },
+      { path: 'programa', element: <Programa /> },
       { path: 'registrar', element: <Registrar /> },
       { path: 'respaldo', element: <Respaldo /> },
       { path: 'ajustes', element: <Ajustes /> },

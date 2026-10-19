@@ -5,7 +5,7 @@ import { clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio } from '../db/repositorio';
-import { formatearFechaCorta, formatearNumero, haceCuanto } from '../domain/formato';
+import { contar, formatearFechaCorta, haceCuanto } from '../domain/formato';
 import { useHoy } from '../hooks/useHoy';
 
 export function Respaldo() {
@@ -31,7 +31,7 @@ export function Respaldo() {
   }
 
   return (
-    <Pantalla titulo="Copia de seguridad">
+    <Pantalla titulo="Copia de seguridad" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
       <p>
         Tus registros viven solo en este teléfono. Hacé una copia seguido y guardala en otro lugar: mandátela
         por WhatsApp o por mail, o guardala en Drive o en iCloud.
@@ -45,8 +45,8 @@ export function Respaldo() {
         </p>
         {registros && (
           <p className="text-tenue">
-            Registros guardados: {formatearNumero(registros.sesiones)} sesiones y{' '}
-            {formatearNumero(registros.conteos)} conteos.
+            Registros guardados: {contar(registros.sesiones, 'sesión', 'sesiones')} y{' '}
+            {contar(registros.conteos, 'conteo', 'conteos')}.
           </p>
         )}
       </Seccion>

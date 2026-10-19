@@ -60,6 +60,11 @@ export interface Programa {
   fechaInicioPorDefecto: string;
   mesesPorTrimestre: number;
   minutosMeditacionDiaria: number;
+  /** Textos literales del cuadernillo, para la pestaña Programa. */
+  cuadernillo: {
+    desarrolloSesion: { titulo: string; duracion: string; pasos: string[] };
+    duranteElAnio: string;
+  };
   niveles: Nivel[];
   compromisos: Compromiso[];
   practicas: Record<Practica, DatosPractica>;

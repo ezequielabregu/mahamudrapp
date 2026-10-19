@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { claseCampo, claseOpcion, clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
@@ -43,7 +43,7 @@ export function Registrar() {
   if (que === 'conteo') return <FormularioConteo alGuardar={setHecho} />;
 
   return (
-    <Pantalla titulo="Registrar">
+    <Pantalla titulo="Registrar" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
       <p>Para anotar práctica que hiciste sin la app, o corregir un número.</p>
       <Link to="?que=sesion" className={clasesBoton('principal')}>
         Una sesión de meditación
@@ -83,7 +83,7 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
   }
 
   return (
-    <Pantalla titulo="Sesión de meditación">
+    <Pantalla titulo="Sesión de meditación" volver={{ a: '/registrar', texto: 'Registrar' }}>
       <form onSubmit={guardar} className="space-y-5">
         <Seccion titulo="¿Qué sesión?">
           <fieldset className="space-y-2">
@@ -138,9 +138,7 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
         <button type="submit" className={clasesBoton('principal')}>
           Guardar
         </button>
-        <Link to="/registrar" className={clasesBoton()}>
-          Cancelar
-        </Link>
+        <BotonCancelar />
       </form>
     </Pantalla>
   );
@@ -174,7 +172,7 @@ function FormularioConteo({ alGuardar }: PropsFormulario) {
   }
 
   return (
-    <Pantalla titulo="Postraciones o mantras">
+    <Pantalla titulo="Postraciones o mantras" volver={{ a: '/registrar', texto: 'Registrar' }}>
       <form onSubmit={guardar} className="space-y-5">
         <Seccion titulo="¿Qué práctica?">
           <fieldset className="space-y-2">
@@ -219,9 +217,7 @@ function FormularioConteo({ alGuardar }: PropsFormulario) {
         <button type="submit" className={clasesBoton('principal')}>
           {restar ? 'Guardar la corrección' : 'Guardar'}
         </button>
-        <Link to="/registrar" className={clasesBoton()}>
-          Cancelar
-        </Link>
+        <BotonCancelar />
       </form>
     </Pantalla>
   );
@@ -268,5 +264,20 @@ function MensajeError({ mensaje }: { mensaje: string | null }) {
     <p role="alert" className="font-semibold text-acento">
       {mensaje}
     </p>
+  );
+}
+
+/** Vuelve a la pantalla anterior (Hoy o Registrar); si se abrió directo, a Registrar. */
+function BotonCancelar() {
+  const navigate = useNavigate();
+  const hayAnterior = ((window.history.state as { idx?: number } | null)?.idx ?? 0) > 0;
+  return (
+    <button
+      type="button"
+      className={clasesBoton()}
+      onClick={() => (hayAnterior ? navigate(-1) : navigate('/registrar'))}
+    >
+      Cancelar
+    </button>
   );
 }

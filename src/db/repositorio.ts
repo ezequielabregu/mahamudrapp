@@ -234,6 +234,26 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     );
   }
 
+  /**
+   * Única excepción al principio de solo agregar: borra todos los registros de práctica
+   * (sesiones, conteos, conteos en curso y log de copias). Conserva los ajustes.
+   * Exige una copia hecha hoy, para que los datos queden al menos en ese archivo.
+   */
+  async function borrarRegistros(): Promise<void> {
+    await db.transaction('rw', [db.sesiones, db.conteos, db.borradores, db.respaldos], async () => {
+      const ultima = await db.respaldos.orderBy('creadoEn').last();
+      if (ultima?.fechaLocal !== hoy()) {
+        throw new Error('Antes de borrar, hacé una copia de seguridad hoy.');
+      }
+      await Promise.all([
+        db.sesiones.clear(),
+        db.conteos.clear(),
+        db.borradores.clear(),
+        db.respaldos.clear(),
+      ]);
+    });
+  }
+
   async function registrarRespaldo(metodo: Respaldo['metodo'], registros: number): Promise<void> {
     await db.respaldos.add({
       id: nuevoId(),
@@ -255,6 +275,7 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     guardarBorrador,
     exportarTodo,
     registrarRespaldo,
+    borrarRegistros,
 
     sesionesEntre: (desde: string, hasta: string) =>
       db.sesiones.where('fechaLocal').between(desde, hasta, true, false).toArray(),

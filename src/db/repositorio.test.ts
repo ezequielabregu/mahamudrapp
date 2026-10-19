@@ -132,4 +132,34 @@ describe('repositorio', () => {
     expect(copia.tablas.borradores).toHaveLength(1);
     expect(copia.tablas.ajustes.some((a) => a.clave === 'dispositivoId')).toBe(true);
   });
+
+  it('borrar los registros exige una copia de hoy y conserva los ajustes', async () => {
+    const { db, repo } = nuevoRepo();
+    await repo.guardarPreferencia('nivel', 2);
+    await repo.registrarSesion({ tipo: 'shine', origen: 'app', fechaLocal: '2026-10-18', duracionSeg: 1800 });
+    await repo.registrarConteo({
+      practica: 'chenresi',
+      cantidad: 100,
+      fechaLocal: '2026-10-18',
+      origen: 'manual',
+    });
+    await repo.sumarAlBorrador('postraciones', 3);
+
+    await expect(repo.borrarRegistros()).rejects.toThrow(/copia/);
+    expect(await db.sesiones.count()).toBe(1);
+
+    await repo.registrarRespaldo('descarga', 2);
+    await repo.borrarRegistros();
+    expect(await db.sesiones.count()).toBe(0);
+    expect(await db.conteos.count()).toBe(0);
+    expect(await db.borradores.count()).toBe(0);
+    expect((await repo.leerPreferencias()).nivel).toBe(2);
+  });
+
+  it('una copia de ayer no alcanza para borrar', async () => {
+    const { repo } = nuevoRepo();
+    await repo.registrarRespaldo('descarga', 0);
+    reloj = new Date(2026, 9, 19, 9, 0);
+    await expect(repo.borrarRegistros()).rejects.toThrow(/copia/);
+  });
 });

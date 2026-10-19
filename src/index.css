@@ -32,6 +32,7 @@
   --color-resalte: #fbefd6;
   --color-hecho: #00703a;
   --color-aviso: #fdf0d6;
+  --color-peligro: #a8001a;
 
   --color-lungta-azul: #1d3fbf;
   --color-lungta-blanco: #fefefe;
@@ -60,6 +61,7 @@
     --color-resalte: #2c201a;
     --color-hecho: #5cc98f;
     --color-aviso: #2e2116;
+    --color-peligro: #ff8a7a;
   }
 }
 

@@ -38,6 +38,11 @@ export function haceCuanto(fecha: string, hoy: string): string {
   return `hace ${dias} días`;
 }
 
+/** "1 sesión", "3 sesiones", "1.240 conteos" */
+export function contar(n: number, singular: string, plural: string): string {
+  return `${formatearNumero(n)} ${n === 1 ? singular : plural}`;
+}
+
 export function formatearMinutos(segundos: number): string {
   const minutos = Math.round(segundos / 60);
   return minutos === 1 ? '1 minuto' : `${minutos} minutos`;

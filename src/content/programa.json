@@ -3,6 +3,21 @@
   "fechaInicioPorDefecto": "2026-10-14",
   "mesesPorTrimestre": 3,
   "minutosMeditacionDiaria": 30,
+  "cuadernillo": {
+    "desarrolloSesion": {
+      "titulo": "Desarrollo de una sesión de meditación",
+      "duracion": "De 1/2 hora a 3/4 de hora",
+      "pasos": [
+        "Tres expulsiones de respiración residual",
+        "Toma de refugio",
+        "Plegaria a la línea o plegaria a Milarepa",
+        "Reflexión preliminar (5 minutos)",
+        "Shiné (o lhaktong)",
+        "Dedicación"
+      ]
+    },
+    "duranteElAnio": "100 000 mantras de Chenresi (optativo en los niveles “yidam”)"
+  },
   "niveles": [
     {
       "numero": 1,

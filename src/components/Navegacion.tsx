@@ -1,13 +1,14 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 
+/** Tres pestañas. Registrar, Copia e Instalar viven dentro de Ajustes. */
 const destinos = [
-  { a: '/', texto: 'Hoy' },
-  { a: '/registrar', texto: 'Registrar' },
-  { a: '/respaldo', texto: 'Copia' },
-  { a: '/ajustes', texto: 'Ajustes' },
+  { a: '/', texto: 'Hoy', tambien: [] },
+  { a: '/programa', texto: 'Programa', tambien: [] },
+  { a: '/ajustes', texto: 'Ajustes', tambien: ['/registrar', '/respaldo', '/instalar'] },
 ];
 
 export function Navegacion() {
+  const { pathname } = useLocation();
   return (
     <nav
       aria-label="Secciones"
@@ -19,20 +20,19 @@ export function Navegacion() {
             <NavLink
               to={d.a}
               end={d.a === '/'}
-              className={({ isActive }) =>
-                'flex min-h-[3.25rem] flex-col items-center justify-center gap-1 ' +
-                (isActive ? 'font-bold text-acento' : 'text-tenue')
-              }
+              className={({ isActive }) => {
+                const activa = isActive || d.tambien.includes(pathname);
+                return (
+                  'group flex min-h-[3.25rem] flex-col items-center justify-center gap-1 ' +
+                  (activa ? 'activa font-bold text-acento' : 'text-tenue')
+                );
+              }}
             >
-              {({ isActive }) => (
-                <>
-                  <span>{d.texto}</span>
-                  <span
-                    aria-hidden="true"
-                    className={`h-1 w-6 rounded-full ${isActive ? 'bg-oro' : 'bg-transparent'}`}
-                  />
-                </>
-              )}
+              <span>{d.texto}</span>
+              <span
+                aria-hidden="true"
+                className="h-1 w-6 rounded-full bg-transparent group-[.activa]:bg-oro"
+              />
             </NavLink>
           </li>
         ))}

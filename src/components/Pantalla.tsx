@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router';
 import { Lungta } from './Lungta';
 
 interface Props {
@@ -7,16 +8,27 @@ interface Props {
   antetitulo?: string;
   /** Contenido extra dentro de la banda, debajo del título. */
   cabecera?: ReactNode;
+  /** Para las subpantallas: botón visible para volver a la sección de la que salen. */
+  volver?: { a: string; texto: string };
   children: ReactNode;
 }
 
 /** Estructura común: banda granate con el título y el contenido debajo. */
-export function Pantalla({ titulo, antetitulo, cabecera, children }: Props) {
+export function Pantalla({ titulo, antetitulo, cabecera, volver, children }: Props) {
   return (
     <>
       <header className="bg-banda text-sobre-banda bg-[radial-gradient(circle_at_88%_0%,rgb(242_179_61/0.22),transparent_55%)]">
         <Lungta />
-        <div className="mx-auto max-w-xl px-5 pt-6 pb-7">
+        <div className={`mx-auto max-w-xl px-5 pb-7 ${volver ? 'pt-2' : 'pt-6'}`}>
+          {volver && (
+            <Link
+              to={volver.a}
+              className="-ml-1 inline-flex min-h-[3rem] items-center gap-2 px-1 font-semibold text-oro-claro"
+            >
+              <span aria-hidden="true">←</span>
+              {volver.texto}
+            </Link>
+          )}
           {antetitulo && <p className="font-semibold text-oro-claro">{antetitulo}</p>}
           <h1 className="text-[2.1rem] leading-tight font-semibold">{titulo}</h1>
           {cabecera}
