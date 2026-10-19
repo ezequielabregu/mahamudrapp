@@ -99,6 +99,7 @@
   "practicas": {
     "postraciones": {
       "titulo": "Postraciones",
+      "corto": "Postraciones",
       "unidad": "postraciones",
       "sumasRapidas": [
         {
@@ -117,21 +118,25 @@
     },
     "vajrasattva": {
       "titulo": "Mantras de Vajrasattva",
+      "corto": "Vajrasattva",
       "unidad": "mantras",
       "sumasRapidas": []
     },
     "mandala": {
       "titulo": "Ofrendas de mandala",
+      "corto": "Mandala",
       "unidad": "ofrendas",
       "sumasRapidas": []
     },
     "guruyoga": {
       "titulo": "Plegarias de guru yoga",
+      "corto": "Guru yoga",
       "unidad": "plegarias",
       "sumasRapidas": []
     },
     "chenresi": {
       "titulo": "Mantras de Chenresi",
+      "corto": "Chenresi",
       "unidad": "mantras",
       "sumasRapidas": [
         {
@@ -144,16 +149,19 @@
     },
     "yidam-exterior": {
       "titulo": "Mantras del yidam (práctica exterior)",
+      "corto": "Yidam",
       "unidad": "mantras",
       "sumasRapidas": []
     },
     "yidam-interior": {
       "titulo": "Mantras del yidam (práctica interior)",
+      "corto": "Yidam",
       "unidad": "mantras",
       "sumasRapidas": []
     },
     "yidam-secreto": {
       "titulo": "Mantras del yidam (práctica secreta)",
+      "corto": "Yidam",
       "unidad": "mantras",
       "sumasRapidas": []
     }

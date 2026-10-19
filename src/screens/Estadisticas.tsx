@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
-import { BarraConMarca } from '../components/BarraConMarca';
+import { ComparacionRitmo } from '../components/ComparacionRitmo';
 import { BarraProgreso } from '../components/BarraProgreso';
 import { GraficoColumnas } from '../components/GraficoColumnas';
 import { MapaDeCalor } from '../components/MapaDeCalor';
@@ -166,7 +166,7 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
       {hayMetas && (
         <Tarjeta antetitulo="Metas" titulo="Cómo vas">
           {preliminar && preliminar.meta > 0 && (
-            <BarraConMarca
+            <ComparacionRitmo
               titulo={programa.practicas[preliminar.practica].titulo}
               valor={preliminar.total}
               meta={preliminar.meta}
@@ -175,7 +175,7 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
             />
           )}
           {chenresi.meta !== null && (
-            <BarraConMarca
+            <ComparacionRitmo
               titulo="Chenresi"
               valor={chenresi.total}
               meta={chenresi.meta}
@@ -198,12 +198,6 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
                 etiqueta="Mantras del yidam, acumulado"
               />
             </div>
-          )}
-          {(Boolean(preliminar?.meta) || chenresi.meta !== null) && (
-            <p className="flex items-center gap-2 text-tenue">
-              <span aria-hidden="true" className="inline-block h-4 w-[3px] shrink-0 rounded-full bg-tinta" />
-              Dónde estarías hoy con un ritmo parejo hasta la meta.
-            </p>
           )}
         </Tarjeta>
       )}

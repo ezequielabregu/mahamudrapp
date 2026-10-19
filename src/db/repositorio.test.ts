@@ -180,4 +180,52 @@ describe('repositorio', () => {
     await db.ajustes.put({ clave: 'apariencia', valor: 'violeta', actualizadoEn: '' });
     expect((await repo.leerPreferencias()).apariencia).toBe('oscura');
   });
+
+  it('el temporizador de Shiné registra la sesión al cumplirse el tiempo, una sola vez', async () => {
+    const { db, repo } = nuevoRepo();
+    await repo.iniciarShine(30);
+    expect((await repo.leerPreferencias()).minutosShine).toBe(30);
+    expect(await repo.cerrarShineSiTermino()).toBe(false);
+
+    reloj = new Date(reloj.getTime() + 31 * 60_000);
+    expect(await repo.cerrarShineSiTermino()).toBe(true);
+    expect(await repo.cerrarShineSiTermino()).toBe(false);
+    expect(await repo.cerrarShine(true)).toBeNull();
+
+    const sesiones = await db.sesiones.toArray();
+    expect(sesiones).toHaveLength(1);
+    expect(sesiones[0]).toMatchObject({
+      tipo: 'shine',
+      origen: 'app',
+      duracionSeg: 1800,
+      fechaLocal: '2026-10-18',
+    });
+    expect(await repo.shineEnCurso()).toBeNull();
+  });
+
+  it('terminar antes guarda lo transcurrido, o nada si fue menos de un minuto o se descarta', async () => {
+    const { db, repo } = nuevoRepo();
+    await repo.iniciarShine(30);
+    reloj = new Date(reloj.getTime() + 12 * 60_000 + 30_000);
+    expect((await repo.cerrarShine(true))?.duracionSeg).toBe(750);
+
+    await repo.iniciarShine(30);
+    reloj = new Date(reloj.getTime() + 40_000);
+    expect(await repo.cerrarShine(true)).toEqual({ sesion: null, duracionSeg: 40 });
+
+    await repo.iniciarShine(30);
+    reloj = new Date(reloj.getTime() + 20 * 60_000);
+    expect((await repo.cerrarShine(false))?.sesion).toBeNull();
+
+    expect(await db.sesiones.count()).toBe(1);
+  });
+
+  it('una sesión que cruza la medianoche pertenece al día en que empezó', async () => {
+    const { db, repo } = nuevoRepo();
+    reloj = new Date(2026, 9, 18, 23, 50);
+    await repo.iniciarShine(30);
+    reloj = new Date(2026, 9, 19, 0, 25);
+    await repo.cerrarShineSiTermino();
+    expect((await db.sesiones.toArray())[0]?.fechaLocal).toBe('2026-10-18');
+  });
 });

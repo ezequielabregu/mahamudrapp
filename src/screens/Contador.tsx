@@ -51,8 +51,12 @@ function PantallaContador({ practica }: { practica: Practica }) {
       <Lungta />
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-4 pt-4">
         <header className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold">{datos.titulo}</h1>
-          <button type="button" className={clasesBoton('secundario', 'w-auto')} onClick={terminar}>
+          <h1 className="min-w-0 text-2xl leading-tight font-semibold break-words">{datos.corto}</h1>
+          <button
+            type="button"
+            className={`${clasesBoton('secundario', 'w-auto')} shrink-0 whitespace-nowrap`}
+            onClick={terminar}
+          >
             Terminar
           </button>
         </header>

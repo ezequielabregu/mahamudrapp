@@ -302,7 +302,7 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - **Hoy:** fecha, trimestre, reflexión y soporte del día, estado de las dos sesiones (pendiente / hecha), progreso del preliminar del trimestre, y un botón principal enorme: "Comenzar la práctica de hoy". Indicador de respaldo ("Última copia: hoy" / "Hace 10 días sin copia").
 - **Práctica (modo guiado):** un paso por pantalla, botones "Anterior" y "Siguiente" grandes, texto del paso con fonética y español, página del libro visible ("Libro, p. 13"). Temporizador cuando corresponde.
 - **Contador:** botón que ocupa al menos la mitad de la pantalla, número gigante, sonido suave en cada toque, botón "deshacer último", sumas rápidas.
-- **Avance (estadísticas):** dos partes. **De un vistazo** (solo gráficos, cada uno elegido según su función): regularidad del año (cifra grande + barra), metas como *barra con marca* (lo hecho contra el "ritmo parejo a hoy" para llegar a la meta), calendario de calor del trimestre, columnas de los últimos 14 días del preliminar contra lo sugerido por día, y columnas de minutos de Shiné por semana. **En números**: meditación (regularidad, días, sesiones, minutos, promedios, rachas), cada práctica (% de la meta, promedio, mejor día, ritmo parejo, proyección, lo que falta por día, días restantes) y el recuento del carnet. Lógica en `src/domain/estadisticas.ts`. La pestaña se llama "Avance" porque "Estadísticas" no entra en la barra con letra grande.
+- **Avance (estadísticas):** dos partes. **De un vistazo** (solo gráficos, cada uno elegido según su función): regularidad del año (cifra grande + barra), metas como dos barras en la misma escala, **Hecho** y **Ritmo parejo a hoy** (lo que correspondería hoy para llegar a la meta), con el % de la meta total en texto; una barra contra la meta total se veía vacía al principio del período, calendario de calor del trimestre, columnas de los últimos 14 días del preliminar contra lo sugerido por día, y columnas de minutos de Shiné por semana. **En números**: meditación (regularidad, días, sesiones, minutos, promedios, rachas), cada práctica (% de la meta, promedio, mejor día, ritmo parejo, proyección, lo que falta por día, días restantes) y el recuento del carnet. Lógica en `src/domain/estadisticas.ts`. La pestaña se llama "Avance" porque "Estadísticas" no entra en la barra con letra grande.
 - **Programa:** la semana tipo de cada trimestre como en el cuadernillo (botones 1º a 4º, abre en el trimestre en curso, con el día de hoy resaltado), las fechas del trimestre, la meta del preliminar según el nivel, el recuadro "Desarrollo de una sesión" y "Durante el año" literales del cuadernillo.
 - **Respaldo:** exportar, importar, estado de Google Drive (etapa 2). Se entra desde Ajustes.
 - **Registrar:** práctica hecha fuera de la app y correcciones. Se entra desde Ajustes o desde el botón de la sesión en Hoy.
@@ -327,11 +327,18 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - Tema oscuro dentro de la sesión, sin elementos ajenos al paso actual.
 - **Pantalla siempre encendida** durante la sesión con la Screen Wake Lock API; si no está disponible, avisar al usuario.
 - Temporizador basado en marcas de tiempo (`Date.now()`), nunca en contar `setInterval`, para que no se desfase.
+- **Temporizador de Shiné** (`screens/SesionShine.tsx`, ruta `/sesion/shine`), entrada principal de la Sesión 1 en Hoy:
+  - Duración elegible (preferencia `minutosShine`, 30 por defecto), anillo de reloj, cuenco al comenzar y al terminar, y **registro automático** de la sesión (`origen: 'app'`, con inicio y fin).
+  - La sesión en curso se guarda en `ajustes` (clave `shineEnCurso`): sobrevive a recargas y cierres. `cerrarShine` es atómica e idempotente (nunca registra dos veces). Si el tiempo se cumplió fuera de la pantalla, Hoy la registra al volver (`cerrarShineSiTermino`).
+  - El cuenco final se agenda en el reloj de audio desde el inicio; si el sistema pausó el audio en segundo plano, suena al volver (hasta 1 minuto tarde; después, solo se registra). Si se retoma tras cerrar la app, el navegador pide un toque ("Activar el cuenco final").
+  - "Terminar antes": guardar lo transcurrido (si es al menos 1 minuto), no guardar, o seguir.
+  - La sesión pertenece al día en que empezó.
 - Aviso: en iPhone, si la app pasa a segundo plano el JavaScript se suspende y el cuenco final puede no sonar. Por eso la pantalla debe quedar encendida.
 
 ### 8.4 Audio
 
-- Cuencos y campanas en `public/audio/`, cacheados por el service worker. Grabaciones propias o de licencia libre, con la licencia anotada en `public/audio/LICENCIAS.md`.
+- **Cuenco sintetizado** con Web Audio (`src/audio/cuenco.ts`): parciales inarmónicos con batido y decaimiento lento (pico 0,45, se apaga en unos 20 s). Un golpe al comenzar, tres al terminar. Sin archivos ni licencias. Si más adelante se usa una grabación, va en `public/audio/` con su licencia en `public/audio/LICENCIAS.md`.
+- Un único `AudioContext` para toda la app (`src/audio/contexto.ts`).
 - El audio en iOS solo se habilita tras un toque del usuario: desbloquear el contexto de audio en el toque de "Comenzar".
 - En iOS, el interruptor de silencio puede silenciar Web Audio: usar `navigator.audioSession.type = 'playback'` cuando exista y probar con el interruptor activado.
 - `navigator.vibrate` no existe en iOS Safari: usar sonido suave como respuesta táctil y vibración solo donde esté disponible.
@@ -393,6 +400,7 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
 ## 12. Hoja de ruta
 
 0. **Versión mínima (hecha, octubre 2026):** pantalla Hoy (qué toca, estado, progreso), contador con borrador a prueba de cortes, registro manual con fecha (sesiones, conteos y correcciones), copia JSON por Compartir o descarga con recordatorio, Ajustes, guía de instalación, PWA offline.
+0.1. **Temporizador de Shiné (hecho):** cuenco sintetizado, anillo de reloj, registro automático.
 1. **Prototipo:** pantalla Hoy, sesión guiada de Shiné y de postraciones del 1º trimestre, temporizador con cuenco, contador, registro local, instalación como PWA.
 2. **Respaldo manual:** exportar e importar JSON y CSV, recordatorio.
 3. **Estadísticas:** regularidad, rachas, acumulados, proyección, resumen tipo carnet.

@@ -4,6 +4,7 @@
 import { infoDelDia } from '../domain/calendario';
 import { esCantidadValida } from '../domain/conteos';
 import { diaDeSemana, esFechaValida, fechaLocalDe } from '../domain/fechas';
+import { estadoTemporizador, minutosValidos, SEGUNDOS_MINIMOS_PARA_GUARDAR } from '../domain/temporizador';
 import { programa, type CompromisoId, type NumeroNivel, type Practica } from '../domain/programa';
 import { nuevoId } from './ids';
 import {
@@ -31,6 +32,8 @@ export interface Preferencias {
   escalaTexto: EscalaTexto;
   sonidoContador: boolean;
   apariencia: Apariencia;
+  /** Duración elegida para el temporizador de Shiné. */
+  minutosShine: number;
 }
 
 export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
@@ -41,7 +44,16 @@ export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   sonidoContador: true,
   // Oscura por defecto: para meditar no se busca una pantalla luminosa.
   apariencia: 'oscura',
+  minutosShine: programa.minutosMeditacionDiaria,
 };
+
+/** Sesión de Shiné con temporizador, mientras transcurre. Se guarda en ajustes (no es un registro de práctica). */
+export interface ShineEnCurso {
+  inicioMs: number;
+  duracionSeg: number;
+  /** Día al que pertenece: el del comienzo. */
+  fechaLocal: string;
+}
 
 export interface NuevaSesion {
   tipo: TipoSesion;
@@ -77,6 +89,7 @@ export interface CopiaCompleta {
 }
 
 const CLAVE_DISPOSITIVO = 'dispositivoId';
+const CLAVE_SHINE_EN_CURSO = 'shineEnCurso';
 const DURACION_MAXIMA_SEG = 24 * 60 * 60;
 
 export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => new Date()) {
@@ -102,6 +115,7 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
       prefs.escalaTexto = PREFERENCIAS_POR_DEFECTO.escalaTexto;
     if (!APARIENCIAS_VALIDAS.includes(prefs.apariencia))
       prefs.apariencia = PREFERENCIAS_POR_DEFECTO.apariencia;
+    if (!minutosValidos(prefs.minutosShine)) prefs.minutosShine = PREFERENCIAS_POR_DEFECTO.minutosShine;
     return prefs;
   }
 
@@ -268,6 +282,79 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     });
   }
 
+  async function shineEnCurso(): Promise<ShineEnCurso | null> {
+    const fila = await db.ajustes.get(CLAVE_SHINE_EN_CURSO);
+    const v = fila?.valor as Partial<ShineEnCurso> | undefined;
+    if (
+      !v ||
+      typeof v.inicioMs !== 'number' ||
+      typeof v.duracionSeg !== 'number' ||
+      !esFechaValida(v.fechaLocal ?? '')
+    ) {
+      return null;
+    }
+    return v as ShineEnCurso;
+  }
+
+  /** Empieza una sesión con temporizador. Si había otra sin cerrar, la reemplaza. */
+  async function iniciarShine(minutos: number): Promise<ShineEnCurso> {
+    if (!minutosValidos(minutos)) throw new Error('La duración no es válida.');
+    const momento = ahora();
+    const enCurso: ShineEnCurso = {
+      inicioMs: momento.getTime(),
+      duracionSeg: minutos * 60,
+      fechaLocal: hoy(),
+    };
+    await db.ajustes.put({
+      clave: CLAVE_SHINE_EN_CURSO,
+      valor: enCurso,
+      actualizadoEn: momento.toISOString(),
+    });
+    await guardarPreferencia('minutosShine', minutos);
+    return enCurso;
+  }
+
+  /**
+   * Cierra la sesión en curso. Si `guardar`, la registra con el tiempo transcurrido (como máximo,
+   * el elegido). Es atómica e idempotente: si ya se cerró, devuelve null y no registra nada.
+   */
+  async function cerrarShine(
+    guardar: boolean,
+  ): Promise<{ sesion: Sesion | null; duracionSeg: number } | null> {
+    return db.transaction('rw', db.ajustes, db.sesiones, async () => {
+      const enCurso = await shineEnCurso();
+      if (!enCurso) return null;
+      const momento = ahora();
+      const { transcurridoSeg } = estadoTemporizador(
+        enCurso.inicioMs,
+        enCurso.duracionSeg,
+        momento.getTime(),
+      );
+      let sesion: Sesion | null = null;
+      if (guardar && transcurridoSeg >= SEGUNDOS_MINIMOS_PARA_GUARDAR) {
+        sesion = await registrarSesion({
+          tipo: 'shine',
+          origen: 'app',
+          fechaLocal: enCurso.fechaLocal,
+          duracionSeg: transcurridoSeg,
+          inicio: new Date(enCurso.inicioMs).toISOString(),
+          fin: new Date(enCurso.inicioMs + transcurridoSeg * 1000).toISOString(),
+        });
+      }
+      await db.ajustes.delete(CLAVE_SHINE_EN_CURSO);
+      return { sesion, duracionSeg: transcurridoSeg };
+    });
+  }
+
+  /** Si la sesión en curso ya cumplió su tiempo (por ejemplo, con la app cerrada), la registra. */
+  async function cerrarShineSiTermino(): Promise<boolean> {
+    const enCurso = await shineEnCurso();
+    if (!enCurso || !estadoTemporizador(enCurso.inicioMs, enCurso.duracionSeg, ahora().getTime()).terminado) {
+      return false;
+    }
+    return (await cerrarShine(true)) !== null;
+  }
+
   async function registrarRespaldo(metodo: Respaldo['metodo'], registros: number): Promise<void> {
     await db.respaldos.add({
       id: nuevoId(),
@@ -290,6 +377,10 @@ export function crearRepositorio(db: BaseMahamudra, ahora: () => Date = () => ne
     exportarTodo,
     registrarRespaldo,
     borrarRegistros,
+    shineEnCurso,
+    iniciarShine,
+    cerrarShine,
+    cerrarShineSiTermino,
 
     sesionesEntre: (desde: string, hasta: string) =>
       db.sesiones.where('fechaLocal').between(desde, hasta, true, false).toArray(),

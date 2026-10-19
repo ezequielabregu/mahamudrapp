@@ -1,21 +1,7 @@
 // Respuesta suave a cada toque del contador. Se sintetiza con Web Audio para no depender
-// de archivos. En iOS el contexto de audio solo arranca después de un toque del usuario,
-// y como esto se llama desde un toque, alcanza con crearlo o reanudarlo acá.
+// de archivos.
 
-type NavegadorConSesionDeAudio = Navigator & { audioSession?: { type: string } };
-
-let contexto: AudioContext | null = null;
-
-function obtenerContexto(): AudioContext | null {
-  if (!contexto) {
-    if (typeof AudioContext === 'undefined') return null;
-    const sesion = (navigator as NavegadorConSesionDeAudio).audioSession;
-    if (sesion) sesion.type = 'playback';
-    contexto = new AudioContext();
-  }
-  if (contexto.state === 'suspended') void contexto.resume();
-  return contexto;
-}
+import { obtenerContexto } from './contexto';
 
 export function sonarToque(): void {
   const ctx = obtenerContexto();

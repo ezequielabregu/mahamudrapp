@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { createHashRouter, Navigate, Outlet, RouterProvider } from 'react-router';
+import { createHashRouter, Navigate, Outlet, RouterProvider, ScrollRestoration } from 'react-router';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Navegacion } from './components/Navegacion';
 import type { EscalaTexto } from './db/repositorio';
@@ -12,6 +12,7 @@ import { Instalar } from './screens/Instalar';
 import { Programa } from './screens/Programa';
 import { Registrar } from './screens/Registrar';
 import { Respaldo } from './screens/Respaldo';
+import { SesionShine } from './screens/SesionShine';
 import { aplicarApariencia } from './tema';
 
 export interface ContextoLayout {
@@ -47,21 +48,37 @@ function Layout() {
   );
 }
 
+/** Raíz de todas las pantallas: cada pantalla nueva abre arriba; al volver atrás, donde estaba. */
+function Raiz() {
+  return (
+    <>
+      <ScrollRestoration />
+      <Outlet />
+    </>
+  );
+}
+
 const router = createHashRouter([
   {
-    element: <Layout />,
+    element: <Raiz />,
     children: [
-      { index: true, element: <Hoy /> },
-      { path: 'programa', element: <Programa /> },
-      { path: 'avance', element: <Estadisticas /> },
-      { path: 'registrar', element: <Registrar /> },
-      { path: 'respaldo', element: <Respaldo /> },
-      { path: 'ajustes', element: <Ajustes /> },
-      { path: 'instalar', element: <Instalar /> },
+      {
+        element: <Layout />,
+        children: [
+          { index: true, element: <Hoy /> },
+          { path: 'programa', element: <Programa /> },
+          { path: 'avance', element: <Estadisticas /> },
+          { path: 'registrar', element: <Registrar /> },
+          { path: 'respaldo', element: <Respaldo /> },
+          { path: 'ajustes', element: <Ajustes /> },
+          { path: 'instalar', element: <Instalar /> },
+        ],
+      },
+      { path: 'contador/:practica', element: <Contador /> },
+      { path: 'sesion/shine', element: <SesionShine /> },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
-  { path: 'contador/:practica', element: <Contador /> },
-  { path: '*', element: <Navigate to="/" replace /> },
 ]);
 
 export function App() {

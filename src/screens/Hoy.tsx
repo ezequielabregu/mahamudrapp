@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useOutletContext } from 'react-router';
 import type { ContextoLayout } from '../App';
 import { Aviso } from '../components/Aviso';
@@ -32,6 +32,15 @@ export function Hoy() {
   const prefs = usePreferencias();
   const dia = useDia(hoy, prefs);
   const borradores = useLiveQuery(() => repositorio.borradores(), []);
+  const shineEnCurso = useLiveQuery(() => repositorio.shineEnCurso(), []);
+
+  // Si una sesión con temporizador cumplió su tiempo fuera de su pantalla, se registra al volver.
+  useEffect(() => {
+    const cerrar = () => void repositorio.cerrarShineSiTermino();
+    cerrar();
+    document.addEventListener('visibilitychange', cerrar);
+    return () => document.removeEventListener('visibilitychange', cerrar);
+  }, []);
   const instalacion = useInstalacion();
   const { actualizacionLista, actualizar } = useOutletContext<ContextoLayout>();
   const mensaje = (useLocation().state as { mensaje?: string } | null)?.mensaje;
@@ -67,6 +76,15 @@ export function Hoy() {
           <p>Para no perder tus registros, instalá la app en tu teléfono antes de empezar a usarla.</p>
           <Link to="/instalar" className={clasesBoton()}>
             Cómo instalarla
+          </Link>
+        </Aviso>
+      )}
+
+      {shineEnCurso && (
+        <Aviso>
+          <p>Tenés una sesión de Shiné en curso.</p>
+          <Link to="/sesion/shine" className={clasesBoton('principal')}>
+            Volver a la sesión
           </Link>
         </Aviso>
       )}
@@ -153,8 +171,11 @@ function TarjetaShine({ info, resumen }: { info: InfoDelDia; resumen: ResumenDel
       <Pasos plegados={hecha}>
         <ListaPasos pasos={pasosDelDia(guiaShine, info)} info={info} />
       </Pasos>
-      <Link to="/registrar?que=sesion" className={clasesBoton(hecha ? 'secundario' : 'principal')}>
-        {hecha ? 'Registrar otra sesión' : 'Registrar la sesión'}
+      <Link to="/sesion/shine" className={clasesBoton(hecha ? 'secundario' : 'principal')}>
+        {hecha ? 'Otra sesión con temporizador' : 'Comenzar la sesión'}
+      </Link>
+      <Link to="/registrar?que=sesion" className={clasesBoton()}>
+        Registrar sin temporizador
       </Link>
     </Tarjeta>
   );

@@ -15,6 +15,8 @@ export interface SumaRapida {
 
 export interface DatosPractica {
   titulo: string;
+  /** Para espacios chicos, como el encabezado del contador. */
+  corto: string;
   unidad: string;
   sumasRapidas: SumaRapida[];
   mantra?: string;

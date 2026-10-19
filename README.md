@@ -13,6 +13,7 @@ Cada día te muestra qué toca (la reflexión, el soporte de meditación y el pr
 ## Qué hace hoy
 
 - **Hoy:** fecha, trimestre y día del trimestre, reflexión y soporte del día con su página del libro, estado de la sesión de Shiné, postraciones del día y del trimestre con la meta diaria sugerida, y mantras de Chenresi del año.
+- **Temporizador de Shiné:** elegís los minutos (30 por defecto), suena un cuenco tibetano al comenzar y al terminar, un anillo dorado acompaña el paso del tiempo, y la sesión se registra sola. La pantalla queda encendida, y si la app se cierra a mitad, al volver la sesión sigue o se registra.
 - **Contador:** un botón grande que ocupa media pantalla, sumas rápidas (+10, +21, +108; +1 mala de Chenresi suma 100), "Deshacer el último", sonido suave opcional y pantalla siempre encendida. Cada toque se guarda al instante: si se corta la batería, no se pierde nada.
 - **Registrar:** sesiones y conteos con fecha pasada, para la práctica hecha sin la app, y correcciones que restan.
 - **Copia de seguridad:** exporta todos los registros en un archivo JSON, para enviarlo por WhatsApp, mail o Drive, o para descargarlo. Si pasan más de 7 días sin copia, la app lo recuerda.
