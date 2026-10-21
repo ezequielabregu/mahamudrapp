@@ -77,7 +77,8 @@ Antes de dar una tarea por terminada: `npm run typecheck && npm run lint && npm 
 /
 ├─ CLAUDE.md
 ├─ referencias/
-│  ├─ Arco Iris, COMPLETO.pdf               # textos de las plegarias (no se versiona)
+│  ├─ Arco Iris 2023 - hoja simple.pdf     # textos de las plegarias, edición de referencia (no se versiona)
+│  ├─ Arco Iris 2023 - dos por hoja.pdf    # la misma edición, armada para imprimir (no se versiona)
 │  ├─ Mahamudra_guia_de_practica_compressed.pdf  # fotos del cuadernillo (no se versiona)
 │  ├─ Programa_Mahamudra_Bokar_Rinpoche.xlsx      # transcripción del cuadernillo, también en formato de datos
 │  └─ indicaciones_Lama_Rinchen.md          # transcripción del seminario (no se versiona)
@@ -117,7 +118,7 @@ Regla: la lógica de negocio va en `src/domain/` como funciones puras, con tests
 
 1. **Cuadernillo del programa anual** (`referencias/Mahamudra_guia_de_practica_compressed.pdf` y su transcripción en `referencias/Programa_Mahamudra_Bokar_Rinpoche.xlsx`): semana tipo por trimestre, niveles, metas y "recuento".
 2. **Transcripción del seminario con Lama Rinchen** (`referencias/indicaciones_Lama_Rinchen.md`): estructura de las sesiones e instrucciones.
-3. **"El Arco Iris de la Sabiduría"** (`referencias/Arco Iris, COMPLETO.pdf`): textos de las plegarias.
+3. **"El Arco Iris de la Sabiduría", edición 2023** (`referencias/Arco Iris 2023 - hoja simple.pdf`; la versión "dos por hoja" es la misma, para imprimir): textos de las plegarias. Es la edición que usa el seminario. Reemplaza al borrador anterior (`Arco Iris, COMPLETO.pdf`), que tenía la numeración corrida y algunas traducciones distintas.
 
 Ante una duda de contenido, no inventar: dejar un `TODO(contenido)` y preguntar al autor.
 
@@ -163,7 +164,14 @@ Semana tipo. Las **reflexiones** son iguales en los cuatro trimestres:
 
 ### 6.3 Páginas: libro impreso vs PDF
 
-**La app siempre muestra la página del libro**, la que da Lama Rinchen y la que figura en el índice. Verificado en todo el PDF: **el número de página del visor del PDF coincide con la página del libro** (8 refugio, 12 Milarepa, 13 linaje, 23 resumen, 69 dedicación, 71 a 86 abreviados, 87 Chenresi, 118 Aspiración, 268 Dedicaciones). El número impreso dentro de cada página del PDF es un resto del borrador (corrido en 2 y después en 18): ignorarlo. Cada texto en `textos.json` guarda una sola página:
+**La app siempre muestra la página del libro**, la que da Lama Rinchen y la que figura en el índice. En la **edición 2023** el número de página del PDF, el número impreso en cada página y el del índice coinciden. Todas las páginas que cita la app se verificaron contra esa edición (octubre 2026).
+
+Diferencias de la edición 2023 con el borrador anterior, a tener en cuenta al copiar textos:
+- La **fonética va en minúsculas** (`sangye chö dang tsok kyi chok nam la /`), no en mayúsculas.
+- Algunas traducciones cambiaron (por ejemplo, Milarepa: "te dirijo mi plegaria" en lugar de "os dirijo"). Copiar siempre de la edición 2023.
+- Incluye la **escritura tibetana**, pero con una fuente antigua no Unicode: al extraer el texto sale como símbolos (`´Tc-]uÈ-c‰Uc`). No usarla tal cual; si algún día se muestra escritura tibetana, va en Unicode y confirmada por la Lama.
+
+Cada texto en `textos.json` guarda una sola página:
 
 ```json
 {
@@ -171,7 +179,7 @@ Semana tipo. Las **reflexiones** son iguales en los cuatro trimestres:
   "titulo": "Refugio",
   "pagina": 8,
   "repeticiones": 3,
-  "fonetica": ["SANGYE CHÖ DANG TSOK KYI CHOK NAM LA /", "..."],
+  "fonetica": ["sangye chö dang tsok kyi chok nam la /", "..."],
   "espanol": ["En el Buda, el dharma y la sanga sublime,", "..."]
 }
 ```
