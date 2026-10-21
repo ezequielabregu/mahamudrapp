@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 import { Link, useLocation, useOutletContext } from 'react-router';
 import type { ContextoLayout } from '../App';
 import { Aviso } from '../components/Aviso';
@@ -271,19 +271,39 @@ function Avance(props: { etiqueta: string; valor: number; meta: number; children
 /** Muestra los pasos; una vez hecha la sesión quedan plegados detrás de un botón visible. */
 function Pasos({ plegados, children }: { plegados: boolean; children: ReactNode }) {
   const [abiertos, setAbiertos] = useState(false);
+  const idPasos = useId();
   if (!plegados) return children;
+  // Enlace desplegable, no botón: es algo secundario y no compite con las acciones de la tarjeta.
+  // Se ve como una línea de texto, pero el área que responde al toque es de 48 px de alto.
   return (
-    <>
-      {abiertos && children}
+    <div>
       <button
         type="button"
         aria-expanded={abiertos}
-        className={clasesBoton()}
+        aria-controls={idPasos}
         onClick={() => setAbiertos((a) => !a)}
+        className="-my-2 inline-flex min-h-[48px] items-center gap-2 font-semibold text-oro underline-offset-4 active:underline"
       >
         {abiertos ? 'Ocultar los pasos' : 'Ver los pasos'}
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className={`size-[1.1em] transition-transform ${abiertos ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </button>
-    </>
+      {abiertos && (
+        <div id={idPasos} className="mt-4">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
