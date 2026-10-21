@@ -105,10 +105,33 @@ export function Hoy() {
         </Aviso>
       ))}
 
-      {/* Fila fina con borde, sin relleno ni sombra: se ve al abrir, pero no compite con las sesiones. */}
+      {!info || !resumen ? (
+        <Tarjeta titulo="Todavía no empezó el año de práctica">
+          <p>Empieza el {formatearFechaCorta(prefs.fechaInicio)}. Podés cambiar la fecha en Ajustes.</p>
+        </Tarjeta>
+      ) : (
+        <>
+          <GrupoSeccion titulo={`Sesión 1 · ${guiaShine.momento}`}>
+            <TarjetaShine info={info} resumen={resumen} />
+          </GrupoSeccion>
+          {resumen.preliminar && (
+            <GrupoSeccion
+              titulo={`Sesión 2 · ${guiaPreliminar(resumen.preliminar.practica)?.momento ?? 'Preliminar del trimestre'}`}
+            >
+              <TarjetaPreliminar info={info} preliminar={resumen.preliminar} />
+            </GrupoSeccion>
+          )}
+          <GrupoSeccion titulo="Durante el día">
+            {resumen.yidam && <TarjetaYidam yidam={resumen.yidam} />}
+            <TarjetaChenresi resumen={resumen} />
+          </GrupoSeccion>
+        </>
+      )}
+
+      {/* Fila fina con borde, sin relleno ni sombra: se distingue sin competir con las sesiones. */}
       <Link
         to="/programa"
-        className="flex min-h-[3.5rem] items-center gap-3 rounded-2xl border border-borde px-4 py-2 font-semibold active:bg-resalte"
+        className="mt-8 flex min-h-[3.5rem] items-center gap-3 rounded-2xl border border-borde px-4 py-2 font-semibold active:bg-resalte"
       >
         <svg
           aria-hidden="true"
@@ -139,29 +162,6 @@ export function Hoy() {
           <path d="m9 6 6 6-6 6" />
         </svg>
       </Link>
-
-      {!info || !resumen ? (
-        <Tarjeta titulo="Todavía no empezó el año de práctica">
-          <p>Empieza el {formatearFechaCorta(prefs.fechaInicio)}. Podés cambiar la fecha en Ajustes.</p>
-        </Tarjeta>
-      ) : (
-        <>
-          <GrupoSeccion titulo={`Sesión 1 · ${guiaShine.momento}`}>
-            <TarjetaShine info={info} resumen={resumen} />
-          </GrupoSeccion>
-          {resumen.preliminar && (
-            <GrupoSeccion
-              titulo={`Sesión 2 · ${guiaPreliminar(resumen.preliminar.practica)?.momento ?? 'Preliminar del trimestre'}`}
-            >
-              <TarjetaPreliminar info={info} preliminar={resumen.preliminar} />
-            </GrupoSeccion>
-          )}
-          <GrupoSeccion titulo="Durante el día">
-            {resumen.yidam && <TarjetaYidam yidam={resumen.yidam} />}
-            <TarjetaChenresi resumen={resumen} />
-          </GrupoSeccion>
-        </>
-      )}
 
       {dia.recordarCopia ? (
         <Aviso>
