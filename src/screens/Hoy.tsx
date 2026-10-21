@@ -6,6 +6,7 @@ import { Aviso } from '../components/Aviso';
 import { BarraProgreso } from '../components/BarraProgreso';
 import { clasesBoton } from '../components/estilos';
 import { Insignia } from '../components/Insignia';
+import { GrupoSeccion } from '../components/GrupoSeccion';
 import { ListaPasos } from '../components/ListaPasos';
 import { MandalaAnio } from '../components/MandalaAnio';
 import { Pantalla } from '../components/Pantalla';
@@ -116,10 +117,20 @@ export function Hoy() {
         </Tarjeta>
       ) : (
         <>
-          <TarjetaShine info={info} resumen={resumen} />
-          {resumen.preliminar && <TarjetaPreliminar info={info} preliminar={resumen.preliminar} />}
-          {resumen.yidam && <TarjetaYidam yidam={resumen.yidam} />}
-          <TarjetaChenresi resumen={resumen} />
+          <GrupoSeccion titulo={`Sesión 1 · ${guiaShine.momento}`}>
+            <TarjetaShine info={info} resumen={resumen} />
+          </GrupoSeccion>
+          {resumen.preliminar && (
+            <GrupoSeccion
+              titulo={`Sesión 2 · ${guiaPreliminar(resumen.preliminar.practica)?.momento ?? 'Preliminar del trimestre'}`}
+            >
+              <TarjetaPreliminar info={info} preliminar={resumen.preliminar} />
+            </GrupoSeccion>
+          )}
+          <GrupoSeccion titulo="Durante el día">
+            {resumen.yidam && <TarjetaYidam yidam={resumen.yidam} />}
+            <TarjetaChenresi resumen={resumen} />
+          </GrupoSeccion>
         </>
       )}
 
@@ -150,7 +161,7 @@ function TarjetaShine({ info, resumen }: { info: InfoDelDia; resumen: ResumenDel
   const hecha = resumen.shine.sesiones > 0;
   return (
     <Tarjeta
-      antetitulo={`Sesión 1 · ${guiaShine.momento}`}
+      nivel={3}
       titulo={guiaShine.titulo}
       subtitulo={guiaShine.duracion}
       estado={
@@ -183,7 +194,7 @@ function TarjetaPreliminar({ info, preliminar }: { info: InfoDelDia; preliminar:
 
   return (
     <Tarjeta
-      antetitulo={`Sesión 2 · ${guia?.momento ?? 'Preliminar del trimestre'}`}
+      nivel={3}
       titulo={datos.titulo}
       estado={<Insignia hecho={hecha} texto={`Hoy: ${formatearNumero(hoy)}`} />}
     >
@@ -209,7 +220,7 @@ function TarjetaChenresi({ resumen }: { resumen: ResumenDelDia }) {
   const { hoy, anio, metaAnio } = resumen.chenresi;
   return (
     <Tarjeta
-      antetitulo="Durante el día"
+      nivel={3}
       titulo="Chenresi"
       estado={<Insignia hecho={hoy > 0} texto={`Hoy: ${formatearNumero(hoy)}`} />}
     >
@@ -232,7 +243,7 @@ function TarjetaYidam({ yidam }: { yidam: NonNullable<ResumenDelDia['yidam']> })
   const datos = programa.practicas[yidam.practica];
   return (
     <Tarjeta
-      antetitulo="Durante el día"
+      nivel={3}
       titulo="Yidam"
       subtitulo={datos.titulo}
       estado={<Insignia hecho={yidam.hoy > 0} texto={`Hoy: ${formatearNumero(yidam.hoy)}`} />}

@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
 import { BarraProgreso } from '../components/BarraProgreso';
 import { GraficoColumnas } from '../components/GraficoColumnas';
+import { GrupoSeccion } from '../components/GrupoSeccion';
 import { MapaDeCalor } from '../components/MapaDeCalor';
 import { Pantalla } from '../components/Pantalla';
 import { Tarjeta } from '../components/Tarjeta';
@@ -113,26 +114,14 @@ function Panel(props: PropsPanel) {
         Ir a los números
       </button>
 
-      <Encabezado titulo="De un vistazo" />
-      <DeUnVistazo {...props} calculo={calculo} />
+      <GrupoSeccion titulo="De un vistazo">
+        <DeUnVistazo {...props} calculo={calculo} />
+      </GrupoSeccion>
 
-      <Encabezado titulo="En números" id="en-numeros" />
-      <EnNumeros {...props} calculo={calculo} carnet={carnet} />
+      <GrupoSeccion titulo="En números" id="en-numeros">
+        <EnNumeros {...props} calculo={calculo} carnet={carnet} />
+      </GrupoSeccion>
     </Pantalla>
-  );
-}
-
-function Encabezado(props: { titulo: string; id?: string }) {
-  return (
-    <div className="flex items-center gap-3 pt-2">
-      <h2
-        id={props.id}
-        className="scroll-mt-4 font-sans font-semibold tracking-[0.08em] whitespace-nowrap text-oro uppercase"
-      >
-        {props.titulo}
-      </h2>
-      <span aria-hidden="true" className="h-px flex-1 bg-borde" />
-    </div>
   );
 }
 

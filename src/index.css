@@ -106,12 +106,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-serif);
-  font-optical-sizing: auto;
-  letter-spacing: -0.01em;
+/* En la capa base, para que un componente pueda cambiar la letra con una clase (los rótulos de sección). */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
 }
 
 button,
