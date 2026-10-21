@@ -22,6 +22,12 @@ export const claseCampo =
   'block w-full min-w-0 min-h-[3rem] rounded-2xl border-2 border-borde bg-superficie px-4 text-lg text-tinta ' +
   'focus:border-oro focus:outline-none';
 
+/** Campo para un número grande (minutos, cantidad): hundido en el fondo y con borde marcado, para que
+ * se vea como un lugar a completar aunque esté vacío. */
+export const claseCampoNumero =
+  'block w-full min-w-0 min-h-[4rem] rounded-2xl border-2 border-tenue bg-fondo px-4 text-center text-tinta ' +
+  'font-serif text-[2rem] font-semibold tabular-nums focus:border-oro focus:outline-none';
+
 export const claseOpcion =
   'flex min-h-[3rem] cursor-pointer items-center gap-3 rounded-2xl border-2 border-borde bg-superficie px-4 py-2 ' +
   'has-checked:border-oro has-checked:bg-resalte has-checked:font-semibold';

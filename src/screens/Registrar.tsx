@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { claseCampo, claseOpcion, clasesBoton } from '../components/estilos';
+import { claseCampo, claseCampoNumero, claseOpcion, clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio } from '../db/repositorio';
@@ -113,7 +113,7 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
             required
             value={minutos}
             onChange={(e) => setMinutos(Number(e.target.value))}
-            className={`${claseCampo} min-h-[4rem] text-center font-serif text-[2rem] font-semibold tabular-nums`}
+            className={claseCampoNumero}
           />
           <div className="grid grid-cols-2 gap-3">
             <button
@@ -156,7 +156,7 @@ function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: s
   const [cantidad, setCantidad] = useState('');
   const [restar, setRestar] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const unidad = programa.practicas[practica].unidad;
+  const { unidad, nota } = programa.practicas[practica];
 
   async function guardar(e: FormEvent) {
     e.preventDefault();
@@ -191,9 +191,11 @@ function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: s
 
         <CampoFecha valor={fecha} maximo={hoy} alCambiar={setFecha} />
 
-        <Seccion titulo="Cantidad">
-          <label htmlFor="cantidad" className="sr-only">
-            Cantidad
+        <Seccion titulo={`Cantidad de ${unidad}`}>
+          {/* La indicación va afuera y no como placeholder: adentro se cortaba en teléfonos angostos. */}
+          <label htmlFor="cantidad" className="block text-tenue">
+            Tocá el recuadro y escribí el número.
+            <span className="sr-only"> Cantidad de {unidad}</span>
           </label>
           <input
             id="cantidad"
@@ -202,10 +204,19 @@ function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: s
             min={1}
             step={1}
             required
+            aria-describedby={nota ? 'nota-cantidad' : undefined}
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
-            className={`${claseCampo} font-serif text-2xl tabular-nums`}
+            className={claseCampoNumero}
           />
+          {nota && (
+            <p id="nota-cantidad" className="text-tenue">
+              {nota}
+            </p>
+          )}
+        </Seccion>
+
+        <Seccion titulo="¿Sumar o restar?">
           <fieldset className="space-y-2">
             <legend className="sr-only">¿Sumar o restar?</legend>
             <Opcion nombre="operacion" marcada={!restar} alElegir={() => setRestar(false)}>
