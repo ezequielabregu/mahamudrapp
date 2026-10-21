@@ -2,7 +2,6 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
 import { sonarToque, vibrarSuave } from '../audio/toque';
-import { clasesBoton } from '../components/estilos';
 import { Lungta } from '../components/Lungta';
 import { repositorio, totalBorrador } from '../db/repositorio';
 import { formatearNumero } from '../domain/formato';
@@ -46,72 +45,74 @@ function PantallaContador({ practica }: { practica: Practica }) {
     }
   }
 
+  // En esta pantalla los tamaños tienen tope según el ancho del teléfono: con letra muy grande,
+  // el botón grande tiene que seguir siendo lo más grande de la pantalla.
+  const claseChico =
+    'inline-flex min-h-[max(48px,min(3rem,13vw))] min-w-0 items-center justify-center rounded-full border border-borde px-1 ' +
+    'text-[min(1rem,4.2vw)] font-semibold whitespace-nowrap text-tenue active:bg-resalte ' +
+    'disabled:opacity-40';
+
+  // Dos zonas: arriba, el control (Terminar, deshacer y sumas rápidas, más chicos); abajo, separado,
+  // el botón grande hasta el borde de la pantalla. Así, durante las postraciones, un toque a ciegas
+  // siempre cae en el botón grande y nunca en otro.
   return (
-    <div className="tema-practica flex min-h-dvh flex-col bg-fondo pt-[env(safe-area-inset-top)] pb-[max(1rem,env(safe-area-inset-bottom))] text-tinta">
+    <div className="tema-practica flex h-dvh flex-col bg-fondo pt-[env(safe-area-inset-top)] text-tinta">
       <Lungta />
-      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-4 px-4 pt-4">
+      <div className="mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <header className="flex items-center justify-between gap-3">
-          <h1 className="min-w-0 text-2xl leading-tight font-semibold break-words">{datos.corto}</h1>
+          <h1 className="min-w-0 truncate text-[min(1.6rem,7vw)] leading-tight font-semibold">
+            {datos.corto}
+          </h1>
           <button
             type="button"
-            className={`${clasesBoton('secundario', 'w-auto')} shrink-0 whitespace-nowrap`}
+            className="inline-flex min-h-[max(48px,min(3.25rem,13vw))] shrink-0 items-center justify-center rounded-full bg-acento px-[min(1.5rem,5vw)] text-[min(1.1rem,4.6vw)] font-semibold whitespace-nowrap text-sobre-acento active:brightness-110"
             onClick={terminar}
           >
             Terminar
           </button>
         </header>
 
-        <p
-          aria-live="polite"
-          className="text-center font-serif text-[5.5rem] leading-none font-semibold text-oro tabular-nums"
-        >
-          <span className="sr-only">Llevás </span>
-          {formatearNumero(total)}
-        </p>
+        <div className="mt-3 grid auto-cols-fr grid-flow-col gap-2">
+          <button
+            type="button"
+            className={claseChico}
+            disabled={!borrador || borrador.pasos.length === 0}
+            onClick={() => repositorio.deshacerEnBorrador(practica)}
+          >
+            Deshacer
+          </button>
+          {datos.sumasRapidas.map((s) => (
+            <button key={s.cantidad} type="button" className={claseChico} onClick={() => sumar(s.cantidad)}>
+              {s.etiqueta}
+            </button>
+          ))}
+        </div>
 
-        <button
-          type="button"
-          onClick={() => sumar(1)}
-          className="min-h-[50dvh] flex-1 rounded-[2rem] border border-borde bg-superficie bg-[radial-gradient(circle_at_50%_45%,rgb(234_169_68/0.18),transparent_62%)] text-2xl font-semibold active:bg-resalte"
-        >
-          Tocá para sumar 1
-        </button>
-
-        {datos.sumasRapidas.length > 0 && (
-          <div className="flex gap-3">
-            {datos.sumasRapidas.map((s) => (
-              <button
-                key={s.cantidad}
-                type="button"
-                className={clasesBoton()}
-                onClick={() => sumar(s.cantidad)}
-              >
-                {s.etiqueta}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <button
-          type="button"
-          className={clasesBoton()}
-          disabled={!borrador || borrador.pasos.length === 0}
-          onClick={() => repositorio.deshacerEnBorrador(practica)}
-        >
-          Deshacer el último
-        </button>
-
-        {datos.nota && <p className="text-center text-tenue">{datos.nota}</p>}
         {!pantallaEncendida && (
-          <p className="text-center text-tenue">
+          <p className="mt-2 text-tenue">
             Este navegador no puede mantener la pantalla encendida: puede apagarse sola.
           </p>
         )}
         {error && (
-          <p role="alert" className="text-center font-semibold">
+          <p role="alert" className="mt-2 font-semibold">
             {error}
           </p>
         )}
+
+        <p aria-live="polite" className="sr-only">
+          Llevás {formatearNumero(total)}
+        </p>
+        <button
+          type="button"
+          aria-label={`Sumar 1. Llevás ${formatearNumero(total)}.`}
+          onClick={() => sumar(1)}
+          className="mt-8 flex min-h-[12rem] flex-1 flex-col items-center justify-center gap-3 rounded-[2rem] border border-borde bg-superficie bg-[radial-gradient(circle_at_50%_45%,rgb(234_169_68/0.18),transparent_62%)] active:bg-resalte"
+        >
+          <span className="font-serif text-[clamp(5rem,26vw,8rem)] leading-none font-semibold text-oro tabular-nums">
+            {formatearNumero(total)}
+          </span>
+          <span className="text-[min(1.25rem,5.5vw)] font-semibold text-tenue">Tocá para sumar 1</span>
+        </button>
       </div>
     </div>
   );
