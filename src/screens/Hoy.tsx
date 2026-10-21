@@ -128,6 +128,25 @@ export function Hoy() {
         </>
       )}
 
+      <Link
+        to="/programa"
+        className="inline-flex min-h-[48px] items-center gap-2 font-semibold text-oro active:underline"
+      >
+        Ver el programa del trimestre
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-[1.1em]"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+      </Link>
+
       {dia.recordarCopia ? (
         <Aviso>
           <p>

@@ -315,17 +315,17 @@ Tablas: `sesiones`, `conteos`, `ajustes`, `respaldos` (log de exportaciones) y `
 - **Respaldo:** exportar, importar, estado de Google Drive (etapa 2). Se entra desde Ajustes.
 - **Registrar:** práctica hecha fuera de la app y correcciones. Se entra desde Ajustes o desde Hoy: "Registrar sin temporizador" (Sesión 1) y "Registrar sin contador" (preliminar, Chenresi y yidam), que abre el formulario con la práctica ya elegida (`?que=conteo&practica=...`).
 - **Ajustes:** arriba, accesos a Registrar y Copia; después nivel, compromiso (solo nivel 1), tamaño de texto, sonido, fecha de inicio, estado del teléfono; al final, borrar todos los registros.
-- **Navegación:** cuatro pestañas abajo, Hoy · Programa · Avance · Ajustes. Las subpantallas (Registrar, Copia, Instalar) tienen un botón visible "← Ajustes" en la banda.
+- **Navegación:** tres pestañas abajo, cada una con ícono y nombre (`components/IconosNavegacion.tsx`, trazo fino): Hoy (persona meditando) · Avance (columnas) · Ajustes (engranaje). Programa se abre con el enlace "Ver el programa del trimestre" al final de Hoy y vuelve con "← Hoy"; mientras está abierto, queda marcada la pestaña Hoy. Las subpantallas de Ajustes (Registrar, Copia, Instalar) tienen un botón visible "← Ajustes" en la banda.
 - **Instalar:** guía ilustrada según el sistema detectado (ver 9.1).
 
 ### 8.2 Accesibilidad (obligatorio)
 
 - Tamaño base de texto: **18 px por defecto** (escala "Pequeño", decisión del autor), textos de práctica ≥ 24 px, todo en `rem` para respetar el tamaño configurado en el teléfono. Escalas en Ajustes: Pequeño (18 px, por defecto), Normal (20 px), Grande y Muy grande. Para la versión grupal, reconsiderar el tamaño por defecto con usuarios reales (ver 12.6).
-- Pestañas de abajo: sin contorno de foco (en Android aparecía al tocar, como un cuadrado amarillo). La activa se marca con texto dorado y rayita.
+- Pestañas de abajo: sin contorno de foco (en Android aparecía al tocar, como un cuadrado amarillo). La activa se marca con ícono y texto dorados y rayita.
 - Contraste mínimo WCAG AA; apuntar a AAA en textos de práctica.
 - Áreas táctiles de al menos 56 × 56 px; botones principales de 72 px de alto o más.
 - Solo toques simples. Nada de deslizar, mantener presionado, doble toque ni menús ocultos.
-- Etiquetas claras en español, sin iconos sin texto. Única excepción, pedida por el autor: el botón "i" de cada paso, con `aria-label` ("Ver la explicación de...") y área táctil de 60 px.
+- Etiquetas claras en español, sin iconos sin texto (los de las pestañas van siempre con su nombre debajo). Única excepción, pedida por el autor: el botón "i" de cada paso, con `aria-label` ("Ver la explicación de...") y área táctil de 60 px.
 - Acciones destructivas o irreversibles con confirmación explícita.
 - Respetar `prefers-reduced-motion`; `prefers-color-scheme` se respeta con la Apariencia "Automática".
 - Navegable con lector de pantalla (roles y `aria-label` correctos).

@@ -1,11 +1,20 @@
+import type { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router';
+import { IconoAjustes, IconoAvance, IconoMeditacion } from './IconosNavegacion';
 
-/** Cuatro pestañas. Registrar, Copia e Instalar viven dentro de Ajustes. */
-const destinos = [
-  { a: '/', texto: 'Hoy', tambien: [] },
-  { a: '/programa', texto: 'Programa', tambien: [] },
-  { a: '/avance', texto: 'Avance', tambien: [] },
-  { a: '/ajustes', texto: 'Ajustes', tambien: ['/registrar', '/respaldo', '/instalar'] },
+/**
+ * Tres pestañas, cada una con ícono y nombre. Programa se abre desde Hoy; Registrar, Copia e
+ * Instalar, desde Ajustes: la pestaña de la que salen queda marcada.
+ */
+const destinos: { a: string; texto: string; icono: ReactNode; tambien: string[] }[] = [
+  { a: '/', texto: 'Hoy', icono: <IconoMeditacion />, tambien: ['/programa'] },
+  { a: '/avance', texto: 'Avance', icono: <IconoAvance />, tambien: [] },
+  {
+    a: '/ajustes',
+    texto: 'Ajustes',
+    icono: <IconoAjustes />,
+    tambien: ['/registrar', '/respaldo', '/instalar'],
+  },
 ];
 
 export function Navegacion() {
@@ -24,19 +33,20 @@ export function Navegacion() {
               className={({ isActive }) => {
                 const activa = isActive || d.tambien.includes(pathname);
                 return (
-                  // Con letra muy grande en un teléfono angosto, las cuatro etiquetas no entran: se achican hasta caber.
+                  // Con letra muy grande en un teléfono angosto, las etiquetas se achican hasta caber.
                   // Sin contorno de foco: Chrome en Android a veces lo muestra al tocar, como un cuadrado
-                  // amarillo. La pestaña activa se marca con el texto dorado y la rayita, también al enfocarla.
-                  'group flex min-h-[3.25rem] flex-col items-center justify-center gap-1 text-[min(1rem,5vw)] ' +
+                  // amarillo. La pestaña activa se marca con el ícono y el texto dorados y la rayita.
+                  'group flex min-h-[3.75rem] flex-col items-center justify-center gap-0.5 pt-1.5 text-[min(0.95rem,4.6vw)] ' +
                   'outline-none focus-visible:outline-none ' +
                   (activa ? 'activa font-bold text-oro' : 'text-tenue')
                 );
               }}
             >
-              <span>{d.texto}</span>
+              {d.icono}
+              <span className="leading-tight">{d.texto}</span>
               <span
                 aria-hidden="true"
-                className="h-1 w-6 rounded-full bg-transparent group-focus-visible:bg-borde group-[.activa]:bg-oro"
+                className="mt-0.5 h-1 w-6 rounded-full bg-transparent group-focus-visible:bg-borde group-[.activa]:bg-oro"
               />
             </NavLink>
           </li>
