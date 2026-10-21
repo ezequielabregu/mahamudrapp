@@ -14,7 +14,6 @@ export interface DatosPractica {
   corto: string;
   unidad: string;
   mantra?: string;
-  nota?: string;
 }
 
 export interface Compromiso {

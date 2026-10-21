@@ -242,7 +242,6 @@ function TarjetaChenresi({ resumen }: { resumen: ResumenDelDia }) {
           {datos.mantra}
         </p>
       )}
-      {datos.nota && <p className="text-tenue">{datos.nota}</p>}
       <Avance etiqueta="En el año" valor={anio} meta={metaAnio ?? 0} />
       {metaAnio === null && <p className="text-tenue">Optativo en tu nivel.</p>}
       <Link to="/contador/chenresi" className={clasesBoton('principal')}>

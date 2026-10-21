@@ -156,7 +156,7 @@ function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: s
   const [cantidad, setCantidad] = useState('');
   const [restar, setRestar] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { unidad, nota } = programa.practicas[practica];
+  const { unidad } = programa.practicas[practica];
 
   async function guardar(e: FormEvent) {
     e.preventDefault();
@@ -204,16 +204,10 @@ function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: s
             min={1}
             step={1}
             required
-            aria-describedby={nota ? 'nota-cantidad' : undefined}
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
             className={claseCampoNumero}
           />
-          {nota && (
-            <p id="nota-cantidad" className="text-tenue">
-              {nota}
-            </p>
-          )}
         </Seccion>
 
         <Seccion titulo="¿Sumar o restar?">
