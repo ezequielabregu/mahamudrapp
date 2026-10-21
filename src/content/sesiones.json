@@ -18,6 +18,13 @@
         "detalle": "Siempre con la visualización. Puede ser en tibetano o en castellano, con melodía o sin ella."
       },
       {
+        "id": "ilimitados",
+        "titulo": "Los cuatro pensamientos ilimitados",
+        "repeticiones": 3,
+        "pagina": 9,
+        "detalle": "Deseamos para todos los seres la felicidad y sus causas, que estén separados del sufrimiento y de sus causas, que no se separen de la santa felicidad libre de sufrimiento y que permanezcan en la gran ecuanimidad."
+      },
+      {
         "id": "linaje",
         "titulo": "Corta plegaria al linaje",
         "pagina": 13

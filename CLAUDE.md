@@ -187,6 +187,7 @@ Cada texto en `textos.json` guarda una sola página:
 | Texto | Página |
 | --- | --- |
 | Refugio breve | 8 |
+| Los cuatro pensamientos ilimitados | 9 |
 | Invocación a Milarepa | 12 |
 | Corta plegaria al linaje | 13 |
 | Preliminares comunes (resumen de las 4 reflexiones) | 23 |
@@ -209,11 +210,12 @@ Se definen en `sesiones.json` como lista ordenada de pasos. Cada paso: `id`, `ti
 
 1. Tres expulsiones del aire residual. Recomendadas en la primera sesión del día; en la segunda son opcionales ("si vinieron de trabajar... lo pueden hacer tantas veces como quieran").
 2. Toma de refugio, 3 veces (p. 8).
-3. Corta plegaria al linaje (p. 13).
-4. Reflexión del día, 5 a 10 minutos (resumen en p. 23). Los días de bodhicitta, sugerir una variante de tong-len: con uno mismo, seres queridos, desconocidos o seres no queridos; énfasis en dar o en tomar.
-5. **Solo los días de Shiné sin soporte:** Invocación a Milarepa (p. 12), para entrar en la meditación apoyados en la devoción.
-6. Shiné con el soporte del día. Antes de terminar, soltar el soporte y reposar unos momentos. Con las respiraciones, el reposo va entre cada ciclo de 21. Las "7 veces" son orientativas: manda el tiempo de la sesión y las pausas no se miden en minutos. Este paso es un temporizador de la sesión, **nunca un contador de ciclos ni de respiraciones**.
-7. Dedicación (p. 69).
+3. Los cuatro pensamientos ilimitados, 3 veces (p. 9). No figura en el cuadernillo ni en el seminario: lo agregó el autor (octubre 2026), y en el libro sigue al refugio entre las plegarias breves. TODO(contenido): confirmarlo con Lama Rinchen.
+4. Corta plegaria al linaje (p. 13).
+5. Reflexión del día, 5 a 10 minutos (resumen en p. 23). Los días de bodhicitta, sugerir una variante de tong-len: con uno mismo, seres queridos, desconocidos o seres no queridos; énfasis en dar o en tomar.
+6. **Solo los días de Shiné sin soporte:** Invocación a Milarepa (p. 12), para entrar en la meditación apoyados en la devoción.
+7. Shiné con el soporte del día. Antes de terminar, soltar el soporte y reposar unos momentos. Con las respiraciones, el reposo va entre cada ciclo de 21. Las "7 veces" son orientativas: manda el tiempo de la sesión y las pausas no se miden en minutos. Este paso es un temporizador de la sesión, **nunca un contador de ciclos ni de respiraciones**.
+8. Dedicación (p. 69).
 
 **Sesión 2: Preliminar del trimestre** (tarde o noche; en el 1º trimestre, postraciones):
 

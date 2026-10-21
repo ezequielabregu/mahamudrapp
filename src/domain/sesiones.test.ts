@@ -7,11 +7,12 @@ const INICIO = '2026-10-14';
 const ids = (fecha: string) => pasosDelDia(guiaShine, infoDelDia(fecha, INICIO, programa)!).map((p) => p.id);
 
 describe('pasosDelDia (Shiné)', () => {
-  it('sigue el orden del cuadernillo un día con soporte', () => {
+  it('sigue el orden de la sesión un día con soporte', () => {
     // Lunes del 1º trimestre: 7 veces 21 respiraciones.
     expect(ids('2026-10-19')).toEqual([
       'expulsiones',
       'refugio',
+      'ilimitados',
       'linaje',
       'reflexion',
       'shine',
@@ -24,6 +25,7 @@ describe('pasosDelDia (Shiné)', () => {
     expect(ids('2026-10-18')).toEqual([
       'expulsiones',
       'refugio',
+      'ilimitados',
       'linaje',
       'reflexion',
       'milarepa',
