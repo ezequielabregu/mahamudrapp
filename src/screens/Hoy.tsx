@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useOutletContext } from 'react-router';
 import type { ContextoLayout } from '../App';
 import { Aviso } from '../components/Aviso';
+import { AvisoActualizacion } from '../components/AvisoActualizacion';
 import { BarraProgreso } from '../components/BarraProgreso';
 import { clasesBoton } from '../components/estilos';
 import { Insignia } from '../components/Insignia';
@@ -66,14 +67,7 @@ export function Hoy() {
         )
       }
     >
-      {actualizacionLista && (
-        <Aviso>
-          <p>Hay una versión nueva de la app.</p>
-          <button type="button" className={clasesBoton('principal')} onClick={actualizar}>
-            Actualizar ahora
-          </button>
-        </Aviso>
-      )}
+      {actualizacionLista && <AvisoActualizacion alActualizar={actualizar} />}
 
       {mensaje && (
         <p role="status" className="font-semibold text-hecho">

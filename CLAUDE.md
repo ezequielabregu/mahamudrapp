@@ -366,7 +366,7 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
   - **iPhone/iPad fuera de Safari** (Chrome, Firefox, Instagram, Facebook...; `pwa/navegadorIOS.ts`, con tests): aviso "Primero, abrila en Safari" con "Abrir en Safari" (enlace `x-safari-https://`, no documentado por Apple: funciona en iOS 15, 17 y posteriores, no en 16) y "Copiar el enlace" como respaldo.
   - **Android (Chrome):** botón "Instalar app" con el evento `beforeinstallprompt`.
 - Si la app ya está instalada (`display-mode: standalone`), no mostrar la guía.
-- Cuando hay una actualización, avisar con un mensaje simple **solo en la pantalla Hoy**, primero que todo ("Actualizar ahora"), nunca en medio de una sesión o del contador.
+- Cuando hay una actualización, avisar con un mensaje simple **solo en la pantalla Hoy**, primero que todo ("Actualizar ahora"), nunca en medio de una sesión o del contador. El aviso es una banda roja (`components/AvisoActualizacion.tsx`, token `destacado` #9b1c1f, igual en los dos temas) para que no se confunda con los avisos dorados ni con los botones.
 
 ### 9.2 Respaldo, etapa 1 (manual)
 

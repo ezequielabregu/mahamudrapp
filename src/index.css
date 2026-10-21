@@ -29,6 +29,9 @@
   --color-oro-claro: #f2b33d;
   --color-banda: #5e1418;
   --color-sobre-banda: #fbf2e3;
+  /* Rojo para lo que pide atención sin ser un error (aviso de versión nueva). Igual en los dos temas. */
+  --color-destacado: #9b1c1f;
+  --color-sobre-destacado: #fbf2e3;
   --color-resalte: #fbefd6;
   --color-hecho: #00703a;
   --color-aviso: #fdf0d6;
