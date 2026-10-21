@@ -361,7 +361,8 @@ Elegante y moderno, inspirado en la tradición tibetana sin caer en el kitsch. L
 - Manifest completo (nombre, íconos, `display: standalone`, colores) y service worker con `vite-plugin-pwa` en modo `prompt` (no `autoUpdate`, que recarga sola la página), precacheando contenido y audio.
 - **En iPhone, primero instalar y después usar.** Safari borra el almacenamiento de los sitios que no se visitan en 7 días (las apps instaladas en la pantalla de inicio están exentas), y la app instalada **no comparte datos** con la pestaña de Safari. Si la app corre en el navegador del teléfono, Hoy muestra "Instalá la app antes de empezar a usarla".
 - Detectar sistema y mostrar la guía adecuada:
-  - **iPhone/iPad (Safari):** pantalla ilustrada paso a paso: "Tocá el botón Compartir → Agregar a inicio". Solo Safari permite instalar.
+  - **iPhone/iPad (Safari):** guía ilustrada (`screens/Instalar.tsx`, maquetas en `components/IlustracionesIOS.tsx`): Compartir (o ⋯ → Compartir, como en iOS 26) → Agregar a inicio → "Abrir como app web" activado (solo se muestra en iOS 26 o más, o si no se sabe la versión) → Agregar → abrir desde el ícono. Apple no permite que una web dispare la instalación: en iOS siempre es manual.
+  - **iPhone/iPad fuera de Safari** (Chrome, Firefox, Instagram, Facebook...; `pwa/navegadorIOS.ts`, con tests): aviso "Primero, abrila en Safari" con "Abrir en Safari" (enlace `x-safari-https://`, no documentado por Apple: funciona en iOS 15, 17 y posteriores, no en 16) y "Copiar el enlace" como respaldo.
   - **Android (Chrome):** botón "Instalar app" con el evento `beforeinstallprompt`.
 - Si la app ya está instalada (`display-mode: standalone`), no mostrar la guía.
 - Cuando hay una actualización, avisar con un mensaje simple **solo en la pantalla Hoy**, primero que todo ("Actualizar ahora"), nunca en medio de una sesión o del contador.
