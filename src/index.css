@@ -120,6 +120,25 @@ body {
   }
 }
 
+/* Que los formularios nunca se salgan de la tarjeta. Un fieldset no se achica por debajo de su palabra
+   más larga (pasaba con letra "Muy grande" en teléfonos de 320 px), y en iPhone el campo de fecha
+   tiene un ancho propio que no respeta el de la tarjeta. */
+@layer base {
+  fieldset {
+    min-width: 0;
+  }
+
+  input[type='date'] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
+  }
+
+  ::-webkit-date-and-time-value {
+    text-align: start;
+  }
+}
+
 button,
 a,
 input,

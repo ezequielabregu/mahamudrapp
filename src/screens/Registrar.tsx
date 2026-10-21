@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { claseCampo, claseCampoNumero, claseOpcion, clasesBoton } from '../components/estilos';
+import { claseCampoFecha, claseCampoNumero, claseOpcion, clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio } from '../db/repositorio';
@@ -251,7 +251,7 @@ function CampoFecha(props: { valor: string; maximo: string; alCambiar: (v: strin
         max={props.maximo}
         value={props.valor}
         onChange={(e) => props.alCambiar(e.target.value)}
-        className={claseCampo}
+        className={claseCampoFecha}
       />
       <p className="text-tenue">{props.valor && formatearFechaLarga(props.valor)}</p>
     </Seccion>

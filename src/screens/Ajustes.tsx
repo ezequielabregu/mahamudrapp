@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { claseCampo, claseOpcion, clasesBoton } from '../components/estilos';
+import { claseCampoFecha, claseOpcion, clasesBoton } from '../components/estilos';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio, type Apariencia, type EscalaTexto, type Preferencias } from '../db/repositorio';
@@ -165,7 +165,7 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
             setFecha(e.target.value);
             setFechaGuardada(false);
           }}
-          className={claseCampo}
+          className={claseCampoFecha}
         />
         <button
           type="button"
