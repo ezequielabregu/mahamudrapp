@@ -105,6 +105,41 @@ export function Hoy() {
         </Aviso>
       ))}
 
+      {/* Fila fina con borde, sin relleno ni sombra: se ve al abrir, pero no compite con las sesiones. */}
+      <Link
+        to="/programa"
+        className="flex min-h-[3.5rem] items-center gap-3 rounded-2xl border border-borde px-4 py-2 font-semibold active:bg-resalte"
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-[1.4em] shrink-0 text-oro"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.7}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x={3.5} y={5} width={17} height={15.5} rx={2.5} />
+          <path d="M3.5 10h17M8 3v4M16 3v4" />
+        </svg>
+        <span className="min-w-0 flex-1">
+          {info ? `Programa del ${info.trimestre}º trimestre` : 'Programa del año'}
+        </span>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-[1.1em] shrink-0 text-oro"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+      </Link>
+
       {!info || !resumen ? (
         <Tarjeta titulo="Todavía no empezó el año de práctica">
           <p>Empieza el {formatearFechaCorta(prefs.fechaInicio)}. Podés cambiar la fecha en Ajustes.</p>
@@ -127,25 +162,6 @@ export function Hoy() {
           </GrupoSeccion>
         </>
       )}
-
-      <Link
-        to="/programa"
-        className="inline-flex min-h-[48px] items-center gap-2 font-semibold text-oro active:underline"
-      >
-        Ver el programa del trimestre
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="size-[1.1em]"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2.2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="m9 6 6 6-6 6" />
-        </svg>
-      </Link>
 
       {dia.recordarCopia ? (
         <Aviso>
