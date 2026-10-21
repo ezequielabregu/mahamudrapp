@@ -20,7 +20,7 @@ import {
   haceCuanto,
   nombreDelDia,
 } from '../domain/formato';
-import { programa } from '../domain/programa';
+import { programa, type Practica } from '../domain/programa';
 import type { ResumenDelDia } from '../domain/resumen';
 import { guiaPreliminar, guiaShine, pasosDelDia } from '../domain/sesiones';
 import { useDia } from '../hooks/useDia';
@@ -199,6 +199,7 @@ function TarjetaPreliminar({ info, preliminar }: { info: InfoDelDia; preliminar:
       <Link to={`/contador/${practica}`} className={clasesBoton('principal')}>
         Contar {datos.unidad}
       </Link>
+      <RegistrarSinContador practica={practica} />
     </Tarjeta>
   );
 }
@@ -222,6 +223,7 @@ function TarjetaChenresi({ resumen }: { resumen: ResumenDelDia }) {
       <Link to="/contador/chenresi" className={clasesBoton('principal')}>
         Contar mantras
       </Link>
+      <RegistrarSinContador practica="chenresi" />
     </Tarjeta>
   );
 }
@@ -239,6 +241,7 @@ function TarjetaYidam({ yidam }: { yidam: NonNullable<ResumenDelDia['yidam']> })
       <Link to={`/contador/${yidam.practica}`} className={clasesBoton('principal')}>
         Contar mantras
       </Link>
+      <RegistrarSinContador practica={yidam.practica} />
     </Tarjeta>
   );
 }
@@ -275,5 +278,14 @@ function Pasos({ plegados, children }: { plegados: boolean; children: ReactNode 
         {abiertos ? 'Ocultar los pasos' : 'Ver los pasos'}
       </button>
     </>
+  );
+}
+
+/** Para lo hecho sin la app (con una mala de papel, en un retiro): abre el formulario con la práctica elegida. */
+function RegistrarSinContador({ practica }: { practica: Practica }) {
+  return (
+    <Link to={`/registrar?que=conteo&practica=${practica}`} className={clasesBoton()}>
+      Registrar sin contador
+    </Link>
   );
 }

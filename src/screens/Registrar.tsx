@@ -7,7 +7,7 @@ import { repositorio } from '../db/repositorio';
 import type { TipoSesion } from '../db/schema';
 import { formatearFechaLarga, formatearNumero } from '../domain/formato';
 import { practicasDelNivel } from '../domain/niveles';
-import { programa, type Practica } from '../domain/programa';
+import { esPractica, programa, type Practica } from '../domain/programa';
 import { useHoy } from '../hooks/useHoy';
 import { usePreferencias } from '../hooks/usePreferencias';
 
@@ -40,7 +40,7 @@ export function Registrar() {
   }
 
   if (que === 'sesion') return <FormularioSesion alGuardar={setHecho} />;
-  if (que === 'conteo') return <FormularioConteo alGuardar={setHecho} />;
+  if (que === 'conteo') return <FormularioConteo alGuardar={setHecho} inicial={params.get('practica')} />;
 
   return (
     <Pantalla titulo="Registrar" volver={{ a: '/ajustes', texto: 'Ajustes' }}>
@@ -145,11 +145,14 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
   );
 }
 
-function FormularioConteo({ alGuardar }: PropsFormulario) {
+function FormularioConteo({ alGuardar, inicial }: PropsFormulario & { inicial: string | null }) {
   const hoy = useHoy();
   const practicas = practicasDelNivel(usePreferencias()?.nivel ?? 1, programa);
   const [fecha, setFecha] = useState(hoy);
-  const [practica, setPractica] = useState<Practica>('postraciones');
+  // Desde Hoy, la práctica llega ya elegida (?practica=chenresi).
+  const [practica, setPractica] = useState<Practica>(
+    esPractica(inicial ?? undefined) ? (inicial as Practica) : 'postraciones',
+  );
   const [cantidad, setCantidad] = useState('');
   const [restar, setRestar] = useState(false);
   const [error, setError] = useState<string | null>(null);
