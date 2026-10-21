@@ -8,17 +8,11 @@ export type NumeroTrimestre = 1 | 2 | 3 | 4;
 export type CompromisoId = 'minimo' | 'medio' | 'completo';
 export type NombreDia = 'domingo' | 'lunes' | 'martes' | 'miercoles' | 'jueves' | 'viernes' | 'sabado';
 
-export interface SumaRapida {
-  cantidad: number;
-  etiqueta: string;
-}
-
 export interface DatosPractica {
   titulo: string;
   /** Para espacios chicos, como el encabezado del contador. */
   corto: string;
   unidad: string;
-  sumasRapidas: SumaRapida[];
   mantra?: string;
   nota?: string;
 }

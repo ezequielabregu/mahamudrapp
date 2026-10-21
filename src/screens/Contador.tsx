@@ -59,20 +59,11 @@ function PantallaContador({ practica }: { practica: Practica }) {
     <div className="tema-practica flex h-dvh flex-col bg-fondo pt-[env(safe-area-inset-top)] text-tinta">
       <Lungta />
       <div className="mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <header className="flex items-center justify-between gap-3">
-          <h1 className="min-w-0 truncate text-[min(1.6rem,7vw)] leading-tight font-semibold">
-            {datos.corto}
-          </h1>
-          <button
-            type="button"
-            className="inline-flex min-h-[max(48px,min(3.25rem,13vw))] shrink-0 items-center justify-center rounded-full bg-acento px-[min(1.5rem,5vw)] text-[min(1.1rem,4.6vw)] font-semibold whitespace-nowrap text-sobre-acento active:brightness-110"
-            onClick={terminar}
-          >
-            Terminar
-          </button>
-        </header>
+        <h1 className="truncate text-[min(1.6rem,7vw)] leading-tight font-semibold">{datos.corto}</h1>
 
-        <div className="mt-3 grid auto-cols-fr grid-flow-col gap-2">
+        {/* Una sola fila de control: Deshacer y Terminar (relleno y más ancho). Las malas o los
+            totales contados aparte se cargan con "Registrar sin contador", desde Hoy. */}
+        <div className="mt-3 grid grid-cols-[1fr_2fr] gap-3">
           <button
             type="button"
             className={claseChico}
@@ -81,11 +72,13 @@ function PantallaContador({ practica }: { practica: Practica }) {
           >
             Deshacer
           </button>
-          {datos.sumasRapidas.map((s) => (
-            <button key={s.cantidad} type="button" className={claseChico} onClick={() => sumar(s.cantidad)}>
-              {s.etiqueta}
-            </button>
-          ))}
+          <button
+            type="button"
+            className="inline-flex min-h-[max(48px,min(3rem,13vw))] min-w-0 items-center justify-center rounded-full bg-acento px-2 text-[min(1.1rem,4.6vw)] font-semibold whitespace-nowrap text-sobre-acento active:brightness-110"
+            onClick={terminar}
+          >
+            Terminar
+          </button>
         </div>
 
         {!pantallaEncendida && (

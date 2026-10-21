@@ -100,70 +100,44 @@
     "postraciones": {
       "titulo": "Postraciones",
       "corto": "Postraciones",
-      "unidad": "postraciones",
-      "sumasRapidas": [
-        {
-          "cantidad": 10,
-          "etiqueta": "+10"
-        },
-        {
-          "cantidad": 21,
-          "etiqueta": "+21"
-        },
-        {
-          "cantidad": 108,
-          "etiqueta": "+108"
-        }
-      ]
+      "unidad": "postraciones"
     },
     "vajrasattva": {
       "titulo": "Mantras de Vajrasattva",
       "corto": "Vajrasattva",
-      "unidad": "mantras",
-      "sumasRapidas": []
+      "unidad": "mantras"
     },
     "mandala": {
       "titulo": "Ofrendas de mandala",
       "corto": "Mandala",
-      "unidad": "ofrendas",
-      "sumasRapidas": []
+      "unidad": "ofrendas"
     },
     "guruyoga": {
       "titulo": "Plegarias de guru yoga",
       "corto": "Guru yoga",
-      "unidad": "plegarias",
-      "sumasRapidas": []
+      "unidad": "plegarias"
     },
     "chenresi": {
       "titulo": "Mantras de Chenresi",
       "corto": "Chenresi",
       "unidad": "mantras",
-      "sumasRapidas": [
-        {
-          "cantidad": 100,
-          "etiqueta": "+1 mala (100)"
-        }
-      ],
       "mantra": "OM MANI PADME HUNG",
       "nota": "Una mala de 108 cuentas suma 100: las 8 restantes son de regalo."
     },
     "yidam-exterior": {
       "titulo": "Mantras del yidam (práctica exterior)",
       "corto": "Yidam",
-      "unidad": "mantras",
-      "sumasRapidas": []
+      "unidad": "mantras"
     },
     "yidam-interior": {
       "titulo": "Mantras del yidam (práctica interior)",
       "corto": "Yidam",
-      "unidad": "mantras",
-      "sumasRapidas": []
+      "unidad": "mantras"
     },
     "yidam-secreto": {
       "titulo": "Mantras del yidam (práctica secreta)",
       "corto": "Yidam",
-      "unidad": "mantras",
-      "sumasRapidas": []
+      "unidad": "mantras"
     }
   },
   "trimestres": [
