@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { claseCampoFecha, claseOpcion, clasesBoton } from '../components/estilos';
+import { GrupoSeccion } from '../components/GrupoSeccion';
 import { Pantalla } from '../components/Pantalla';
 import { Seccion } from '../components/Seccion';
 import { repositorio, type Apariencia, type EscalaTexto, type Preferencias } from '../db/repositorio';
@@ -45,156 +46,165 @@ function FormularioAjustes({ prefs }: { prefs: Preferencias }) {
 
   return (
     <Pantalla titulo="Ajustes">
-      <Registros />
+      {/* Primero lo que se usa seguido; después, en el orden en que se configura la primera vez. */}
+      <GrupoSeccion titulo="Tus registros">
+        <Registros />
+      </GrupoSeccion>
 
-      <Seccion titulo="Nivel">
-        <fieldset className="space-y-2">
-          <legend className="sr-only">Nivel del programa</legend>
-          {programa.niveles.map((n) => (
-            <label key={n.numero} className={claseOpcion}>
-              <input
-                type="radio"
-                name="nivel"
-                checked={prefs.nivel === n.numero}
-                onChange={() => repositorio.guardarPreferencia('nivel', n.numero)}
-                className="size-6 shrink-0 accent-acento"
-              />
-              <span>
-                <span className="block">
-                  Nivel {n.numero} · {n.nombre}
-                </span>
-                {prefs.nivel === n.numero && (
-                  <span className="block font-normal text-tenue">{n.compromiso}</span>
-                )}
-              </span>
-            </label>
-          ))}
-        </fieldset>
-      </Seccion>
+      <GrupoSeccion titulo="Tu programa">
+        <Seccion titulo="Inicio del año de práctica">
+          <p className="text-tenue">Ahora: {formatearFechaCorta(prefs.fechaInicio)}.</p>
+          <label htmlFor="fecha-inicio" className="sr-only">
+            Fecha de inicio
+          </label>
+          <input
+            id="fecha-inicio"
+            type="date"
+            value={fecha}
+            onChange={(e) => {
+              setFecha(e.target.value);
+              setFechaGuardada(false);
+            }}
+            className={claseCampoFecha}
+          />
+          <button
+            type="button"
+            className={clasesBoton()}
+            disabled={fecha === prefs.fechaInicio || !esFechaValida(fecha)}
+            onClick={guardarFecha}
+          >
+            Guardar la fecha
+          </button>
+          {fechaGuardada && <p role="status">Fecha guardada.</p>}
+        </Seccion>
 
-      {prefs.nivel === 1 && (
-        <Seccion titulo="Compromiso de práctica">
+        <Seccion titulo="Nivel">
           <fieldset className="space-y-2">
-            <legend className="sr-only">Compromiso de práctica</legend>
-            {programa.compromisos.map((c) => (
-              <label key={c.id} className={claseOpcion}>
+            <legend className="sr-only">Nivel del programa</legend>
+            {programa.niveles.map((n) => (
+              <label key={n.numero} className={claseOpcion}>
                 <input
                   type="radio"
-                  name="compromiso"
-                  checked={prefs.compromiso === c.id}
-                  onChange={() => repositorio.guardarPreferencia('compromiso', c.id)}
+                  name="nivel"
+                  checked={prefs.nivel === n.numero}
+                  onChange={() => repositorio.guardarPreferencia('nivel', n.numero)}
                   className="size-6 shrink-0 accent-acento"
                 />
                 <span>
-                  <span className="block">{c.titulo}</span>
-                  <span className="block font-normal text-tenue">{c.descripcion}</span>
+                  <span className="block">
+                    Nivel {n.numero} · {n.nombre}
+                  </span>
+                  {prefs.nivel === n.numero && (
+                    <span className="block font-normal text-tenue">{n.compromiso}</span>
+                  )}
                 </span>
               </label>
             ))}
           </fieldset>
         </Seccion>
-      )}
 
-      <Seccion titulo="Apariencia">
-        <fieldset className="space-y-2">
-          <legend className="sr-only">Apariencia</legend>
-          {APARIENCIAS.map((a) => (
-            <label key={a.id} className={claseOpcion}>
-              <input
-                type="radio"
-                name="apariencia"
-                checked={prefs.apariencia === a.id}
-                onChange={() => repositorio.guardarPreferencia('apariencia', a.id)}
-                className="size-6 shrink-0 accent-acento"
-              />
-              <span>
-                <span className="block">{a.titulo}</span>
-                <span className="block font-normal text-tenue">{a.descripcion}</span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
-      </Seccion>
-
-      <Seccion titulo="Tamaño del texto">
-        <fieldset className="space-y-2">
-          <legend className="sr-only">Tamaño del texto</legend>
-          {ESCALAS.map((e) => (
-            <label key={e.id} className={claseOpcion}>
-              <input
-                type="radio"
-                name="escala"
-                checked={prefs.escalaTexto === e.id}
-                onChange={() => repositorio.guardarPreferencia('escalaTexto', e.id)}
-                className="size-6 accent-acento"
-              />
-              {e.titulo}
-            </label>
-          ))}
-        </fieldset>
-      </Seccion>
-
-      <Seccion titulo="Sonido al contar">
-        <fieldset className="space-y-2">
-          <legend className="sr-only">Sonido al contar</legend>
-          {[true, false].map((valor) => (
-            <label key={String(valor)} className={claseOpcion}>
-              <input
-                type="radio"
-                name="sonido"
-                checked={prefs.sonidoContador === valor}
-                onChange={() => repositorio.guardarPreferencia('sonidoContador', valor)}
-                className="size-6 accent-acento"
-              />
-              {valor ? 'Sí, un sonido suave en cada toque' : 'No, en silencio'}
-            </label>
-          ))}
-        </fieldset>
-      </Seccion>
-
-      <Seccion titulo="Inicio del año de práctica">
-        <p className="text-tenue">Ahora: {formatearFechaCorta(prefs.fechaInicio)}.</p>
-        <label htmlFor="fecha-inicio" className="sr-only">
-          Fecha de inicio
-        </label>
-        <input
-          id="fecha-inicio"
-          type="date"
-          value={fecha}
-          onChange={(e) => {
-            setFecha(e.target.value);
-            setFechaGuardada(false);
-          }}
-          className={claseCampoFecha}
-        />
-        <button
-          type="button"
-          className={clasesBoton()}
-          disabled={fecha === prefs.fechaInicio || !esFechaValida(fecha)}
-          onClick={guardarFecha}
-        >
-          Guardar la fecha
-        </button>
-        {fechaGuardada && <p role="status">Fecha guardada.</p>}
-      </Seccion>
-
-      <Seccion titulo="Este teléfono">
-        <p>{instalacion.instalada ? 'La app está instalada.' : 'La app todavía no está instalada.'}</p>
-        {!instalacion.instalada && (
-          <Link to="/instalar" className={clasesBoton()}>
-            Cómo instalarla
-          </Link>
+        {prefs.nivel === 1 && (
+          <Seccion titulo="Compromiso de práctica">
+            <fieldset className="space-y-2">
+              <legend className="sr-only">Compromiso de práctica</legend>
+              {programa.compromisos.map((c) => (
+                <label key={c.id} className={claseOpcion}>
+                  <input
+                    type="radio"
+                    name="compromiso"
+                    checked={prefs.compromiso === c.id}
+                    onChange={() => repositorio.guardarPreferencia('compromiso', c.id)}
+                    className="size-6 shrink-0 accent-acento"
+                  />
+                  <span>
+                    <span className="block">{c.titulo}</span>
+                    <span className="block font-normal text-tenue">{c.descripcion}</span>
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+          </Seccion>
         )}
-        {almacenamiento !== null && (
-          <p className="text-tenue">
-            {almacenamiento
-              ? 'El navegador se comprometió a no borrar tus registros.'
-              : 'El navegador no garantiza conservar tus registros: hacé copias seguido.'}
-          </p>
-        )}
-      </Seccion>
+      </GrupoSeccion>
 
-      <BorrarRegistros />
+      <GrupoSeccion titulo="Pantalla y sonido">
+        <Seccion titulo="Tamaño del texto">
+          <fieldset className="space-y-2">
+            <legend className="sr-only">Tamaño del texto</legend>
+            {ESCALAS.map((e) => (
+              <label key={e.id} className={claseOpcion}>
+                <input
+                  type="radio"
+                  name="escala"
+                  checked={prefs.escalaTexto === e.id}
+                  onChange={() => repositorio.guardarPreferencia('escalaTexto', e.id)}
+                  className="size-6 accent-acento"
+                />
+                {e.titulo}
+              </label>
+            ))}
+          </fieldset>
+        </Seccion>
+
+        <Seccion titulo="Apariencia">
+          <fieldset className="space-y-2">
+            <legend className="sr-only">Apariencia</legend>
+            {APARIENCIAS.map((a) => (
+              <label key={a.id} className={claseOpcion}>
+                <input
+                  type="radio"
+                  name="apariencia"
+                  checked={prefs.apariencia === a.id}
+                  onChange={() => repositorio.guardarPreferencia('apariencia', a.id)}
+                  className="size-6 shrink-0 accent-acento"
+                />
+                <span>
+                  <span className="block">{a.titulo}</span>
+                  <span className="block font-normal text-tenue">{a.descripcion}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+        </Seccion>
+
+        <Seccion titulo="Sonido al contar">
+          <fieldset className="space-y-2">
+            <legend className="sr-only">Sonido al contar</legend>
+            {[true, false].map((valor) => (
+              <label key={String(valor)} className={claseOpcion}>
+                <input
+                  type="radio"
+                  name="sonido"
+                  checked={prefs.sonidoContador === valor}
+                  onChange={() => repositorio.guardarPreferencia('sonidoContador', valor)}
+                  className="size-6 accent-acento"
+                />
+                {valor ? 'Sí, un sonido suave en cada toque' : 'No, en silencio'}
+              </label>
+            ))}
+          </fieldset>
+        </Seccion>
+      </GrupoSeccion>
+
+      <GrupoSeccion titulo="Este teléfono">
+        <Seccion titulo="Este teléfono">
+          <p>{instalacion.instalada ? 'La app está instalada.' : 'La app todavía no está instalada.'}</p>
+          {!instalacion.instalada && (
+            <Link to="/instalar" className={clasesBoton()}>
+              Cómo instalarla
+            </Link>
+          )}
+          {almacenamiento !== null && (
+            <p className="text-tenue">
+              {almacenamiento
+                ? 'El navegador se comprometió a no borrar tus registros.'
+                : 'El navegador no garantiza conservar tus registros: hacé copias seguido.'}
+            </p>
+          )}
+        </Seccion>
+
+        <BorrarRegistros />
+      </GrupoSeccion>
 
       <p className="text-center text-tenue">Versión {__VERSION_APP__}</p>
     </Pantalla>
