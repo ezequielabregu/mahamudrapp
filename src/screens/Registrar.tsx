@@ -63,20 +63,23 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
   const hoy = useHoy();
   const [fecha, setFecha] = useState(hoy);
   const [tipo, setTipo] = useState<TipoSesion>('shine');
-  const [minutos, setMinutos] = useState(programa.minutosMeditacionDiaria);
+  // Como texto, igual que la cantidad: guardado como número, al borrar quedaba "0" y al escribir, "030".
+  const [minutos, setMinutos] = useState(String(programa.minutosMeditacionDiaria));
   const [error, setError] = useState<string | null>(null);
+  const tituloMinutos = tipo === 'shine' ? 'Minutos de meditación' : 'Minutos de práctica';
 
   async function guardar(e: FormEvent) {
     e.preventDefault();
+    const n = Math.round(Number(minutos));
     try {
       await repositorio.registrarSesion({
         tipo,
         origen: 'manual',
         fechaLocal: fecha,
-        duracionSeg: Math.round(minutos) * 60,
+        duracionSeg: n * 60,
       });
       const nombre = tipo === 'shine' ? 'Sesión de Shiné' : 'Sesión de preliminares';
-      alGuardar(`${nombre} del ${formatearFechaLarga(fecha).toLowerCase()}: ${minutos} minutos.`);
+      alGuardar(`${nombre} del ${formatearFechaLarga(fecha).toLowerCase()}: ${n} minutos.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar.');
     }
@@ -99,40 +102,23 @@ function FormularioSesion({ alGuardar }: PropsFormulario) {
 
         <CampoFecha valor={fecha} maximo={hoy} alCambiar={setFecha} />
 
-        <Seccion titulo="Minutos">
-          <label htmlFor="minutos" className="sr-only">
-            Minutos
+        <Seccion titulo={tituloMinutos}>
+          <label htmlFor="minutos" className="block text-tenue">
+            Tocá el recuadro y escribí el número.
+            <span className="sr-only"> {tituloMinutos}</span>
           </label>
-          {/* El número va solo en su fila: entre los botones se cortaba en teléfonos angostos. */}
           <input
             id="minutos"
             type="number"
             inputMode="numeric"
             min={1}
             max={600}
+            step={1}
             required
             value={minutos}
-            onChange={(e) => setMinutos(Number(e.target.value))}
+            onChange={(e) => setMinutos(e.target.value)}
             className={claseCampoNumero}
           />
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              className={clasesBoton()}
-              aria-label="Restar 5 minutos"
-              onClick={() => setMinutos((m) => Math.max(1, m - 5))}
-            >
-              −5
-            </button>
-            <button
-              type="button"
-              className={clasesBoton()}
-              aria-label="Sumar 5 minutos"
-              onClick={() => setMinutos((m) => Math.min(600, m + 5))}
-            >
-              +5
-            </button>
-          </div>
         </Seccion>
 
         <MensajeError mensaje={error} />
