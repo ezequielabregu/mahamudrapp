@@ -1,7 +1,7 @@
 import type { Apariencia } from './db/repositorio';
 
 /** Color de la barra del navegador y del sistema: el de la banda de cada tema. */
-const COLOR_BARRA = { claro: '#5e1418', oscuro: '#2b1214' } as const;
+const COLOR_BARRA = { claro: '#5e1418', oscuro: '#4d1219' } as const;
 
 /**
  * Copia de la apariencia elegida en localStorage, solo para pintar el tema correcto

@@ -11,3 +11,5 @@ Niveles 2 a 6: ¿cambian la semana tipo, las sesiones o el texto "Shiné sin sop
 La lista de las ocho preocupaciones mundanas que muestra el botón "i" del primer paso de la Sesión 2: ¿se puede dejar así o se usa solo el texto del libro ("preocupaciones mundanas")?
 
 Uso de los textos del Arco Iris (© Claire Lumière) antes de compartir la app con el grupo.
+
+Con el contador de la app (un toque por mantra), ¿108 toques se anotan como 108 o como 100?

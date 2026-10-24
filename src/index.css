@@ -52,28 +52,29 @@
   --font-serif: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
 }
 
-/* Tema oscuro. data-tema lo pone src/tema.ts según la Apariencia elegida en Ajustes
-   (por defecto, oscura; "automática" sigue al teléfono). */
+/* Tema oscuro, en granate oscuro (el de los hábitos) con el azafrán para destacar; antes era un marrón
+   café que se parecía a cualquier tema oscuro cálido. data-tema lo pone src/tema.ts según la Apariencia
+   elegida en Ajustes (por defecto, oscura; "automática" sigue al teléfono). */
 :root {
   color-scheme: light;
 }
 
 :root[data-tema='oscuro'] {
   color-scheme: dark;
-  --color-fondo: #140e0c;
-  --color-superficie: #1f1714;
-  --color-tinta: #f4eadb;
-  --color-tenue: #cbb8a3;
-  --color-borde: #3a2c25;
-  --color-pista: #3a2c25;
+  --color-fondo: #1c0a0e;
+  --color-superficie: #2b1118;
+  --color-tinta: #f8ebe0;
+  --color-tenue: #dcbfb7;
+  --color-borde: #4b1f28;
+  --color-pista: #4b1f28;
   --color-acento: #eaa944;
   --color-sobre-acento: #1a100b;
   --color-oro: #eaa944;
-  --color-banda: #2b1214;
+  --color-banda: #4d1219;
   --color-sobre-banda: #f4eadb;
-  --color-resalte: #2c201a;
+  --color-resalte: #3e1922;
   --color-hecho: #5cc98f;
-  --color-aviso: #2e2116;
+  --color-aviso: #3a2219;
   --color-peligro: #ff8a7a;
   --color-calor-1: #6b4a1c;
   --color-calor-2: #b47c2c;
@@ -81,16 +82,16 @@
 }
 
 .tema-practica {
-  --color-fondo: #100b09;
-  --color-superficie: #1b1411;
-  --color-tinta: #f4eadb;
-  --color-tenue: #cbb8a3;
-  --color-borde: #3a2c25;
-  --color-pista: #3a2c25;
+  --color-fondo: #170810;
+  --color-superficie: #26101a;
+  --color-tinta: #f8ebe0;
+  --color-tenue: #dcbfb7;
+  --color-borde: #4b1f28;
+  --color-pista: #4b1f28;
   --color-acento: #eaa944;
   --color-sobre-acento: #1a100b;
   --color-oro: #eaa944;
-  --color-resalte: #2c201a;
+  --color-resalte: #3e1922;
   --color-aviso: #2e2116;
 }
 
