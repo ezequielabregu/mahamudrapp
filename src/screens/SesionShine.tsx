@@ -10,7 +10,7 @@ import {
 } from '../audio/cuenco';
 import { obtenerContexto } from '../audio/contexto';
 import { AnilloReloj } from '../components/AnilloReloj';
-import { claseCampo, clasesBoton } from '../components/estilos';
+import { claseCampoNumero, clasesBoton } from '../components/estilos';
 import { Lungta } from '../components/Lungta';
 import { repositorio, type ShineEnCurso } from '../db/repositorio';
 import { infoDelDia } from '../domain/calendario';
@@ -22,6 +22,7 @@ import {
   formatearReloj,
   MINUTOS_MAXIMOS,
   MINUTOS_MINIMOS,
+  minutosValidos,
   SEGUNDOS_MINIMOS_PARA_GUARDAR,
 } from '../domain/temporizador';
 import { useHoy } from '../hooks/useHoy';
@@ -64,19 +65,24 @@ export function SesionShine() {
 function Preparar() {
   const hoy = useHoy();
   const prefs = usePreferencias();
-  const [minutos, setMinutos] = useState<number | null>(null);
+  // Como texto, igual que en Registrar: guardado como número, al borrar quedaba "0" y al escribir, "030".
+  const [minutos, setMinutos] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   if (!prefs) return null;
-  const elegidos = minutos ?? prefs.minutosShine;
+  const elegidos = minutos ?? String(prefs.minutosShine);
   const info = infoDelDia(hoy, prefs.fechaInicio, programa);
-  const cambiar = (delta: number) =>
-    setMinutos(Math.min(MINUTOS_MAXIMOS, Math.max(MINUTOS_MINIMOS, elegidos + delta)));
 
   async function comenzar() {
+    const n = Number(elegidos);
+    // Se revisa antes del cuenco, para que no suene si la sesión no va a empezar.
+    if (elegidos.trim() === '' || !minutosValidos(n)) {
+      setError(`Escribí un número de minutos entre ${MINUTOS_MINIMOS} y ${MINUTOS_MAXIMOS}.`);
+      return;
+    }
     // Primero el sonido, todavía dentro del toque: en iOS es lo que habilita el audio.
     sonarCuencoInicio();
     try {
-      await repositorio.iniciarShine(elegidos);
+      await repositorio.iniciarShine(n);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo comenzar.');
     }
@@ -98,8 +104,10 @@ function Preparar() {
       )}
 
       <section className="space-y-3">
-        <label htmlFor="minutos-shine" className="block font-semibold">
-          Duración, en minutos
+        <h2 className="text-xl font-semibold">Minutos de meditación</h2>
+        <label htmlFor="minutos-shine" className="block text-tenue">
+          Tocá el recuadro y escribí el número.
+          <span className="sr-only"> Minutos de meditación</span>
         </label>
         <input
           id="minutos-shine"
@@ -107,28 +115,14 @@ function Preparar() {
           inputMode="numeric"
           min={MINUTOS_MINIMOS}
           max={MINUTOS_MAXIMOS}
+          step={1}
           value={elegidos}
-          onChange={(e) => setMinutos(Number(e.target.value))}
-          className={`${claseCampo} min-h-[4.5rem] text-center font-serif text-[2.5rem] font-semibold tabular-nums`}
+          onChange={(e) => {
+            setMinutos(e.target.value);
+            setError(null);
+          }}
+          className={claseCampoNumero}
         />
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            className={clasesBoton()}
-            onClick={() => cambiar(-5)}
-            aria-label="Restar 5 minutos"
-          >
-            −5
-          </button>
-          <button
-            type="button"
-            className={clasesBoton()}
-            onClick={() => cambiar(5)}
-            aria-label="Sumar 5 minutos"
-          >
-            +5
-          </button>
-        </div>
       </section>
 
       <div className="mt-auto space-y-3">
