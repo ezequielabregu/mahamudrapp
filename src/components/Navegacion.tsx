@@ -13,12 +13,14 @@ const destinos: { a: string; texto: string; icono: ReactNode; tambien: string[] 
     a: '/ajustes',
     texto: 'Ajustes',
     icono: <IconoAjustes />,
-    tambien: ['/registrar', '/respaldo', '/instalar'],
+    tambien: ['/registrar', '/historial', '/respaldo', '/instalar'],
   },
 ];
 
 export function Navegacion() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  // Una subpantalla a la que se entra desde dos pestañas (Historial) dice de cuál vino.
+  const desde = (state as { desde?: string } | null)?.desde;
   return (
     <nav
       aria-label="Secciones"
@@ -31,7 +33,7 @@ export function Navegacion() {
               to={d.a}
               end={d.a === '/'}
               className={({ isActive }) => {
-                const activa = isActive || d.tambien.includes(pathname);
+                const activa = isActive || (desde ? desde === d.a : d.tambien.includes(pathname));
                 return (
                   // Con letra muy grande en un teléfono angosto, las etiquetas se achican hasta caber.
                   // Sin contorno de foco: Chrome en Android a veces lo muestra al tocar, como un cuadrado

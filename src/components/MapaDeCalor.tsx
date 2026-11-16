@@ -10,6 +10,8 @@ interface Props {
   hasta: string;
   hoy: string;
   minutos: Map<string, number>;
+  /** Lo contado en un día ("45 postraciones"), para el detalle al tocarlo. */
+  contado?: (fecha: string) => string[];
 }
 
 const FILAS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
@@ -32,7 +34,7 @@ function nivel(minutos: number): number {
  * Calendario del trimestre: una columna por semana (de lunes a domingo) y cada día
  * con un tono de oro según los minutos de Shiné. Tocar un día muestra su detalle.
  */
-export function MapaDeCalor({ desde, hasta, hoy, minutos }: Props) {
+export function MapaDeCalor({ desde, hasta, hoy, minutos, contado }: Props) {
   const [elegido, setElegido] = useState<string | null>(null);
   const semanas: string[][] = [];
   for (let inicio = inicioDeSemana(desde); inicio < hasta; inicio = sumarDias(inicio, 7)) {
@@ -47,7 +49,10 @@ export function MapaDeCalor({ desde, hasta, hoy, minutos }: Props) {
           <>
             {formatearFechaLarga(elegido)}:{' '}
             <span className="font-semibold text-tinta">
-              {minutosElegido > 0 ? `${minutosElegido} minutos de Shiné` : 'sin sesión de Shiné'}
+              {[
+                minutosElegido > 0 ? `${minutosElegido} minutos de Shiné` : 'sin sesión de Shiné',
+                ...(contado?.(elegido) ?? []),
+              ].join(' · ')}
             </span>
           </>
         ) : (

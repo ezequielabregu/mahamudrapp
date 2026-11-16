@@ -7,6 +7,7 @@ import { usePreferencias } from './hooks/usePreferencias';
 import { Ajustes } from './screens/Ajustes';
 import { Contador } from './screens/Contador';
 import { Estadisticas } from './screens/Estadisticas';
+import { Historial } from './screens/Historial';
 import { Hoy } from './screens/Hoy';
 import { Instalar } from './screens/Instalar';
 import { Programa } from './screens/Programa';
@@ -69,6 +70,7 @@ const router = createHashRouter([
           { path: 'programa', element: <Programa /> },
           { path: 'avance', element: <Estadisticas /> },
           { path: 'registrar', element: <Registrar /> },
+          { path: 'historial', element: <Historial /> },
           { path: 'respaldo', element: <Respaldo /> },
           { path: 'ajustes', element: <Ajustes /> },
           { path: 'instalar', element: <Instalar /> },

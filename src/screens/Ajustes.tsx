@@ -216,6 +216,9 @@ function Registros() {
   const ultima = useLiveQuery(() => repositorio.ultimoRespaldo(), []);
   return (
     <Seccion titulo="Registros">
+      <Link to="/historial" className={clasesBoton()}>
+        Ver lo registrado
+      </Link>
       <Link to="/registrar" className={clasesBoton()}>
         Registrar o corregir
       </Link>

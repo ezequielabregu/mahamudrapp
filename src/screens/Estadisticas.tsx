@@ -1,6 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type ReactNode } from 'react';
+import { Link } from 'react-router';
 import { BarraProgreso } from '../components/BarraProgreso';
+import { clasePildora } from '../components/estilos';
 import { GraficoColumnas } from '../components/GraficoColumnas';
 import { GrupoSeccion } from '../components/GrupoSeccion';
 import { MapaDeCalor } from '../components/MapaDeCalor';
@@ -31,8 +33,9 @@ import {
   formatearFechaLarga,
   formatearNumero,
 } from '../domain/formato';
+import { cantidadConPractica, contadoEnElDia, practicasConRegistros } from '../domain/historial';
 import { metasDelNivel } from '../domain/niveles';
-import { programa, type NumeroTrimestre } from '../domain/programa';
+import { programa, type NumeroTrimestre, type Practica } from '../domain/programa';
 import { rangoDelTrimestre } from '../domain/semana';
 import { useHoy } from '../hooks/useHoy';
 import { usePreferencias } from '../hooks/usePreferencias';
@@ -174,35 +177,34 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
         </Tarjeta>
       )}
 
-      <CalendarioPorTrimestre hoy={hoy} info={info} sesiones={sesiones} />
+      <CalendarioPorTrimestre hoy={hoy} info={info} sesiones={sesiones} conteos={conteos} />
 
-      {preliminar && (
-        <Tarjeta
-          antetitulo="Ritmo"
-          titulo={programa.practicas[preliminar.practica].titulo}
-          subtitulo={`Últimos ${DIAS_EN_GRAFICO} días`}
+      <RitmoPorPractica
+        hoy={hoy}
+        conteos={conteos}
+        preliminar={preliminar?.practica ?? null}
+        metaDiaria={metaDiaria}
+      />
+
+      <Link
+        to="/historial"
+        state={{ desde: '/avance' }}
+        className="flex min-h-[3.5rem] items-center gap-3 rounded-2xl border border-borde px-4 py-2 font-semibold active:bg-resalte"
+      >
+        <span className="min-w-0 flex-1">Ver lo registrado, día por día</span>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="size-[1.1em] shrink-0 text-oro"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <GraficoColumnas
-            columnas={totalesPorDia(conteos, preliminar.practica, hoy, DIAS_EN_GRAFICO).map((d) => ({
-              clave: d.fecha,
-              eje: formatearDiaCorto(d.fecha),
-              nombre: formatearFechaLarga(d.fecha),
-              valor: d.total,
-            }))}
-            unidad={programa.practicas[preliminar.practica].unidad}
-            descripcion={`${programa.practicas[preliminar.practica].titulo} por día, últimos ${DIAS_EN_GRAFICO} días`}
-            referencia={
-              metaDiaria > 0
-                ? {
-                    valor: metaDiaria,
-                    texto: `${formatearNumero(metaDiaria)} por día: lo sugerido para la meta`,
-                  }
-                : undefined
-            }
-            encabezado="Día"
-          />
-        </Tarjeta>
-      )}
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+      </Link>
 
       <Tarjeta
         antetitulo="Ritmo"
@@ -229,6 +231,61 @@ function DeUnVistazo(props: PropsPanel & { calculo: Calculo }) {
   );
 }
 
+/**
+ * Columnas de los últimos días de una práctica. Arranca en el preliminar del trimestre y deja elegir
+ * cualquier otra práctica con registros, con botones a la vista (sin desplegables).
+ */
+function RitmoPorPractica(props: {
+  hoy: string;
+  conteos: Conteo[];
+  preliminar: Practica | null;
+  metaDiaria: number;
+}) {
+  const { hoy, conteos, preliminar, metaDiaria } = props;
+  const opciones = [...new Set([...(preliminar ? [preliminar] : []), ...practicasConRegistros(conteos)])];
+  const [elegida, setElegida] = useState<Practica | null>(null);
+  const practica = elegida ?? opciones[0];
+  if (!practica) return null;
+  const datos = programa.practicas[practica];
+  const conMeta = practica === preliminar && metaDiaria > 0;
+
+  return (
+    <Tarjeta antetitulo="Ritmo" titulo={datos.titulo} subtitulo={`Últimos ${DIAS_EN_GRAFICO} días`}>
+      {opciones.length > 1 && (
+        <div role="group" aria-label="Práctica" className="flex flex-wrap gap-2">
+          {opciones.map((p) => (
+            <button
+              key={p}
+              type="button"
+              aria-pressed={practica === p}
+              onClick={() => setElegida(p)}
+              className={clasePildora(practica === p)}
+            >
+              {programa.practicas[p].corto}
+            </button>
+          ))}
+        </div>
+      )}
+      <GraficoColumnas
+        columnas={totalesPorDia(conteos, practica, hoy, DIAS_EN_GRAFICO).map((d) => ({
+          clave: d.fecha,
+          eje: formatearDiaCorto(d.fecha),
+          nombre: formatearFechaLarga(d.fecha),
+          valor: d.total,
+        }))}
+        unidad={datos.unidad}
+        descripcion={`${datos.titulo} por día, últimos ${DIAS_EN_GRAFICO} días`}
+        referencia={
+          conMeta
+            ? { valor: metaDiaria, texto: `${formatearNumero(metaDiaria)} por día: lo sugerido para la meta` }
+            : undefined
+        }
+        encabezado="Día"
+      />
+    </Tarjeta>
+  );
+}
+
 /** Una meta: cuánto va hecho, de cuánto y qué porcentaje, con su barra. */
 function AvanceMeta(props: { titulo: string; valor: number; meta: number; periodo: string }) {
   const { titulo, valor, meta, periodo } = props;
@@ -252,8 +309,13 @@ function AvanceMeta(props: { titulo: string; valor: number; meta: number; period
 
 const TRIMESTRES: NumeroTrimestre[] = [1, 2, 3, 4];
 
-function CalendarioPorTrimestre(props: { hoy: string; info: InfoDelDia; sesiones: Sesion[] }) {
-  const { hoy, info, sesiones } = props;
+function CalendarioPorTrimestre(props: {
+  hoy: string;
+  info: InfoDelDia;
+  sesiones: Sesion[];
+  conteos: Conteo[];
+}) {
+  const { hoy, info, sesiones, conteos } = props;
   const [elegido, setElegido] = useState<NumeroTrimestre>(info.trimestre);
   const rango = rangoDelTrimestre(info.inicioAnio, elegido, programa);
   const hasta = sumarDias(rango.hasta, 1);
@@ -284,6 +346,9 @@ function CalendarioPorTrimestre(props: { hoy: string; info: InfoDelDia; sesiones
           hasta={hasta}
           hoy={hoy}
           minutos={minutosPorDia(sesiones, rango.desde, hasta)}
+          contado={(fecha) =>
+            contadoEnElDia(conteos, fecha).map((c) => cantidadConPractica(c.total, c.practica, programa))
+          }
         />
       )}
     </Tarjeta>

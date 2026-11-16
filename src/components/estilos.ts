@@ -32,6 +32,18 @@ export const claseCampoNumero =
   'block w-full min-w-0 min-h-[4rem] rounded-2xl border-2 border-tenue bg-fondo px-4 text-center text-tinta ' +
   'font-serif text-[2rem] font-semibold tabular-nums focus:border-oro focus:outline-none';
 
+/**
+ * Botón de una fila de opciones a la vista (filtros del Historial, práctica del gráfico): píldora,
+ * la elegida rellena. Con letra muy grande en un teléfono angosto, el texto se achica un poco para que
+ * la fila no ocupe toda la pantalla.
+ */
+export function clasePildora(elegida: boolean): string {
+  return (
+    'min-h-[max(48px,min(3rem,14vw))] rounded-full border-2 px-[min(1rem,4vw)] text-[min(1rem,5vw)] font-semibold ' +
+    (elegida ? 'border-acento bg-acento text-sobre-acento' : 'border-borde text-tenue')
+  );
+}
+
 export const claseOpcion =
   'flex min-h-[3rem] cursor-pointer items-center gap-3 rounded-2xl border-2 border-borde bg-superficie px-4 py-2 ' +
   'min-w-0 hyphens-auto [overflow-wrap:anywhere] ' +
